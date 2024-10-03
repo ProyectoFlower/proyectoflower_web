@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="https://github.com/ProyectoFlower/proyectoflower_web/sitemap.xsl"?>
+<?xml-stylesheet type="text/xsl" href="https://proyectoflower.github.io/proyectoflower_web/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
-<loc>https://github.com/ProyectoFlower/proyectoflower_web/</loc>
+<loc>https://proyectoflower.github.io/proyectoflower_web/</loc>
 </url>
 <url>
-<loc>https://github.com/ProyectoFlower/proyectoflower_web/overthevoid.html</loc>
-<lastmod>2024-10-03T12:59:12-04:00</lastmod>
+<loc>https://proyectoflower.github.io/proyectoflower_web/overthevoid.html</loc>
+<lastmod>2024-10-03T13:49:02-04:00</lastmod>
+<image:image>
+<image:loc>https://proyectoflower.github.io/proyectoflower_web/media/posts/1/otv-2.jpg</image:loc>
+<image:title><![CDATA[Over The Void]]></image:title>
+</image:image>
 </url>
 <url>
-<loc>https://github.com/ProyectoFlower/proyectoflower_web/probando.html</loc>
+<loc>https://proyectoflower.github.io/proyectoflower_web/probando.html</loc>
 <lastmod>2024-10-03T13:14:57-04:00</lastmod>
 </url>
 </urlset>

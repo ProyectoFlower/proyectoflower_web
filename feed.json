@@ -2,17 +2,17 @@
     "version": "https://jsonfeed.org/version/1",
     "title": "Proyecto Flower",
     "description": "",
-    "home_page_url": "https://github.com/ProyectoFlower/proyectoflower_web",
-    "feed_url": "https://github.com/ProyectoFlower/proyectoflower_web/feed.json",
+    "home_page_url": "https://proyectoflower.github.io/proyectoflower_web",
+    "feed_url": "https://proyectoflower.github.io/proyectoflower_web/feed.json",
     "user_comment": "",
-    "icon": "https://github.com/ProyectoFlower/proyectoflower_web/media/website/logo-pf-grande.png",
+    "icon": "https://proyectoflower.github.io/proyectoflower_web/media/website/logo-pf-grande.png",
     "author": {
         "name": "CIRUSBMAX"
     },
     "items": [
         {
-            "id": "https://github.com/ProyectoFlower/proyectoflower_web/probando.html",
-            "url": "https://github.com/ProyectoFlower/proyectoflower_web/probando.html",
+            "id": "https://proyectoflower.github.io/proyectoflower_web/probando.html",
+            "url": "https://proyectoflower.github.io/proyectoflower_web/probando.html",
             "title": "Probando",
             "summary": "Probando publicaciones",
             "content_html": "<p>Probando publicaciones</p>",
