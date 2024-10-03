@@ -5,24 +5,7 @@
 <loc>https://proyectoflower.github.io/proyectoflower_web/</loc>
 </url>
 <url>
-<loc>https://proyectoflower.github.io/proyectoflower_web/indexhtml/</loc>
-<lastmod>2024-10-03T16:57:14-04:00</lastmod>
-<image:image>
-<image:loc>https://proyectoflower.github.io/proyectoflower_web/media/posts/3/gallery/Asriel.png</image:loc>
-<image:title><![CDATA[Asriel's Adventure]]></image:title>
-</image:image>
-<image:image>
-<image:loc>https://proyectoflower.github.io/proyectoflower_web/media/posts/3/gallery/FINAGLC.png</image:loc>
-<image:title><![CDATA[Flowey is Not A Good Life Coach]]></image:title>
-</image:image>
-<image:image>
-<image:loc>https://proyectoflower.github.io/proyectoflower_web/media/posts/3/gallery/Over-the-Void-Icon.png</image:loc>
-<image:title><![CDATA[Over The Void]]></image:title>
-</image:image>
-<image:image>
-<image:loc>https://proyectoflower.github.io/proyectoflower_web/media/posts/3/banner-pf-oficial-2024-low.jpg</image:loc>
-<image:title><![CDATA[]]></image:title>
-</image:image>
+<loc>https://proyectoflower.github.io/proyectoflower_web/post\probando/</loc>
 </url>
 <url>
 <loc>https://proyectoflower.github.io/proyectoflower_web/overthevoid/</loc>
@@ -31,9 +14,5 @@
 <image:loc>https://proyectoflower.github.io/proyectoflower_web/media/posts/1/otv-2.jpg</image:loc>
 <image:title><![CDATA[Over The Void]]></image:title>
 </image:image>
-</url>
-<url>
-<loc>https://proyectoflower.github.io/proyectoflower_web/probando/</loc>
-<lastmod>2024-10-03T13:14:57-04:00</lastmod>
 </url>
 </urlset>
