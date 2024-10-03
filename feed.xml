@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+    <title>Proyecto Flower</title>
+    <link href="https://github.com/ProyectoFlower/proyectoflower_web/feed.xml" rel="self" />
+    <link href="https://github.com/ProyectoFlower/proyectoflower_web" />
+    <updated>2024-10-03T13:14:57-04:00</updated>
+    <author>
+        <name>CIRUSBMAX</name>
+    </author>
+    <id>https://github.com/ProyectoFlower/proyectoflower_web</id>
+
+    <entry>
+        <title>Probando</title>
+        <author>
+            <name>CIRUSBMAX</name>
+        </author>
+        <link href="https://github.com/ProyectoFlower/proyectoflower_web/probando.html"/>
+        <id>https://github.com/ProyectoFlower/proyectoflower_web/probando.html</id>
+
+        <updated>2024-10-03T13:14:57-04:00</updated>
+            <summary>
+                <![CDATA[
+                    Probando publicaciones
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                <p>Probando publicaciones</p>
+            ]]>
+        </content>
+    </entry>
+</feed>
