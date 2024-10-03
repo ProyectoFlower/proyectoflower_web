@@ -11,8 +11,8 @@
     },
     "items": [
         {
-            "id": "https://proyectoflower.github.io/proyectoflower_web/probando.html",
-            "url": "https://proyectoflower.github.io/proyectoflower_web/probando.html",
+            "id": "https://proyectoflower.github.io/proyectoflower_web/probando/",
+            "url": "https://proyectoflower.github.io/proyectoflower_web/probando/",
             "title": "Probando",
             "summary": "Probando publicaciones",
             "content_html": "<p>Probando publicaciones</p>",
