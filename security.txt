@@ -1,0 +1,1 @@
+Canonical: https://proyectoflower.github.io/proyectoflower_web/security.txt
