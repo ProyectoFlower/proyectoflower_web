@@ -1,0 +1,13 @@
+/*Ocultar*/
+@media screen and (max-width: 600px) {
+  .ocultar-div{
+    display:none;
+  }
+}
+
+/* Mostrar */
+@media screen and (min-width: 600px) {
+  .mostrar-div{
+    display:none;
+  }
+}
