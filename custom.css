@@ -1,19 +1,13 @@
-.ocultar-div{
-  display:block;
-  text-align:center;
-  max-width:600px;
-}
-@media screen and (min-width: 600px) {
+/*Ocultar*/
+@media screen and (max-width: 600px) {
   .ocultar-div{
     display:none;
   }
 }
-.mostrar-div{
-  display:none;
-  max-width:600px;
-}
+
+/* Mostrar */
 @media screen and (min-width: 600px) {
   .mostrar-div{
-    display:block;
+    display:none;
   }
 }
