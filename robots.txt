@@ -6,4 +6,4 @@ User-agent: CCBot
 Disallow: /
 User-agent: *
 Disallow:
-Sitemap: https://proyectoflower.github.io/proyectoflower_web/sitemap.xml
+Sitemap: https://proyectoflower.com/sitemap.xml
