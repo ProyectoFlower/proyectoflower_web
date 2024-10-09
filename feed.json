@@ -11,8 +11,8 @@
     },
     "items": [
         {
-            "id": "https://proyectoflower.com/post/probando/index.html",
-            "url": "https://proyectoflower.com/post/probando/index.html",
+            "id": "https://proyectoflower.com/post/probando/",
+            "url": "https://proyectoflower.com/post/probando/",
             "title": "Probando",
             "summary": "Probando publicaciones",
             "content_html": "<p>Probando publicaciones</p>",
