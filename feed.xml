@@ -3,30 +3,10 @@
     <title>Proyecto Flower</title>
     <link href="https://proyectoflower.com/feed.xml" rel="self" />
     <link href="https://proyectoflower.com" />
-    <updated>2024-10-03T13:14:57-04:00</updated>
+    <updated>1969-12-31T20:00:00-04:00</updated>
     <author>
         <name>CIRUSBMAX</name>
     </author>
     <id>https://proyectoflower.com</id>
 
-    <entry>
-        <title>Probando</title>
-        <author>
-            <name>CIRUSBMAX</name>
-        </author>
-        <link href="https://proyectoflower.com/post/probando/"/>
-        <id>https://proyectoflower.com/post/probando/</id>
-
-        <updated>2024-10-03T13:14:57-04:00</updated>
-            <summary>
-                <![CDATA[
-                    Probando publicaciones
-                ]]>
-            </summary>
-        <content type="html">
-            <![CDATA[
-                <p>Probando publicaciones</p>
-            ]]>
-        </content>
-    </entry>
 </feed>

@@ -10,19 +10,5 @@
         "name": "CIRUSBMAX"
     },
     "items": [
-        {
-            "id": "https://proyectoflower.com/post/probando/",
-            "url": "https://proyectoflower.com/post/probando/",
-            "title": "Probando",
-            "summary": "Probando publicaciones",
-            "content_html": "<p>Probando publicaciones</p>",
-            "author": {
-                "name": "CIRUSBMAX"
-            },
-            "tags": [
-            ],
-            "date_published": "2024-10-03T13:14:57-04:00",
-            "date_modified": "2024-10-03T13:14:57-04:00"
-        }
     ]
 }
