@@ -22,3 +22,9 @@
   transition:all 1s ease-in-out;
   filter: saturate(100%);
 }
+
+.contenedor {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+}
