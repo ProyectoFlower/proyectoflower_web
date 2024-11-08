@@ -13,14 +13,14 @@
 }
 
 .imagen {
-  filter: grayscale(90%);
-  /*-webkit-transition:all .5s ease-in-out;*/
+  filter: grayscale(80%);
+  transition: filter 0.5s ease-in-out;
   
 }
 
 .imagen:hover {
-  transition:all 1s ease-in-out;
-  filter: saturate(100%);
+  filter: grayscale(0%);
+  
 }
 
 .contenedor {
