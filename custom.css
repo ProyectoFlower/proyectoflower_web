@@ -12,6 +12,8 @@
   }
 }
 
+/* Hover y cabecera */
+
 .imagen {
   filter: grayscale(80%);
   transition: filter 0.5s ease-in-out;
