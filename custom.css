@@ -44,15 +44,6 @@
 /* pagina completa */
 
 .full-post {
-  display: block;
+  width: 100vw; /* Anchura total de la ventana */
   margin-left: calc(-50vw + 50%);
-  margin-right: calc(-60vw + 50%);
-  text-align: left;
-}
-
-.full-post a, .full-post{
-  border-radius: 0;
-  display: block;
-  height: auto;
-  width: 100%
 }
