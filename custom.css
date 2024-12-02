@@ -44,6 +44,6 @@
 /* pagina completa */
 
 .full-post {
-  width: 100vw; /* Anchura total de la ventana */
+  width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
