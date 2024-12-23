@@ -69,6 +69,10 @@
   width: 100%;
   height: auto;
 }
+.comic-info {
+  padding: 10px;
+  text-align: center;
+}
 @media (min-width: 300px) {
   .comic {
     width: calc(60% - 40px);
