@@ -47,3 +47,40 @@
   width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
+
+/* galeria de comics */
+
+.cont-comic {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 15px;
+}
+.comic {
+  display: inline-block;
+  width: 20%;
+  margin: 1%;
+  background-color: #32010A;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.comic img {
+  width: 100%;
+  height: auto;
+}
+@media (min-width: 600px) {
+ .comic {
+    width: calc(50% - 40px);
+ }
+}
+@media (min-width: 900px) {
+ .comic {
+    width: calc(33.33% - 40px);
+  }
+}
+@media (min-width: 1200px) {
+ .comic {
+  width: calc(20% - 40px);
+  }
+}
