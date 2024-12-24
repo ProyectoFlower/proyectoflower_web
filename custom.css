@@ -93,3 +93,10 @@
   width: calc(20% - 40px);
         }
 }
+
+/* arreglo de margen */
+
+.margin-fix{
+  margin-top: 0;
+  margin-bottom: 0;
+}
