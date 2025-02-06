@@ -1,3 +1,7 @@
+.hero__image-wrapper {
+    display: none !important;
+}
+
 /*Ocultar*/
 @media screen and (max-width: 600px) {
   .ocultar-div{
