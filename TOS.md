@@ -20,14 +20,14 @@ El respeto es importante y por eso, si en algún momento se le falta el respeto 
 
 4. Sobre los pagos
 
-    • El pago se realizará en dos partes divididas en un 50%, la primera mitad como anticipo y la segunda mitad para liberar la versión final.
+    • El pago se realizará en dos partes divididas en un 50%, la primera mitad como anticipo y la segunda mitad para liberar la versión final del video.
     • Se generará una factura para el pago inicial y una para el de liberación (cuando el pedido esté listo).
     • La moneda que se usa es el $ USD (dólar estadounidense).
     • Para pedidos superiores a 100 $, es posible un pago en cuotas (se debe acordar antes de solicitarlo).
     • El precio puede variar de acuerdo a la complejidad del proyecto.
     • Puede pagar con PayPal o tarjeta de crédito/débito.
 
-5- Política de reembolso
+5. Política de reembolso
 
 Los reembolsos corresponden a PayPal y deberá consultarlos para hacer uno; si elige esta vía, su pedido será cancelado en su totalidad y Proyecto Flower se reservará los derechos de conservar o desechar el contenido del pedido.
 
@@ -62,6 +62,21 @@ Debido a algunas limitaciones técnicas (que se solventarán en un futuro), se d
 10. Derechos de uso
 
     • Proyecto Flower se reserva los derechos de autor sobre todos los pedidos de edición en audio y video, a menos que se acuerde lo contrario.
-    • Proyecto Flower se reserva el derecho de usar el material editado como una licencia única, exclusiva y global para material promocional y/o comercial o como material didáctico.
+    • Proyecto Flower se reserva el derecho de usar el material editado como una licencia única, exclusiva y global para material promocional o como material didáctico.
     • El cliente puede usar su video con fines personales no comerciales.
-    • Por ahora no es posible; puede hacer un pedido para material comercial (publicidad, series, películas, etc.).
+    • Por ahora no es posible hacer un pedido para material comercial (publicidad, series, películas, etc.).
+
+11. NSFW (Contenido para adultos)
+
+En este momento no hay disponible ninguna comisión de contenido para adulto; en un futuro se abrirá con métodos de pago diferentes.
+
+12. Otras consideraciones
+
+    • Puedes preguntar lo que sea acerca del pedido antes, durante y después del mismo.
+    • Los pedidos gratuitos solo son en ocasiones especiales y para usuarios especiales; Proyecto Flower se reserva el derecho a elegir cuándo y a quién hacer un pedido gratuito.
+    • El tiempo de producción dependerá de la complejidad de los pedidos y el pedido puede durar más o menos.
+    • Proyecto Flower no trabaja bajo contrato, solo pedidos.
+    • Puede pedir más de un video vertical (o para redes sociales) en un solo pedido; tenga en cuenta que cada video tiene su propio precio (ya sea igual para todos o único). Esto quiere decir que una edición básica por 9.99$ costaría para 5 videos, por ejemplo, unos 50$. En caso de que los videos requieran una edición más compleja, el precio puede variar para cada video del pedido.
+    • No hay opción para pedir varios videos en formato horizontal en un pedido, por ahora.
+
+Actualizado el 7 de septiembre de 2025
