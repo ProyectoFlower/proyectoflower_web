@@ -1,4 +1,4 @@
-/*! elementor - v3.31.0 - 11-08-2025 */
+/*! elementor - v3.31.0 - 08-09-2025 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -464,6 +464,9 @@ var StyledElementorLogo = (0, _ui.styled)(ElementorLogo)(function (_ref) {
   };
 });
 var DialogHeader = function DialogHeader(props) {
+  var hideAiBetaLogo = props.hideAiBetaLogo,
+    onClose = props.onClose,
+    children = props.children;
   return /*#__PURE__*/_react.default.createElement(_ui.AppBar, {
     sx: {
       fontWeight: 'normal'
@@ -472,7 +475,7 @@ var DialogHeader = function DialogHeader(props) {
     position: "relative"
   }, /*#__PURE__*/_react.default.createElement(_ui.Toolbar, {
     variant: "dense"
-  }, /*#__PURE__*/_react.default.createElement(StyledElementorLogo, {
+  }, !hideAiBetaLogo && /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(StyledElementorLogo, {
     sx: {
       mr: 1
     }
@@ -490,17 +493,17 @@ var DialogHeader = function DialogHeader(props) {
     sx: {
       ml: 1
     }
-  }), /*#__PURE__*/_react.default.createElement(_ui.Stack, {
+  })), /*#__PURE__*/_react.default.createElement(_ui.Stack, {
     direction: "row",
     spacing: 1,
     alignItems: "center",
     sx: {
-      ml: 'auto'
+      ml: hideAiBetaLogo ? 0 : 'auto'
     }
-  }, props.children, /*#__PURE__*/_react.default.createElement(_ui.IconButton, {
+  }, children, /*#__PURE__*/_react.default.createElement(_ui.IconButton, {
     size: "small",
     "aria-label": "close",
-    onClick: props.onClose,
+    onClick: onClose,
     sx: {
       '&.MuiButtonBase-root': {
         mr: -1
@@ -510,6 +513,7 @@ var DialogHeader = function DialogHeader(props) {
 };
 DialogHeader.propTypes = {
   onClose: _propTypes.default.func.isRequired,
+  hideAiBetaLogo: _propTypes.default.bool,
   children: _propTypes.default.oneOfType([_propTypes.default.arrayOf(_propTypes.default.node), _propTypes.default.node])
 };
 var _default = exports["default"] = DialogHeader;

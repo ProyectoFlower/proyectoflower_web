@@ -1,4 +1,4 @@
-/*! elementor - v3.31.0 - 11-08-2025 */
+/*! elementor - v3.31.0 - 08-09-2025 */
 .elementor-control-unit-1 {
   width: 27px;
 }
@@ -1394,6 +1394,18 @@ body.elementor-panel-loading #elementor-panel-state-loading {
   padding-inline-end: 15px;
 }
 
+.e-free-badge-container {
+  flex-grow: 1;
+  margin-inline-start: 10px;
+  margin-inline-end: 10px;
+}
+.e-free-badge-container .e-free-badge {
+  border-radius: var(--e-a-border-radius);
+  background-color: var(--e-a-btn-bg);
+  color: var(--e-a-btn-color-invert);
+  padding: 3px 5px;
+}
+
 .elementor-panel .elementor-element {
   font-family: var(--e-a-font-family);
   color: var(--e-a-color-txt);
@@ -1426,6 +1438,9 @@ body.elementor-panel-loading #elementor-panel-state-loading {
 .elementor-panel .elementor-element:hover > .eicon-lock, .elementor-panel .elementor-element:focus > .eicon-lock {
   color: var(--e-a-color-accent);
 }
+.elementor-panel .elementor-element:hover > .eicon-plug, .elementor-panel .elementor-element:focus > .eicon-plug {
+  color: var(--e-a-color-info);
+}
 .elementor-panel .elementor-element .icon {
   font-size: 28px;
   padding-block-start: 15px;
@@ -1439,7 +1454,7 @@ body.elementor-panel-loading #elementor-panel-state-loading {
 .elementor-panel .elementor-element .title {
   font-size: 12px;
 }
-.elementor-panel .elementor-element > .eicon-lock {
+.elementor-panel .elementor-element > .eicon-lock, .elementor-panel .elementor-element .eicon-plug {
   position: absolute;
   inset-block-start: 5px;
   inset-inline-end: 5px;
@@ -2214,13 +2229,13 @@ body:not(.elementor-device-mobile) .elementor-control.elementor-control-responsi
 }
 
 .elementor-group-control-blur .elementor-slider {
-  background: url("../images/blur.png");
+  background: url("/wp-content/plugins/elementor/assets/images/blur.png");
   background-size: cover;
   background-position: center;
 }
 
 .elementor-group-control-contrast .elementor-slider {
-  background: url("../images/contrast.png");
+  background: url("/wp-content/plugins/elementor/assets/images/contrast.png");
   background-size: 100% 100%;
 }
 

@@ -1,4 +1,4 @@
-/*! elementor - v3.31.0 - 11-08-2025 */
+/*! elementor - v3.31.0 - 08-09-2025 */
 "use strict";
 (self["webpackChunkelementorFrontend"] = self["webpackChunkelementorFrontend"] || []).push([["text-path"],{
 

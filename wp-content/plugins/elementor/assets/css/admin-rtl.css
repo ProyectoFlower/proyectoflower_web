@@ -1,4 +1,4 @@
-/*! elementor - v3.31.0 - 11-08-2025 */
+/*! elementor - v3.31.0 - 08-09-2025 */
 .elementor-button,
 .e-btn,
 #elementor-deactivate-feedback-modal .dialog-skip,
@@ -591,6 +591,20 @@
 }
 #adminmenu #toplevel_page_elementor a[href="admin.php?page=go_elementor_pro"]:hover, #adminmenu #toplevel_page_elementor a[href="admin.php?page=go_elementor_pro"]:focus {
   background-color: rgb(198, 0, 84.8571428571);
+  box-shadow: none;
+}
+#adminmenu #menu-posts-elementor_library a[href*="page=go_cloud_hosting_plans"] {
+  font-weight: 600;
+  background-color: #660044;
+  color: #ffffff;
+  margin: 3px 10px 0;
+  display: block;
+  text-align: center;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+#adminmenu #menu-posts-elementor_library a[href*="page=go_cloud_hosting_plans"]:hover, #adminmenu #menu-posts-elementor_library a[href*="page=go_cloud_hosting_plans"]:focus {
+  background-color: #B90B84;
   box-shadow: none;
 }
 #adminmenu #menu-posts-elementor_library .wp-menu-image:before {

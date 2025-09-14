@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><body><p>/*! elementor - v3.31.0 - 11-08-2025 */
-/******/ (() =&gt; { // webpackBootstrap
+/*! elementor - v3.31.0 - 08-09-2025 */
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
@@ -8,7 +7,7 @@
 /*!**************************!*\
   !*** external "wp.i18n" ***!
   \**************************/
-/***/ ((module) =&gt; {
+/***/ ((module) => {
 
 module.exports = wp.i18n;
 
@@ -42,7 +41,7 @@ module.exports = wp.i18n;
 /******/ 	
 /************************************************************************/
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
-(() =&gt; {
+(() => {
 /*!*******************************************!*\
   !*** ../assets/dev/js/admin/gutenberg.js ***!
   \*******************************************/
@@ -109,7 +108,7 @@ module.exports = wp.i18n;
     },
     buildPanelTopBar: function buildPanelTopBar() {
       var self = this;
-      if (!$('#elementor-edit-mode-button').length &amp;&amp; this.isElementorMode) {
+      if (!$('#elementor-edit-mode-button').length && this.isElementorMode) {
         self.cache.$editorBtnTop = $($('#elementor-gutenberg-button-tmpl').html());
         self.cache.$gutenberg.find('.edit-post-header-toolbar').append(self.cache.$editorBtnTop);
         $('#elementor-edit-mode-button').on('click', function (event) {
@@ -119,7 +118,7 @@ module.exports = wp.i18n;
       }
     },
     handleEditButtonClick: function handleEditButtonClick() {
-      var withAnimation = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : true;
+      var withAnimation = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       var self = this;
       if (withAnimation) {
         self.animateLoader();
@@ -196,4 +195,4 @@ module.exports = wp.i18n;
 
 /******/ })()
 ;
-//# sourceMappingURL=gutenberg.js.map</p></body></html>
+//# sourceMappingURL=gutenberg.js.map

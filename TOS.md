@@ -6,7 +6,7 @@ Aquí se enumerarán los términos en los cuales se prestará el servicio; de se
 
     • Debe ser específico con su pedido, dar ejemplos claros y concisos de lo que desea.
     • El pedido debe ser realista de acuerdo al tiempo en el que quiere tener listo su video.
-    • Consulte la guía de precios mínimos para hacerse una idea del coste del proyecto. Recuerde que los precios pueden variar de acuerdo a la duración y complejidad del pedido.
+    • Los precios mínimos están en la pagina de comisiones. Recuerde que los precios pueden variar de acuerdo a la duración y complejidad del pedido.
 
 2. Lo que se necesita para realizar un pedido.
 
@@ -79,4 +79,4 @@ En este momento no hay disponible ninguna comisión de contenido para adulto; en
     • Puede pedir más de un video vertical (o para redes sociales) en un solo pedido; tenga en cuenta que cada video tiene su propio precio (ya sea igual para todos o único). Esto quiere decir que una edición básica por 9.99$ costaría para 5 videos, por ejemplo, unos 50$. En caso de que los videos requieran una edición más compleja, el precio puede variar para cada video del pedido.
     • No hay opción para pedir varios videos en formato horizontal en un pedido, por ahora.
 
-Actualizado el 7 de septiembre de 2025
+Actualizado el 8 de septiembre de 2025

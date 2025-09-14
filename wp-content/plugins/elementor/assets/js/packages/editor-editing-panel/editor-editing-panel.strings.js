@@ -27,7 +27,7 @@ __( 'Has effective styles', 'elementor' );
 __( 'Has overridden styles', 'elementor' );
 __( 'Has styles', 'elementor' );
 __( 'Style origin', 'elementor' );
-/* translators: %s: Label of the inheritance item */
+// translators: %s is the display label of the inheritance item
 __( 'Inheritance item: %s', 'elementor' );
 __( 'Style origin', 'elementor' );
 __( 'This is the final value', 'elementor' );

@@ -1,3 +1,0 @@
-Contact: mailto:contacto@proyectoflower.com
-Preferred-Languages: en, es
-Canonical: https://proyectoflower.com/security.txt

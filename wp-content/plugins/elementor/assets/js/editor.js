@@ -1,4 +1,4 @@
-/*! elementor - v3.31.0 - 11-08-2025 */
+/*! elementor - v3.31.0 - 08-09-2025 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -27697,6 +27697,7 @@ var _module8 = _interopRequireDefault(__webpack_require__(/*! elementor/modules/
 var _module9 = _interopRequireDefault(__webpack_require__(/*! elementor/modules/link-in-bio/assets/js/editor/module */ "../modules/link-in-bio/assets/js/editor/module.js"));
 var _module0 = _interopRequireDefault(__webpack_require__(/*! elementor/modules/cloud-library/assets/js/editor/module */ "../modules/cloud-library/assets/js/editor/module.js"));
 var elementTypes = _interopRequireWildcard(__webpack_require__(/*! ./elements/types */ "../assets/dev/js/editor/elements/types/index.js"));
+var hints = _interopRequireWildcard(__webpack_require__(/*! ./hints */ "../assets/dev/js/editor/hints/index.js"));
 var _elementBase = _interopRequireDefault(__webpack_require__(/*! ./elements/types/base/element-base */ "../assets/dev/js/editor/elements/types/base/element-base.js"));
 var _fontVariables = __webpack_require__(/*! ./utils/font-variables */ "../assets/dev/js/editor/utils/font-variables.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof3(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
@@ -27729,6 +27730,7 @@ var EditorBase = exports["default"] = /*#__PURE__*/function (_Marionette$Applica
     (0, _defineProperty2.default)(_this, "ajax", elementorCommon.ajax);
     (0, _defineProperty2.default)(_this, "conditions", new _controlConditions.default());
     (0, _defineProperty2.default)(_this, "history", __webpack_require__(/*! elementor/modules/history/assets/js/module */ "../modules/history/assets/js/module.js"));
+    (0, _defineProperty2.default)(_this, "hints", new hints.Ally());
     (0, _defineProperty2.default)(_this, "channels", {
       editor: Backbone.Radio.channel('ELEMENTOR:editor'),
       data: Backbone.Radio.channel('ELEMENTOR:data'),
@@ -34340,6 +34342,168 @@ var _default = exports["default"] = ElementTypeNotFound;
 
 /***/ }),
 
+/***/ "../assets/dev/js/editor/hints/ally.js":
+/*!*********************************************!*\
+  !*** ../assets/dev/js/editor/hints/ally.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+function _callSuper(t, o, e) { return o = (0, _getPrototypeOf2.default)(o), (0, _possibleConstructorReturn2.default)(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0, _getPrototypeOf2.default)(t).constructor) : o.apply(t, e)); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+var Ally = /*#__PURE__*/function (_elementorModules$edi) {
+  function Ally() {
+    var _this;
+    (0, _classCallCheck2.default)(this, Ally);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, Ally, [].concat(args));
+    (0, _defineProperty2.default)(_this, "eventName", 'ally_heading_notice');
+    (0, _defineProperty2.default)(_this, "suffix", '');
+    (0, _defineProperty2.default)(_this, "control", null);
+    return _this;
+  }
+  (0, _inherits2.default)(Ally, _elementorModules$edi);
+  return (0, _createClass2.default)(Ally, [{
+    key: "onSectionActive",
+    value: function onSectionActive(sectionName) {
+      // Check if the section is the section_title of heading widget
+      if (!['section_title'].includes(sectionName)) {
+        return;
+      }
+      this.control = null;
+
+      // Check if control exists
+      if (!this.hasPromoControl()) {
+        return;
+      }
+
+      // Check if the user has dismissed the hint
+      if (elementor.config.user.dismissed_editor_notices.includes('ally_heading_notice')) {
+        this.getPromoControl().remove();
+        return;
+      }
+      this.registerEvents();
+    }
+  }, {
+    key: "registerEvents",
+    value: function registerEvents() {
+      var _this2 = this;
+      // Handle dismiss and action buttons
+      var dismissBtn = this.getPromoControl().$el.find('.elementor-control-notice-dismiss');
+      var _onDismissBtnClick = function onDismissBtnClick(event) {
+        dismissBtn.off('click', _onDismissBtnClick); // Remove the event listener
+        event.preventDefault();
+        _this2.dismiss();
+        _this2.getPromoControl().remove();
+      };
+      dismissBtn.on('click', _onDismissBtnClick);
+
+      // Handle action button
+      var actionBtn = this.getPromoControl().$el.find('.e-btn-1');
+      var _onActionBtn = function onActionBtn(event) {
+        actionBtn.off('click', _onActionBtn); // Remove the event listener
+        event.preventDefault();
+        _this2.onAction(event);
+        _this2.getPromoControl().remove();
+      };
+      actionBtn.on('click', _onActionBtn);
+    }
+  }, {
+    key: "getPromoControl",
+    value: function getPromoControl() {
+      if (!this.control) {
+        this.control = this.getEditorControlView('ally_heading_notice');
+      }
+      return this.control;
+    }
+  }, {
+    key: "hasPromoControl",
+    value: function hasPromoControl() {
+      return !!this.getPromoControl();
+    }
+  }, {
+    key: "ajaxRequest",
+    value: function ajaxRequest(name, data) {
+      elementorCommon.ajax.addRequest(name, {
+        data: data
+      });
+    }
+  }, {
+    key: "dismiss",
+    value: function dismiss() {
+      this.ajaxRequest('dismissed_editor_notices', {
+        dismissId: this.eventName
+      });
+
+      // Prevent opening the same hint again in current editor session.
+      this.ensureNoPromoControlInSession();
+    }
+  }, {
+    key: "ensureNoPromoControlInSession",
+    value: function ensureNoPromoControlInSession() {
+      // Prevent opening the same hint again in current editor session.
+      elementor.config.user.dismissed_editor_notices.push(this.eventName);
+    }
+  }, {
+    key: "onAction",
+    value: function onAction(event) {
+      var _JSON$parse = JSON.parse(event.target.closest('button').dataset.settings),
+        _JSON$parse$action_ur = _JSON$parse.action_url,
+        actionURL = _JSON$parse$action_ur === void 0 ? null : _JSON$parse$action_ur;
+      if (actionURL) {
+        window.open(actionURL, '_blank');
+      }
+      this.ensureNoPromoControlInSession();
+    }
+  }, {
+    key: "onElementorLoaded",
+    value: function onElementorLoaded() {
+      elementor.channels.editor.on('section:activated', this.onSectionActive.bind(this));
+    }
+  }]);
+}(elementorModules.editor.utils.Module);
+var _default = exports["default"] = Ally;
+
+/***/ }),
+
+/***/ "../assets/dev/js/editor/hints/index.js":
+/*!**********************************************!*\
+  !*** ../assets/dev/js/editor/hints/index.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "Ally", ({
+  enumerable: true,
+  get: function get() {
+    return _ally.default;
+  }
+}));
+var _ally = _interopRequireDefault(__webpack_require__(/*! ./ally */ "../assets/dev/js/editor/hints/ally.js"));
+
+/***/ }),
+
 /***/ "../assets/dev/js/editor/introduction-tooltips/manager.js":
 /*!****************************************************************!*\
   !*** ../assets/dev/js/editor/introduction-tooltips/manager.js ***!
@@ -37629,6 +37793,24 @@ PanelElementsLayoutView = Marionette.LayoutView.extend({
         editable: false
       });
     });
+    if (elementor.config.integrationWidgets) {
+      var injectionPoint = elementsCollection.findIndex({
+        widgetType: 'image-carousel'
+      }) + 1;
+      jQuery.each(elementor.config.integrationWidgets, function (index, widget) {
+        elementsCollection.add({
+          name: widget.name,
+          title: widget.title,
+          icon: widget.icon,
+          categories: JSON.parse(widget.categories),
+          editable: false,
+          integration: true,
+          keywords: widget.keywords || []
+        }, {
+          at: injectionPoint
+        });
+      });
+    }
     if (elementorCommon.config.experimentalFeatures.container) {
       jQuery.each(elementor.config.elementsPresets, function (index, widget) {
         var originalWidget = elementor.widgetsCache[widget.replacements.custom.originalWidget],
@@ -37927,6 +38109,9 @@ module.exports = Marionette.ItemView.extend({
     if (!this.isEditable()) {
       className += ' elementor-element--promotion';
     }
+    if (this.isIntegration()) {
+      className += ' elementor-element--integration';
+    }
     return className;
   },
   events: function events() {
@@ -37954,6 +38139,9 @@ module.exports = Marionette.ItemView.extend({
   isEditable: function isEditable() {
     return false !== this.model.get('editable');
   },
+  isIntegration: function isIntegration() {
+    return !!this.model.get('integration');
+  },
   onRender: function onRender() {
     var _this = this;
     if (!elementor.userCan('design') || !this.isEditable()) {
@@ -37977,7 +38165,16 @@ module.exports = Marionette.ItemView.extend({
   onMouseDown: function onMouseDown() {
     var title = this.model.get('title'),
       widgetType = this.model.get('name') || this.model.get('widgetType'),
-      promotion = elementor.config.promotion.elements;
+      isIntegration = this.isIntegration(),
+      configPromotion = elementor.config.promotion;
+    var promotion = configPromotion.elements,
+      // eslint-disable-next-line @wordpress/valid-sprintf
+      url = sprintf(promotion.action_button.url.toString(), widgetType);
+    if (isIntegration) {
+      var _configPromotion$inte;
+      promotion = configPromotion === null || configPromotion === void 0 || (_configPromotion$inte = configPromotion.integration) === null || _configPromotion$inte === void 0 ? void 0 : _configPromotion$inte[widgetType];
+      url = promotion.action_button.url.toString().replaceAll('&amp;', '&');
+    }
     elementor.promotion.showDialog({
       // eslint-disable-next-line @wordpress/valid-sprintf
       title: sprintf(promotion.title, title),
@@ -37988,11 +38185,11 @@ module.exports = Marionette.ItemView.extend({
         blockStart: '-7'
       },
       actionButton: {
-        // eslint-disable-next-line @wordpress/valid-sprintf
-        url: sprintf(promotion.action_button.url, widgetType),
+        url: url,
         text: promotion.action_button.text,
         classes: promotion.action_button.classes || ['elementor-button', 'go-pro']
-      }
+      },
+      hideProTag: isIntegration
     });
   },
   addToPage: function addToPage() {
@@ -41765,7 +41962,8 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         url: null,
         text: null,
         classes: ['elementor-button', 'e-accent']
-      }
+      },
+      hideProTag: false
     });
     (0, _defineProperty2.default)(_this, "elements", {
       $title: null,
@@ -41792,6 +41990,11 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         },
         position: {
           my: (elementorCommon.config.isRTL ? 'right' : 'left') + '+5 top'
+        },
+        onHide: function onHide() {
+          if (_this2.hideProTag) {
+            _this2.resetProTag();
+          }
         }
       });
       this.elements.$header = this.dialog.getElements('header');
@@ -41808,6 +42011,51 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         return _this2.dialog.hide();
       });
       this.elements.$header.append(this.elements.$title, this.elements.$titleBadge, this.elements.$closeButton);
+    }
+  }, {
+    key: "getElements",
+    value: function getElements() {
+      return this.elements;
+    }
+  }, {
+    key: "updateElements",
+    value: function updateElements(elements) {
+      this.elements = elements;
+    }
+  }, {
+    key: "hideProTag",
+    value: function hideProTag() {
+      var elements = this.getElements();
+      elements.$titleBadge.css('display', 'none');
+      if (!elements.$freeBadgeContainer) {
+        elements.$freeBadgeContainer = jQuery('<div>', {
+          class: 'e-free-badge-container'
+        });
+        elements.$freeBadge = jQuery('<span>', {
+          class: 'e-free-badge'
+        });
+        elements.$freeBadge.text('Free');
+        elements.$freeBadgeContainer.append(elements.$freeBadge);
+        elements.$titleBadge.after(elements.$freeBadgeContainer);
+        this.updateElements(elements);
+      }
+      var $actionButton = this.dialog.getElements('action');
+      $actionButton.removeClass('go-pro');
+      $actionButton.css('background-color', 'var(--e-a-btn-bg-info)');
+    }
+  }, {
+    key: "resetProTag",
+    value: function resetProTag() {
+      var _elements$$freeBadgeC;
+      var elements = this.getElements();
+      elements.$titleBadge.css('display', 'inline-block');
+      if ((_elements$$freeBadgeC = elements.$freeBadgeContainer) !== null && _elements$$freeBadgeC !== void 0 && _elements$$freeBadgeC.remove) {
+        elements.$freeBadgeContainer.remove();
+      }
+      elements.$freeBadgeContainer = null;
+      elements.$freeBadge = null;
+      this.updateElements(elements);
+      this.dialog.getElements('action').addClass('go-pro');
     }
   }, {
     key: "createButton",
@@ -41849,6 +42097,11 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         of: options.targetElement,
         at: "".concat(inlineStartKey).concat(options.position.inlineStart || '', " top").concat(options.position.blockStart || '')
       });
+      if (options.hideProTag) {
+        this.hideProTag();
+      } else {
+        this.resetProTag();
+      }
       return this.dialog.show();
     }
   }]);
@@ -53478,21 +53731,49 @@ var Module = exports["default"] = /*#__PURE__*/function (_elementorModules$edi) 
   return (0, _createClass2.default)(Module, [{
     key: "onElementorInit",
     value: function onElementorInit() {
-      var _elementor$config;
-      if (!((_elementor$config = elementor.config) !== null && _elementor$config !== void 0 && _elementor$config.promotionWidgets) || !elementor.config.promotionWidgets.length) {
+      if (!this.hasPromotionWidgets() && !this.hasIntegrationWidgets()) {
         return;
       }
       elementor.hooks.addFilter('element/view', function (DefaultView, model) {
+        var _config$promotionWidg, _config$integrationWi;
         var widgetType = model.get('widgetType');
-        var isProWidget = elementor.config.promotionWidgets.find(function (item) {
-          return widgetType === item.name;
-        });
-        if (isProWidget) {
+        var _elementor = elementor,
+          config = _elementor.config;
+        var hasWidget = function hasWidget(path) {
+          return !!config[path].find(function (item) {
+            return widgetType === item.name;
+          });
+        };
+        var isProWidget = false,
+          isIntegrationWidget = false;
+        if (config !== null && config !== void 0 && (_config$promotionWidg = config.promotionWidgets) !== null && _config$promotionWidg !== void 0 && _config$promotionWidg.length) {
+          isProWidget = hasWidget('promotionWidgets');
+        }
+        if (config !== null && config !== void 0 && (_config$integrationWi = config.integrationWidgets) !== null && _config$integrationWi !== void 0 && _config$integrationWi.length && !isProWidget) {
+          isIntegrationWidget = hasWidget('integrationWidgets');
+        }
+        if (isProWidget || isIntegrationWidget) {
           return (__webpack_require__(/*! ./widget/view */ "../modules/promotions/assets/js/editor/widget/view.js")["default"]);
         }
         return DefaultView;
       });
       elementor.hooks.addFilter('controls/base/behaviors', this.registerControlBehavior);
+    }
+  }, {
+    key: "hasWidgetsElements",
+    value: function hasWidgetsElements(path) {
+      var _elementor$config;
+      return (_elementor$config = elementor.config) === null || _elementor$config === void 0 || (_elementor$config = _elementor$config[path]) === null || _elementor$config === void 0 ? void 0 : _elementor$config.length;
+    }
+  }, {
+    key: "hasPromotionWidgets",
+    value: function hasPromotionWidgets() {
+      return this.hasWidgetsElements('promotionWidgets');
+    }
+  }, {
+    key: "hasIntegrationWidgets",
+    value: function hasIntegrationWidgets() {
+      return this.hasWidgetsElements('integrationWidgets');
     }
   }, {
     key: "registerControlBehavior",
