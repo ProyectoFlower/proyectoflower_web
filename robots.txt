@@ -1,7 +1,8 @@
-User-agent: ChatGPT-User
-Disallow: /
-User-agent: GPTBot
-Disallow: /
+# START YOAST BLOCK
+# ---------------------------
 User-agent: *
 Disallow:
-Sitemap: https://proyectoflower.com/sitemap.xml
+
+Sitemap: /sitemap_index.xml
+# ---------------------------
+# END YOAST BLOCK

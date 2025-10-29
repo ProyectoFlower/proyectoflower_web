@@ -1,174 +1,5 @@
-/*! elementor - v3.31.0 - 08-09-2025 */
+/*! elementor - v3.32.0 - 21-10-2025 */
 (self["webpackChunkelementor"] = self["webpackChunkelementor"] || []).push([["kit-library"],{
-
-/***/ "../app/assets/js/ui/popover-dialog/popover-dialog.js":
-/*!************************************************************!*\
-  !*** ../app/assets/js/ui/popover-dialog/popover-dialog.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = PopoverDialog;
-var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
-function PopoverDialog(props) {
-  var targetRef = props.targetRef,
-    offsetTop = props.offsetTop,
-    offsetLeft = props.offsetLeft,
-    wrapperClass = props.wrapperClass,
-    trigger = props.trigger,
-    hideAfter = props.hideAfter,
-    popoverRef = (0, _react.useCallback)(function (popoverEl) {
-      var target = targetRef === null || targetRef === void 0 ? void 0 : targetRef.current;
-
-      // If the target or the popover element does not exist on the page anymore after a re-render, do nothing.
-      if (!target || !popoverEl) {
-        return;
-      }
-
-      /**
-       * Show Popover
-       */
-      var showPopover = function showPopover() {
-        popoverEl.style.display = 'block';
-        popoverEl.setAttribute('aria-expanded', true);
-        var targetRect = target.getBoundingClientRect(),
-          popoverRect = popoverEl.getBoundingClientRect(),
-          widthDifference = popoverRect.width - targetRect.width;
-        popoverEl.style.top = targetRect.bottom + offsetTop + 'px';
-        popoverEl.style.left = targetRect.left - widthDifference / 2 - offsetLeft + 'px';
-
-        // 16px to compensate for the arrow width.
-        popoverEl.style.setProperty('--popover-arrow-offset-end', (popoverRect.width - 16) / 2 + 'px');
-      };
-
-      /**
-       * Hide Popover
-       */
-      var hidePopover = function hidePopover() {
-        popoverEl.style.display = 'none';
-        popoverEl.setAttribute('aria-expanded', false);
-      };
-
-      /**
-       * Handle the Popover's hover functionality
-       */
-      var handlePopoverHover = function handlePopoverHover() {
-        var hideOnMouseOut = true,
-          timeOut = null;
-
-        // Show popover on hover of the target
-        target.addEventListener('mouseover', function () {
-          hideOnMouseOut = true;
-          showPopover();
-        });
-
-        // Hide popover when not overing over the target or the popover itself
-        target.addEventListener('mouseleave', function () {
-          timeOut = setTimeout(function () {
-            if (hideOnMouseOut) {
-              if ('block' === popoverEl.style.display) {
-                hidePopover();
-              }
-            }
-          }, hideAfter);
-        });
-
-        // Don't hide the popover if the user is still hovering over it.
-        popoverEl.addEventListener('mouseover', function () {
-          hideOnMouseOut = false;
-          if (timeOut) {
-            clearTimeout(timeOut);
-            timeOut = null;
-          }
-        });
-
-        // Once the user stops hovering over the popover, hide it.
-        popoverEl.addEventListener('mouseleave', function () {
-          timeOut = setTimeout(function () {
-            if (hideOnMouseOut) {
-              if ('block' === popoverEl.style.display) {
-                hidePopover();
-              }
-            }
-          }, hideAfter);
-          hideOnMouseOut = true;
-        });
-      };
-
-      /**
-       * Handle the Popover's click functionality
-       */
-      var handlePopoverClick = function handlePopoverClick() {
-        var popoverIsActive = false;
-        target.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          if (popoverIsActive) {
-            hidePopover();
-            popoverIsActive = false;
-          } else {
-            showPopover();
-            popoverIsActive = true;
-          }
-        });
-
-        // Make sure the popover doesn't close when it is clicked on.
-        popoverEl.addEventListener('click', function (e) {
-          e.stopPropagation();
-        });
-
-        // Hide the popover when clicking outside of it.
-        document.body.addEventListener('click', function () {
-          if (popoverIsActive) {
-            hidePopover();
-            popoverIsActive = false;
-          }
-        });
-      };
-      if ('hover' === trigger) {
-        handlePopoverHover();
-      } else if ('click' === trigger) {
-        handlePopoverClick();
-      }
-    }, [targetRef]);
-  var wrapperClasses = 'e-app__popover';
-  if (wrapperClass) {
-    wrapperClasses += ' ' + wrapperClass;
-  }
-  return /*#__PURE__*/_react.default.createElement("div", {
-    className: wrapperClasses,
-    ref: popoverRef
-  }, props.children);
-}
-PopoverDialog.propTypes = {
-  targetRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({
-    current: PropTypes.any
-  })]).isRequired,
-  trigger: PropTypes.string,
-  direction: PropTypes.string,
-  offsetTop: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  offsetLeft: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  wrapperClass: PropTypes.string,
-  children: PropTypes.any,
-  hideAfter: PropTypes.number
-};
-PopoverDialog.defaultProps = {
-  direction: 'bottom',
-  trigger: 'hover',
-  offsetTop: 10,
-  offsetLeft: 0,
-  hideAfter: 300
-};
-
-/***/ }),
 
 /***/ "../app/modules/kit-library/assets/js/app.js":
 /*!***************************************************!*\
@@ -255,10 +86,19 @@ function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r
 function ApplyKitDialog(props) {
   var navigate = (0, _router.useNavigate)();
   var startImportProcess = (0, _react.useCallback)(function () {
+    var _elementorCommon;
     var applyAll = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var url = '/import/process' + "?id=".concat(props.id) + "&file_url=".concat(encodeURIComponent(props.downloadLink)) + "&nonce=".concat(props.nonce, "&referrer=kit-library");
-    if (applyAll) {
-      url += '&action_type=apply-all';
+    var url = '';
+    if ((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.config) !== null && _elementorCommon !== void 0 && _elementorCommon.experimentalFeatures['import-export-customization']) {
+      url = "import-customization?referrer=kit-library&id=".concat(props.id, "&file_url=").concat(encodeURIComponent(props.downloadLink));
+      if (applyAll) {
+        url += '&action_type=apply-all';
+      }
+    } else {
+      url = '/import/process' + "?id=".concat(props.id) + "&file_url=".concat(encodeURIComponent(props.downloadLink)) + "&nonce=".concat(props.nonce, "&referrer=kit-library");
+      if (applyAll) {
+        url += '&action_type=apply-all';
+      }
     }
     navigate(url);
   }, [props.downloadLink, props.nonce]);
@@ -818,8 +658,8 @@ var _useKitCallToAction2 = _interopRequireWildcard(__webpack_require__(/*! ../ho
 var _useAddKitPromotionUtm = _interopRequireDefault(__webpack_require__(/*! ../hooks/use-add-kit-promotion-utm */ "../app/modules/kit-library/assets/js/hooks/use-add-kit-promotion-utm.js"));
 var _appUi = __webpack_require__(/*! @elementor/app-ui */ "@elementor/app-ui");
 var _settingsContext = __webpack_require__(/*! ../context/settings-context */ "../app/modules/kit-library/assets/js/context/settings-context.js");
-var _appsEventTracking = __webpack_require__(/*! elementor-app/event-track/apps-event-tracking */ "../app/assets/js/event-track/apps-event-tracking.js");
 var _tiers = __webpack_require__(/*! elementor-utils/tiers */ "../assets/dev/js/utils/tiers.js");
+var _appsEventTracking = __webpack_require__(/*! elementor-app/event-track/apps-event-tracking */ "../app/assets/js/event-track/apps-event-tracking.js");
 __webpack_require__(/*! ./item-header.scss */ "../app/modules/kit-library/assets/js/components/item-header.scss");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 /**
@@ -891,11 +731,28 @@ function useKitCallToActionButton(model, _ref) {
       },
       includeHeaderBtnClass: false
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, subscriptionPlan, isApplyLoading, apply]);
 }
 function ItemHeader(props) {
   var _useSettingsContext2 = (0, _settingsContext.useSettingsContext)(),
     updateSettings = _useSettingsContext2.updateSettings;
+  var resetConnect = function resetConnect() {
+    var _elementorCommon;
+    var lc = (_elementorCommon = elementorCommon) === null || _elementorCommon === void 0 || (_elementorCommon = _elementorCommon.config) === null || _elementorCommon === void 0 ? void 0 : _elementorCommon.library_connect;
+    if (!lc) {
+      return;
+    }
+    lc.is_connected = false;
+    lc.current_access_level = 0;
+    lc.current_access_tier = _tiers.TIERS.free;
+    lc.plan_type = _tiers.TIERS.free;
+    updateSettings({
+      is_library_connected: false,
+      access_level: 0,
+      access_tier: _tiers.TIERS.free
+    });
+  };
   var _useState = (0, _react.useState)(false),
     _useState2 = (0, _slicedToArray2.default)(_useState, 2),
     isConnectDialogOpen = _useState2[0],
@@ -908,36 +765,49 @@ function ItemHeader(props) {
     _useState6 = (0, _slicedToArray2.default)(_useState5, 2),
     error = _useState6[0],
     setError = _useState6[1];
+  var handleKitError = function handleKitError(_ref2) {
+    var code = _ref2.code;
+    if (401 === code) {
+      resetConnect();
+      setIsConnectDialogOpen(true);
+      return;
+    }
+    setError({
+      code: code,
+      message: __('Something went wrong.', 'elementor')
+    });
+  };
   var kitData = {
     kitName: props.model.title,
     pageId: props.pageId
   };
   var _useDownloadLinkMutat = (0, _useDownloadLinkMutation.default)(props.model, {
-      onSuccess: function onSuccess(_ref2) {
-        var data = _ref2.data;
+      onSuccess: function onSuccess(_ref3) {
+        var data = _ref3.data;
         return setDownloadLinkData(data);
       },
-      onError: function onError(errorResponse) {
-        if (401 === errorResponse.code) {
-          elementorCommon.config.library_connect.is_connected = false;
-          elementorCommon.config.library_connect.current_access_level = 0;
-          elementorCommon.config.library_connect.current_access_tier = _tiers.TIERS.free;
-          updateSettings({
-            is_library_connected: false,
-            access_level: 0,
-            access_tier: _tiers.TIERS.free
-          });
-          setIsConnectDialogOpen(true);
-          return;
-        }
-        setError({
-          code: errorResponse.code,
-          message: __('Something went wrong.', 'elementor')
-        });
-      }
+      onError: handleKitError
     }),
     apply = _useDownloadLinkMutat.mutate,
     isApplyLoading = _useDownloadLinkMutat.isLoading;
+  var _useDownloadLinkMutat2 = (0, _useDownloadLinkMutation.default)(props.model, {
+      onSuccess: function onSuccess(response) {
+        try {
+          var _response$data;
+          var linkUrl = response === null || response === void 0 || (_response$data = response.data) === null || _response$data === void 0 || (_response$data = _response$data.data) === null || _response$data === void 0 ? void 0 : _response$data.download_link;
+          if (linkUrl) {
+            window.open(linkUrl, '_blank');
+          }
+        } catch (e) {
+          setError({
+            message: __('Something went wrong.', 'elementor')
+          });
+        }
+      },
+      onError: handleKitError
+    }),
+    fetchDownloadLink = _useDownloadLinkMutat2.mutate,
+    isDownloadLoading = _useDownloadLinkMutat2.isLoading;
   var applyButton = useKitCallToActionButton(props.model, {
     onConnect: function onConnect() {
       return setIsConnectDialogOpen(true);
@@ -953,9 +823,26 @@ function ItemHeader(props) {
       });
     }
   });
+  var downloadButton = (0, _react.useMemo)(function () {
+    return {
+      id: 'download',
+      text: __('Download Website', 'elementor'),
+      hideText: true,
+      icon: 'eicon-file-download',
+      tooltip: __('Download Website ZIP', 'elementor'),
+      color: isDownloadLoading ? 'disabled' : 'secondary',
+      includeHeaderBtnClass: false,
+      onClick: function onClick(e) {
+        if (isDownloadLoading) {
+          return;
+        }
+        fetchDownloadLink(e);
+      }
+    };
+  }, [isDownloadLoading, fetchDownloadLink]);
   var buttons = (0, _react.useMemo)(function () {
-    return [applyButton].concat((0, _toConsumableArray2.default)(props.buttons));
-  }, [props.buttons, applyButton]);
+    return [downloadButton, applyButton].concat((0, _toConsumableArray2.default)(props.buttons));
+  }, [props.buttons, applyButton, downloadButton]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, error && /*#__PURE__*/_react.default.createElement(_appUi.Dialog, {
     title: error.message,
     text: __('Go to the pages screen to make sure your kit pages have been imported successfully. If not, try again.', 'elementor'),
@@ -989,6 +876,7 @@ function ItemHeader(props) {
       elementorCommon.config.library_connect.is_connected = true;
       elementorCommon.config.library_connect.current_access_level = accessLevel;
       elementorCommon.config.library_connect.current_access_tier = accessTier;
+      elementorCommon.config.library_connect.plan_type = data.plan_type;
       updateSettings({
         is_library_connected: true,
         access_level: accessLevel,
@@ -1291,6 +1179,7 @@ var KitListCloudItem = function KitListCloudItem(props) {
   };
   var handleDelete = function handleDelete() {
     setIsPopoverOpen(false);
+    _appsEventTracking.AppsEventTracking.sendKitCloudLibraryDelete(props.model.id);
     eventTracking('kit-library/cloud-delete');
     props.onDelete();
   };
@@ -1330,8 +1219,11 @@ var KitListCloudItem = function KitListCloudItem(props) {
     text: (0, _i18n.__)('Apply', 'elementor'),
     icon: "eicon-library-download",
     onClick: function onClick() {
+      var _elementorCommon;
       eventTracking('kit-library/cloud-import');
-      navigate("import?referrer=kit-library&source=".concat(_useKit.KIT_SOURCE_MAP.CLOUD, "&kit_id=").concat(props.model.id), {
+      _appsEventTracking.AppsEventTracking.sendKitCloudLibraryApply(props.model.id);
+      var url = (_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.config) !== null && _elementorCommon !== void 0 && _elementorCommon.experimentalFeatures['import-export-customization'] ? "import-customization?referrer=".concat(_useKit.KIT_SOURCE_MAP.CLOUD, "&id=").concat(props.model.id) : "import?referrer=kit-library&source=".concat(_useKit.KIT_SOURCE_MAP.CLOUD, "&kit_id=").concat(props.model.id);
+      navigate(url, {
         replace: true
       });
     }
@@ -3889,6 +3781,7 @@ function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function Cloud(_ref) {
+  var _elementorCommon;
   var _ref$path = _ref.path,
     path = _ref$path === void 0 ? '' : _ref$path,
     _ref$renderNoResultsC = _ref.renderNoResultsComponent,
@@ -3923,6 +3816,7 @@ function Cloud(_ref) {
     isCheckingEligibility = _useCloudKitsEligibil.isLoading,
     refetchEligibility = _useCloudKitsEligibil.refetch;
   var isCloudKitsAvailable = (cloudKitsData === null || cloudKitsData === void 0 ? void 0 : cloudKitsData.is_eligible) || false;
+  var exportUrl = (_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.config) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.experimentalFeatures) !== null && _elementorCommon !== void 0 && _elementorCommon['import-export-customization'] ? elementorAppConfig.base_url + '#/export-customization' : elementorAppConfig.base_url + '#/export';
   var menuItems = (0, _useMenuItems.default)(path);
   var eventTracking = function eventTracking(command, elementPosition) {
     var search = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -3954,6 +3848,9 @@ function Cloud(_ref) {
       setConnecting(false);
     }
   }, [isConnecting, isCheckingEligibility, isLoading, setConnecting]);
+  (0, _react.useEffect)(function () {
+    _appsEventTracking.AppsEventTracking.sendPageViewsWebsiteTemplates(elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.cloudKitLibrary);
+  }, []);
   if (!isConnected) {
     return /*#__PURE__*/_react.default.createElement(_connectScreen.default, {
       onConnectSuccess: onConnectSuccess,
@@ -4036,7 +3933,7 @@ function Cloud(_ref) {
       newLineButton: true,
       button: {
         text: __('Export this site', 'elementor'),
-        url: elementorAppConfig.base_url + '#/export',
+        url: exportUrl,
         target: '_blank',
         variant: 'contained',
         color: 'primary'
@@ -4074,6 +3971,8 @@ var _content = _interopRequireDefault(__webpack_require__(/*! ../../../../../../
 var _indexHeader = _interopRequireDefault(__webpack_require__(/*! ../index/index-header */ "../app/modules/kit-library/assets/js/pages/index/index-header.js"));
 var _indexSidebar = _interopRequireDefault(__webpack_require__(/*! ../index/index-sidebar */ "../app/modules/kit-library/assets/js/pages/index/index-sidebar.js"));
 var _layout = _interopRequireDefault(__webpack_require__(/*! ../../components/layout */ "../app/modules/kit-library/assets/js/components/layout/index.js"));
+var _appsEventTracking = __webpack_require__(/*! elementor-app/event-track/apps-event-tracking */ "../app/assets/js/event-track/apps-event-tracking.js");
+var _tiers = __webpack_require__(/*! elementor-utils/tiers */ "../assets/dev/js/utils/tiers.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function ConnectScreen(_ref) {
   var _elementorAppConfig, _elementorAppConfig2, _elementorAppConfig3, _elementorAppConfig4;
@@ -4092,20 +3991,29 @@ function ConnectScreen(_ref) {
         width: 600,
         height: 700
       },
-      success: function success(data) {
+      success: function success(_event, data) {
+        var isTrackingOptedInConnect = data.tracking_opted_in && elementorCommon.config.editor_events;
         elementorCommon.config.library_connect.is_connected = true;
         elementorCommon.config.library_connect.current_access_level = data.kits_access_level || data.access_level || 0;
         elementorCommon.config.library_connect.current_access_tier = data.access_tier;
+        elementorCommon.config.library_connect.plan_type = data.plan_type;
+        if (isTrackingOptedInConnect) {
+          elementorCommon.config.editor_events.can_send_events = true;
+        }
         onConnectSuccess === null || onConnectSuccess === void 0 || onConnectSuccess();
       },
       error: function error() {
         elementorCommon.config.library_connect.is_connected = false;
         elementorCommon.config.library_connect.current_access_level = 0;
         elementorCommon.config.library_connect.current_access_tier = '';
+        elementorCommon.config.library_connect.plan_type = _tiers.TIERS.free;
         onConnectError === null || onConnectError === void 0 || onConnectError();
       }
     });
   }, [onConnectSuccess, onConnectError]);
+  (0, _react.useEffect)(function () {
+    _appsEventTracking.AppsEventTracking.sendPageViewsWebsiteTemplates(elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.cloudKitLibraryConnect);
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_layout.default, {
     sidebar: /*#__PURE__*/_react.default.createElement(_indexSidebar.default, {
       menuItems: menuItems
@@ -4213,17 +4121,20 @@ FullPageLoader.propTypes = {
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = UpgradeScreen;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
 var _appUi = __webpack_require__(/*! @elementor/app-ui */ "@elementor/app-ui");
 var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
 var _content = _interopRequireDefault(__webpack_require__(/*! ../../../../../../assets/js/layout/content */ "../app/assets/js/layout/content.js"));
 var _indexHeader = _interopRequireDefault(__webpack_require__(/*! ../index/index-header */ "../app/modules/kit-library/assets/js/pages/index/index-header.js"));
 var _indexSidebar = _interopRequireDefault(__webpack_require__(/*! ../index/index-sidebar */ "../app/modules/kit-library/assets/js/pages/index/index-sidebar.js"));
 var _layout = _interopRequireDefault(__webpack_require__(/*! ../../components/layout */ "../app/modules/kit-library/assets/js/components/layout/index.js"));
+var _appsEventTracking = __webpack_require__(/*! elementor-app/event-track/apps-event-tracking */ "../app/assets/js/event-track/apps-event-tracking.js");
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function UpgradeScreen(_ref) {
   var menuItems = _ref.menuItems,
     forceRefetch = _ref.forceRefetch,
@@ -4231,6 +4142,9 @@ function UpgradeScreen(_ref) {
     cloudKitsData = _ref.cloudKitsData;
   var hasSubscription = '' !== (cloudKitsData === null || cloudKitsData === void 0 ? void 0 : cloudKitsData.subscription_id);
   var url = hasSubscription ? 'https://go.elementor.com/go-pro-cloud-website-templates-library-advanced/' : 'https://go.elementor.com/go-pro-cloud-website-templates-library/';
+  (0, _react.useEffect)(function () {
+    _appsEventTracking.AppsEventTracking.sendPageViewsWebsiteTemplates(elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.cloudKitLibraryUpgrade);
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_layout.default, {
     sidebar: /*#__PURE__*/_react.default.createElement(_indexSidebar.default, {
       menuItems: menuItems
@@ -4264,6 +4178,9 @@ function UpgradeScreen(_ref) {
   }, __('Upgrade to Elementor Pro to import your own website template and save templates that you can reuse on any of your connected websites.', 'elementor')), /*#__PURE__*/_react.default.createElement(_appUi.Button, {
     text: __('Upgrade now', 'elementor'),
     url: url,
+    onClick: function onClick() {
+      _appsEventTracking.AppsEventTracking.sendKitsCloudUpgradeClicked(elementorCommon.eventsManager.config.secondaryLocations.kitLibrary.cloudKitLibrary);
+    },
     target: "_blank",
     className: "e-kit-library__upgrade-button"
   })))));
@@ -5586,4 +5503,4 @@ var isTierAtLeast = exports.isTierAtLeast = function isTierAtLeast(currentTier, 
 /***/ })
 
 }]);
-//# sourceMappingURL=kit-library.8357091f2047eb2634d3.bundle.js.map
+//# sourceMappingURL=kit-library.ed7fc5d9656556af9353.bundle.js.map

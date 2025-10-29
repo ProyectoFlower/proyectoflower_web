@@ -1,4 +1,4 @@
-/*! elementor - v3.31.0 - 08-09-2025 */
+/*! elementor - v3.32.0 - 21-10-2025 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -2074,8 +2074,7 @@ var _module3 = _interopRequireDefault(__webpack_require__(/*! elementor/modules/
         $settingsTabsWrapper: $('#elementor-settings-tabs-wrapper'),
         $menuGetHelpLink: $('a[href="admin.php?page=go_knowledge_base_site"]'),
         $menuGoProLink: $('a[href="admin.php?page=go_elementor_pro"]'),
-        $reMigrateGlobalsButton: $('.elementor-re-migrate-globals-button'),
-        $menuCloudHostingPlansLink: $('a[href="edit.php?post_type=elementor_library&page=go_cloud_hosting_plans"]')
+        $reMigrateGlobalsButton: $('.elementor-re-migrate-globals-button')
       };
       elements.$settingsFormPages = elements.$settingsForm.find('.elementor-settings-form-page');
       elements.$activeSettingsPage = elements.$settingsFormPages.filter('.elementor-active');
@@ -2362,7 +2361,7 @@ var _module3 = _interopRequireDefault(__webpack_require__(/*! elementor/modules/
      * @since 3.6.0
      */
     openLinksInNewTab: function openLinksInNewTab() {
-      var elements = [this.elements.$menuGetHelpLink, this.elements.$menuGoProLink, this.elements.$menuCloudHostingPlansLink];
+      var elements = [this.elements.$menuGetHelpLink, this.elements.$menuGoProLink];
       elements.forEach(function ($element) {
         // Only add the attribute if the element is found.
         if ($element.length) {

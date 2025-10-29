@@ -1,174 +1,6 @@
-/*! elementor - v3.31.0 - 08-09-2025 */
+/*! elementor - v3.32.0 - 21-10-2025 */
 "use strict";
 (self["webpackChunkelementor"] = self["webpackChunkelementor"] || []).push([["onboarding"],{
-
-/***/ "../app/assets/js/ui/popover-dialog/popover-dialog.js":
-/*!************************************************************!*\
-  !*** ../app/assets/js/ui/popover-dialog/popover-dialog.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = PopoverDialog;
-var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
-function PopoverDialog(props) {
-  var targetRef = props.targetRef,
-    offsetTop = props.offsetTop,
-    offsetLeft = props.offsetLeft,
-    wrapperClass = props.wrapperClass,
-    trigger = props.trigger,
-    hideAfter = props.hideAfter,
-    popoverRef = (0, _react.useCallback)(function (popoverEl) {
-      var target = targetRef === null || targetRef === void 0 ? void 0 : targetRef.current;
-
-      // If the target or the popover element does not exist on the page anymore after a re-render, do nothing.
-      if (!target || !popoverEl) {
-        return;
-      }
-
-      /**
-       * Show Popover
-       */
-      var showPopover = function showPopover() {
-        popoverEl.style.display = 'block';
-        popoverEl.setAttribute('aria-expanded', true);
-        var targetRect = target.getBoundingClientRect(),
-          popoverRect = popoverEl.getBoundingClientRect(),
-          widthDifference = popoverRect.width - targetRect.width;
-        popoverEl.style.top = targetRect.bottom + offsetTop + 'px';
-        popoverEl.style.left = targetRect.left - widthDifference / 2 - offsetLeft + 'px';
-
-        // 16px to compensate for the arrow width.
-        popoverEl.style.setProperty('--popover-arrow-offset-end', (popoverRect.width - 16) / 2 + 'px');
-      };
-
-      /**
-       * Hide Popover
-       */
-      var hidePopover = function hidePopover() {
-        popoverEl.style.display = 'none';
-        popoverEl.setAttribute('aria-expanded', false);
-      };
-
-      /**
-       * Handle the Popover's hover functionality
-       */
-      var handlePopoverHover = function handlePopoverHover() {
-        var hideOnMouseOut = true,
-          timeOut = null;
-
-        // Show popover on hover of the target
-        target.addEventListener('mouseover', function () {
-          hideOnMouseOut = true;
-          showPopover();
-        });
-
-        // Hide popover when not overing over the target or the popover itself
-        target.addEventListener('mouseleave', function () {
-          timeOut = setTimeout(function () {
-            if (hideOnMouseOut) {
-              if ('block' === popoverEl.style.display) {
-                hidePopover();
-              }
-            }
-          }, hideAfter);
-        });
-
-        // Don't hide the popover if the user is still hovering over it.
-        popoverEl.addEventListener('mouseover', function () {
-          hideOnMouseOut = false;
-          if (timeOut) {
-            clearTimeout(timeOut);
-            timeOut = null;
-          }
-        });
-
-        // Once the user stops hovering over the popover, hide it.
-        popoverEl.addEventListener('mouseleave', function () {
-          timeOut = setTimeout(function () {
-            if (hideOnMouseOut) {
-              if ('block' === popoverEl.style.display) {
-                hidePopover();
-              }
-            }
-          }, hideAfter);
-          hideOnMouseOut = true;
-        });
-      };
-
-      /**
-       * Handle the Popover's click functionality
-       */
-      var handlePopoverClick = function handlePopoverClick() {
-        var popoverIsActive = false;
-        target.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          if (popoverIsActive) {
-            hidePopover();
-            popoverIsActive = false;
-          } else {
-            showPopover();
-            popoverIsActive = true;
-          }
-        });
-
-        // Make sure the popover doesn't close when it is clicked on.
-        popoverEl.addEventListener('click', function (e) {
-          e.stopPropagation();
-        });
-
-        // Hide the popover when clicking outside of it.
-        document.body.addEventListener('click', function () {
-          if (popoverIsActive) {
-            hidePopover();
-            popoverIsActive = false;
-          }
-        });
-      };
-      if ('hover' === trigger) {
-        handlePopoverHover();
-      } else if ('click' === trigger) {
-        handlePopoverClick();
-      }
-    }, [targetRef]);
-  var wrapperClasses = 'e-app__popover';
-  if (wrapperClass) {
-    wrapperClasses += ' ' + wrapperClass;
-  }
-  return /*#__PURE__*/_react.default.createElement("div", {
-    className: wrapperClasses,
-    ref: popoverRef
-  }, props.children);
-}
-PopoverDialog.propTypes = {
-  targetRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({
-    current: PropTypes.any
-  })]).isRequired,
-  trigger: PropTypes.string,
-  direction: PropTypes.string,
-  offsetTop: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  offsetLeft: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  wrapperClass: PropTypes.string,
-  children: PropTypes.any,
-  hideAfter: PropTypes.number
-};
-PopoverDialog.defaultProps = {
-  direction: 'bottom',
-  trigger: 'hover',
-  offsetTop: 10,
-  offsetLeft: 0,
-  hideAfter: 300
-};
-
-/***/ }),
 
 /***/ "../app/modules/onboarding/assets/js/app.js":
 /*!**************************************************!*\
@@ -195,18 +27,22 @@ var _siteLogo = _interopRequireDefault(__webpack_require__(/*! ./pages/site-logo
 var _goodToGo = _interopRequireDefault(__webpack_require__(/*! ./pages/good-to-go */ "../app/modules/onboarding/assets/js/pages/good-to-go.js"));
 var _uploadAndInstallPro = _interopRequireDefault(__webpack_require__(/*! ./pages/upload-and-install-pro */ "../app/modules/onboarding/assets/js/pages/upload-and-install-pro.js"));
 var _chooseFeatures = _interopRequireDefault(__webpack_require__(/*! ./pages/choose-features */ "../app/modules/onboarding/assets/js/pages/choose-features.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ./utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function App() {
   // Send an AJAX request to update the database option which makes sure the Onboarding process only runs once,
   // for new Elementor sites.
   (0, _react.useEffect)(function () {
+    var _elementorAppConfig;
+    _onboardingEventTracking.OnboardingEventTracking.initiateCoreOnboarding();
+
     // This is to prevent dark theme in onboarding app from the frontend and not backend
     var darkThemeClassName = 'eps-theme-dark';
     var hasDarkMode = document.body.classList.contains(darkThemeClassName);
     if (hasDarkMode) {
       document.body.classList.remove(darkThemeClassName);
     }
-    if (!elementorAppConfig.onboarding.onboardingAlreadyRan) {
+    if (!((_elementorAppConfig = elementorAppConfig) !== null && _elementorAppConfig !== void 0 && (_elementorAppConfig = _elementorAppConfig.onboarding) !== null && _elementorAppConfig !== void 0 && _elementorAppConfig.onboardingAlreadyRan)) {
       var formData = new FormData();
       formData.append('_nonce', elementorCommon.config.ajax.nonce);
       formData.append('action', 'elementor_update_onboarding_option');
@@ -258,6 +94,9 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = Button;
 var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _extends2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/extends */ "../node_modules/@babel/runtime/helpers/extends.js"));
+var _objectWithoutProperties2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/objectWithoutProperties */ "../node_modules/@babel/runtime/helpers/objectWithoutProperties.js"));
+var _excluded = ["elRef"];
 function Button(props) {
   var buttonSettings = props.buttonSettings,
     type = props.type;
@@ -270,10 +109,16 @@ function Button(props) {
   } else {
     buttonSettings.className = buttonClasses;
   }
+  var elRef = buttonSettings.elRef,
+    buttonProps = (0, _objectWithoutProperties2.default)(buttonSettings, _excluded);
   if (buttonSettings.href) {
-    return /*#__PURE__*/_react.default.createElement("a", buttonSettings, buttonSettings.text);
+    return /*#__PURE__*/_react.default.createElement("a", (0, _extends2.default)({
+      ref: elRef
+    }, buttonProps), buttonSettings.text);
   }
-  return /*#__PURE__*/_react.default.createElement("div", buttonSettings, buttonSettings.text);
+  return /*#__PURE__*/_react.default.createElement("div", (0, _extends2.default)({
+    ref: elRef
+  }, buttonProps), buttonSettings.text);
 }
 Button.propTypes = {
   buttonSettings: PropTypes.object.isRequired,
@@ -405,7 +250,6 @@ Checklist.propTypes = {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 /* provided dependency */ var __ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n")["__"];
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
@@ -420,19 +264,38 @@ var _popoverDialog = _interopRequireDefault(__webpack_require__(/*! elementor-ap
 var _checklist = _interopRequireDefault(__webpack_require__(/*! ./checklist */ "../app/modules/onboarding/assets/js/components/checklist.js"));
 var _checklistItem = _interopRequireDefault(__webpack_require__(/*! ./checklist-item */ "../app/modules/onboarding/assets/js/components/checklist-item.js"));
 var _button = _interopRequireDefault(__webpack_require__(/*! ./button */ "../app/modules/onboarding/assets/js/components/button.js"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function GoProPopover(props) {
   var _useContext = (0, _react.useContext)(_context.OnboardingContext),
     state = _useContext.state,
     updateState = _useContext.updateState;
+  var upgradeButtonRef = (0, _react.useRef)(null);
 
   // Handle the Pro Upload popup window.
   var alreadyHaveProButtonRef = (0, _react.useCallback)(function (alreadyHaveProButton) {
     if (!alreadyHaveProButton) {
       return;
     }
-    alreadyHaveProButton.addEventListener('click', function (event) {
+    if (!state.currentStep || '' === state.currentStep) {
+      return;
+    }
+    var existingHandler = alreadyHaveProButton._elementorProHandler;
+    if (existingHandler) {
+      alreadyHaveProButton.removeEventListener('click', existingHandler);
+    }
+    var clickHandler = function clickHandler(event) {
       event.preventDefault();
+      if (!state.currentStep || '' === state.currentStep) {
+        return;
+      }
+      var stepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(state.currentStep);
+      _onboardingEventTracking.OnboardingEventTracking.trackStepAction(stepNumber, 'upgrade_already_pro');
+      _onboardingEventTracking.OnboardingEventTracking.cancelDelayedNoClickEvent();
+      if (stepNumber) {
+        _onboardingEventTracking.OnboardingEventTracking.sendTopUpgrade(stepNumber, 'already_pro_user');
+      }
       elementorCommon.events.dispatchEvent({
         event: 'already have pro',
         version: '',
@@ -450,38 +313,50 @@ function GoProPopover(props) {
         updateState({
           hasPro: true,
           proNotice: {
-            type: 'success',
-            icon: 'eicon-check-circle-o',
-            message: __('Elementor Pro has been successfully installed.', 'elementor')
+            color: 'success',
+            children: __('Pro is now active! You can continue.', 'elementor')
           }
         });
       });
-    });
-  }, []);
-
-  // The buttonsConfig prop is an array of objects. To find the 'Upgrade Now' button, we need to iterate over the object.
-  var goProButton = props.buttonsConfig.find(function (button) {
-      return 'go-pro' === button.id;
-    }),
-    getElProButton = {
-      text: elementorAppConfig.onboarding.experiment ? __('Upgrade now', 'elementor') : __('Upgrade Now', 'elementor'),
-      className: 'e-onboarding__go-pro-cta',
-      target: '_blank',
-      href: 'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar-dropdown&utm_term=' + elementorAppConfig.onboarding.onboardingVersion,
-      tabIndex: 0,
-      onClick: function onClick() {
-        elementorCommon.events.dispatchEvent({
-          event: 'get elementor pro',
-          version: '',
-          details: {
-            placement: elementorAppConfig.onboarding.eventPlacement,
-            step: state.currentStep
-          }
-        });
-      }
     };
+    alreadyHaveProButton._elementorProHandler = clickHandler;
+    alreadyHaveProButton.addEventListener('click', clickHandler);
+  }, [state.currentStep, updateState]);
+  var getElProButton = {
+    text: elementorAppConfig.onboarding.experiment ? __('Upgrade now', 'elementor') : __('Upgrade Now', 'elementor'),
+    className: 'e-onboarding__go-pro-cta',
+    target: '_blank',
+    href: 'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar-dropdown&utm_term=' + elementorAppConfig.onboarding.onboardingVersion,
+    tabIndex: 0,
+    elRef: function elRef(buttonElement) {
+      if (!buttonElement) {
+        return;
+      }
+      upgradeButtonRef.current = buttonElement;
+    },
+    onClick: function onClick() {
+      if (!state.currentStep || '' === state.currentStep) {
+        return;
+      }
+      var stepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(state.currentStep);
+      _onboardingEventTracking.OnboardingEventTracking.trackStepAction(stepNumber, 'upgrade_now');
+      _onboardingEventTracking.OnboardingEventTracking.cancelDelayedNoClickEvent();
+      if (stepNumber) {
+        _onboardingEventTracking.OnboardingEventTracking.sendTopUpgrade(stepNumber, 'on_tooltip');
+      }
+      elementorCommon.events.dispatchEvent({
+        event: 'get elementor pro',
+        version: '',
+        details: {
+          placement: elementorAppConfig.onboarding.eventPlacement,
+          step: state.currentStep
+        }
+      });
+    }
+  };
+  var targetRef = props.goProButtonRef || upgradeButtonRef;
   return /*#__PURE__*/_react.default.createElement(_popoverDialog.default, {
-    targetRef: goProButton.elRef,
+    targetRef: targetRef,
     wrapperClass: "e-onboarding__go-pro"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "e-onboarding__go-pro-content"
@@ -504,7 +379,8 @@ function GoProPopover(props) {
   }, __('Already have Elementor Pro?', 'elementor')))));
 }
 GoProPopover.propTypes = {
-  buttonsConfig: PropTypes.array.isRequired
+  buttonsConfig: _propTypes.default.array.isRequired,
+  goProButtonRef: _propTypes.default.object
 };
 
 /***/ }),
@@ -562,7 +438,6 @@ FooterButtons.propTypes = {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 /* provided dependency */ var __ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n")["__"];
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
@@ -572,11 +447,13 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = Header;
 var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
 var _context = __webpack_require__(/*! ../../context/context */ "../app/modules/onboarding/assets/js/context/context.js");
 var _grid = _interopRequireDefault(__webpack_require__(/*! elementor-app/ui/grid/grid */ "../app/assets/js/ui/grid/grid.js"));
 var _goProPopover = _interopRequireDefault(__webpack_require__(/*! ../go-pro-popover */ "../app/modules/onboarding/assets/js/components/go-pro-popover.js"));
 var _headerButtons = _interopRequireDefault(__webpack_require__(/*! elementor-app/layout/header-buttons */ "../app/assets/js/layout/header-buttons.js"));
 var _usePageTitle = _interopRequireDefault(__webpack_require__(/*! elementor-app/hooks/use-page-title */ "../app/assets/js/hooks/use-page-title.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function Header(props) {
   (0, _usePageTitle.default)({
@@ -584,7 +461,12 @@ function Header(props) {
   });
   var _useContext = (0, _react.useContext)(_context.OnboardingContext),
     state = _useContext.state;
+  var trackXButtonExit = function trackXButtonExit() {
+    var stepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(state.currentStep);
+    _onboardingEventTracking.OnboardingEventTracking.sendExitButtonEvent(stepNumber || state.currentStep);
+  };
   var onClose = function onClose() {
+    trackXButtonExit();
     elementorCommon.events.dispatchEvent({
       event: 'close modal',
       version: '',
@@ -593,7 +475,9 @@ function Header(props) {
         step: state.currentStep
       }
     });
-    window.top.location = elementorAppConfig.admin_url;
+    setTimeout(function () {
+      window.top.location = elementorAppConfig.admin_url;
+    }, 100);
   };
   return /*#__PURE__*/_react.default.createElement(_grid.default, {
     container: true,
@@ -611,12 +495,14 @@ function Header(props) {
     buttons: props.buttons,
     onClose: onClose
   }), !state.hasPro && /*#__PURE__*/_react.default.createElement(_goProPopover.default, {
-    buttonsConfig: props.buttons
+    buttonsConfig: props.buttons,
+    goProButtonRef: props.goProButtonRef
   }));
 }
 Header.propTypes = {
-  title: PropTypes.string,
-  buttons: PropTypes.arrayOf(PropTypes.object)
+  title: _propTypes.default.string,
+  buttons: _propTypes.default.arrayOf(_propTypes.default.object),
+  goProButtonRef: _propTypes.default.object
 };
 Header.defaultProps = {
   buttons: []
@@ -631,7 +517,6 @@ Header.defaultProps = {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 /* provided dependency */ var __ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n")["__"];
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
@@ -641,13 +526,46 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = Layout;
 var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
 var _context = __webpack_require__(/*! ../../context/context */ "../app/modules/onboarding/assets/js/context/context.js");
 var _header = _interopRequireDefault(__webpack_require__(/*! ./header */ "../app/modules/onboarding/assets/js/components/layout/header.js"));
 var _progressBar = _interopRequireDefault(__webpack_require__(/*! ../progress-bar/progress-bar */ "../app/modules/onboarding/assets/js/components/progress-bar/progress-bar.js"));
 var _content = _interopRequireDefault(__webpack_require__(/*! ../../../../../../assets/js/layout/content */ "../app/assets/js/layout/content.js"));
 var _connect = _interopRequireDefault(__webpack_require__(/*! ../../utils/connect */ "../app/modules/onboarding/assets/js/utils/connect.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
+function getCurrentStepForTracking(pageId, currentStep) {
+  return pageId || currentStep || 'account';
+}
+function shouldResetupButtonTracking(buttonRef, pageId, currentStep) {
+  if (!buttonRef) {
+    return false;
+  }
+  var currentStepForTracking = getCurrentStepForTracking(pageId, currentStep);
+  var currentTrackedStep = buttonRef.dataset.onboardingStep;
+  return currentTrackedStep !== currentStepForTracking;
+}
 function Layout(props) {
+  var _useContext = (0, _react.useContext)(_context.OnboardingContext),
+    state = _useContext.state,
+    updateState = _useContext.updateState;
+  var stepNumber = (0, _react.useMemo)(function () {
+    return _onboardingEventTracking.OnboardingEventTracking.getStepNumber(props.pageId);
+  }, [props.pageId]);
+  var goProButtonRef = (0, _react.useRef)();
+  var setupTopbarUpgradeTracking = (0, _react.useCallback)(function (buttonElement) {
+    if (!buttonElement) {
+      return;
+    }
+    var currentStep = getCurrentStepForTracking(props.pageId, state.currentStep);
+    goProButtonRef.current = buttonElement;
+    return _onboardingEventTracking.OnboardingEventTracking.setupSingleUpgradeButton(buttonElement, currentStep);
+  }, [state.currentStep, props.pageId]);
+  var handleTopbarConnectSuccess = (0, _react.useCallback)(function () {
+    updateState({
+      isLibraryConnected: true
+    });
+  }, [updateState]);
   (0, _react.useEffect)(function () {
     // Send modal load event for current step.
     elementorCommon.events.dispatchEvent({
@@ -659,17 +577,21 @@ function Layout(props) {
         user_state: elementorCommon.config.library_connect.is_connected ? 'logged' : 'anon'
       }
     });
+    if (goProButtonRef.current) {
+      setupTopbarUpgradeTracking(goProButtonRef.current);
+    }
     updateState({
       currentStep: props.pageId,
       nextStep: props.nextStep || '',
       proNotice: null
     });
-  }, [props.pageId]);
-  var _useContext = (0, _react.useContext)(_context.OnboardingContext),
-    state = _useContext.state,
-    updateState = _useContext.updateState,
-    headerButtons = [],
-    goProButtonRef = (0, _react.useRef)(),
+  }, [setupTopbarUpgradeTracking, stepNumber, props.pageId, props.nextStep, updateState]);
+  (0, _react.useEffect)(function () {
+    if (shouldResetupButtonTracking(goProButtonRef.current, props.pageId, state.currentStep)) {
+      setupTopbarUpgradeTracking(goProButtonRef.current);
+    }
+  }, [state.currentStep, props.pageId, setupTopbarUpgradeTracking]);
+  var headerButtons = [],
     createAccountButton = {
       id: 'create-account',
       text: __('Create Account', 'elementor'),
@@ -679,6 +601,10 @@ function Layout(props) {
       target: '_blank',
       rel: 'opener',
       onClick: function onClick() {
+        _onboardingEventTracking.OnboardingEventTracking.sendEventOrStore('CREATE_MY_ACCOUNT', {
+          currentStep: stepNumber,
+          createAccountClicked: 'topbar'
+        });
         elementorCommon.events.dispatchEvent({
           event: 'create account',
           version: '',
@@ -721,14 +647,17 @@ function Layout(props) {
       className: 'eps-button__go-pro-btn',
       url: 'https://elementor.com/pro/?utm_source=onboarding-wizard&utm_campaign=gopro&utm_medium=wp-dash&utm_content=top-bar&utm_term=' + elementorAppConfig.onboarding.onboardingVersion,
       target: '_blank',
-      elRef: goProButtonRef,
+      elRef: setupTopbarUpgradeTracking,
       onClick: function onClick() {
+        var currentStep = getCurrentStepForTracking(props.pageId, state.currentStep);
+        var currentStepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(currentStep);
+        _onboardingEventTracking.OnboardingEventTracking.trackStepAction(currentStepNumber, 'upgrade_topbar');
         elementorCommon.events.dispatchEvent({
           event: 'go pro',
           version: '',
           details: {
             placement: elementorAppConfig.onboarding.eventPlacement,
-            step: state.currentStep
+            step: currentStep
           }
         });
       }
@@ -739,10 +668,12 @@ function Layout(props) {
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "eps-app e-onboarding"
   }, !state.isLibraryConnected && /*#__PURE__*/_react.default.createElement(_connect.default, {
-    buttonRef: createAccountButton.elRef
+    buttonRef: createAccountButton.elRef,
+    successCallback: handleTopbarConnectSuccess
   }), /*#__PURE__*/_react.default.createElement(_header.default, {
     title: __('Getting Started', 'elementor'),
-    buttons: headerButtons
+    buttons: headerButtons,
+    goProButtonRef: goProButtonRef
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: 'eps-app__main e-onboarding__page-' + props.pageId
   }, /*#__PURE__*/_react.default.createElement(_content.default, {
@@ -750,10 +681,10 @@ function Layout(props) {
   }, /*#__PURE__*/_react.default.createElement(_progressBar.default, null), props.children))));
 }
 Layout.propTypes = {
-  pageId: PropTypes.string.isRequired,
-  nextStep: PropTypes.string,
-  className: PropTypes.string,
-  children: PropTypes.any.isRequired
+  pageId: _propTypes.default.string.isRequired,
+  nextStep: _propTypes.default.string,
+  className: _propTypes.default.string,
+  children: _propTypes.default.any.isRequired
 };
 
 /***/ }),
@@ -962,6 +893,7 @@ var _extends2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/he
 var _context = __webpack_require__(/*! ../../context/context */ "../app/modules/onboarding/assets/js/context/context.js");
 var _router = __webpack_require__(/*! @reach/router */ "../node_modules/@reach/router/es/index.js");
 var _progressBarItem = _interopRequireDefault(__webpack_require__(/*! ./progress-bar-item */ "../app/modules/onboarding/assets/js/components/progress-bar/progress-bar-item.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function ProgressBar() {
   var _useContext = (0, _react.useContext)(_context.OnboardingContext),
@@ -1007,6 +939,15 @@ function ProgressBar() {
     itemConfig.index = index;
     if (state.steps[itemConfig.id]) {
       itemConfig.onClick = function () {
+        var currentStepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(state.currentStep);
+        var nextStepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(itemConfig.id);
+        if (4 === currentStepNumber) {
+          _onboardingEventTracking.OnboardingEventTracking.trackStepAction(4, 'stepper_clicks', {
+            from_step: currentStepNumber,
+            to_step: nextStepNumber
+          });
+          _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(4);
+        }
         elementorCommon.events.dispatchEvent({
           event: 'step click',
           version: '',
@@ -1049,6 +990,7 @@ var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
 var _context = __webpack_require__(/*! ../context/context */ "../app/modules/onboarding/assets/js/context/context.js");
 var _router = __webpack_require__(/*! @reach/router */ "../node_modules/@reach/router/es/index.js");
 var _button = _interopRequireDefault(__webpack_require__(/*! ./button */ "../app/modules/onboarding/assets/js/components/button.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function SkipButton(props) {
   var button = props.button,
@@ -1070,8 +1012,17 @@ function SkipButton(props) {
   // Make sure the 'action' prop doesn't get printed on the button markup which causes an error.
   delete button.action;
 
-  // If the button is a link, no onClick functionality should be added.
-  button.onClick = function () {
+  // Handle both href and non-href skip buttons properly
+  button.onClick = function (event) {
+    var stepNumber = _onboardingEventTracking.OnboardingEventTracking.getStepNumber(state.currentStep);
+    _onboardingEventTracking.OnboardingEventTracking.trackStepAction(stepNumber, 'skipped');
+    _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(stepNumber);
+    _onboardingEventTracking.OnboardingEventTracking.sendEventOrStore('SKIP', {
+      currentStep: stepNumber
+    });
+    if (4 === stepNumber) {
+      _onboardingEventTracking.OnboardingEventTracking.storeExitEventForLater('step4_skip_button', stepNumber);
+    }
     elementorCommon.events.dispatchEvent({
       event: 'skip',
       version: '',
@@ -1080,7 +1031,12 @@ function SkipButton(props) {
         step: state.currentStep
       }
     });
-    if (!button.href) {
+    if (button.href) {
+      event.preventDefault();
+      setTimeout(function () {
+        window.location.href = button.href;
+      }, 100);
+    } else {
       action();
     }
   };
@@ -1193,6 +1149,8 @@ var _context = __webpack_require__(/*! ../context/context */ "../app/modules/onb
 var _connect = _interopRequireDefault(__webpack_require__(/*! ../utils/connect */ "../app/modules/onboarding/assets/js/utils/connect.js"));
 var _layout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/layout */ "../app/modules/onboarding/assets/js/components/layout/layout.js"));
 var _pageContentLayout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/page-content-layout */ "../app/modules/onboarding/assets/js/components/layout/page-content-layout.js"));
+var _utils = __webpack_require__(/*! ../utils/utils */ "../app/modules/onboarding/assets/js/utils/utils.js");
+var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function Account() {
   var _useContext = (0, _react.useContext)(_context.OnboardingContext),
@@ -1208,10 +1166,41 @@ function Account() {
     pageId = 'account',
     actionButtonRef = (0, _react.useRef)(),
     alreadyHaveAccountLinkRef = (0, _react.useRef)();
+  (0, _react.useEffect)(function () {
+    if (!state.isLibraryConnected) {
+      var _elementorCommon$even;
+      (0, _utils.safeDispatchEvent)('view_account_setup', {
+        location: 'plugin_onboarding',
+        trigger: ((_elementorCommon$even = elementorCommon.eventsManager) === null || _elementorCommon$even === void 0 || (_elementorCommon$even = _elementorCommon$even.config) === null || _elementorCommon$even === void 0 || (_elementorCommon$even = _elementorCommon$even.triggers) === null || _elementorCommon$even === void 0 ? void 0 : _elementorCommon$even.pageLoaded) || 'page_loaded',
+        step_number: 1,
+        step_name: 'account_setup',
+        is_library_connected: (state === null || state === void 0 ? void 0 : state.isLibraryConnected) || false
+      });
+    }
+    _onboardingEventTracking.OnboardingEventTracking.setupAllUpgradeButtons(state.currentStep);
+    _onboardingEventTracking.OnboardingEventTracking.onStepLoad(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   var skipButton;
   if ('completed' !== state.steps[pageId]) {
     skipButton = {
-      text: __('Skip', 'elementor')
+      text: __('Skip setup', 'elementor'),
+      action: function action() {
+        var _elementorCommon$even2;
+        _onboardingEventTracking.OnboardingEventTracking.trackStepAction(1, 'skip');
+        _onboardingEventTracking.OnboardingEventTracking.sendEventOrStore('SKIP', {
+          currentStep: 1
+        });
+        _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(1);
+        (0, _utils.safeDispatchEvent)('skip_setup', {
+          location: 'plugin_onboarding',
+          trigger: ((_elementorCommon$even2 = elementorCommon.eventsManager) === null || _elementorCommon$even2 === void 0 || (_elementorCommon$even2 = _elementorCommon$even2.config) === null || _elementorCommon$even2 === void 0 || (_elementorCommon$even2 = _elementorCommon$even2.triggers) === null || _elementorCommon$even2 === void 0 ? void 0 : _elementorCommon$even2.click) || 'click',
+          step_number: 1,
+          step_name: 'account_setup'
+        });
+        updateState(getStateObjectToUpdate(state, 'steps', pageId, 'skipped'));
+        navigate('onboarding/' + nextStep);
+      }
     };
   }
   var pageTexts = {};
@@ -1222,8 +1211,8 @@ function Account() {
     };
   } else {
     pageTexts = elementorAppConfig.onboarding.experiment ? {
-      firstLine: __('Once you connect your Elementor account, you can choose from dozens of professional templates and manage your site with the My Elementor dashboard.', 'elementor'),
-      listItems: []
+      firstLine: /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, __('To get the most of Elementor, we\'ll connect your account.', 'elementor'), "  ", /*#__PURE__*/_react.default.createElement("br", null), " ", __('Then you can:', 'elementor')),
+      listItems: [__('Access dozens of professionally designed templates', 'elementor'), __('Manage all your sites from the My Elementor dashboard', 'elementor'), __('Unlock tools that streamline your workflow and site setup', 'elementor')]
     } : {
       firstLine: __('To get the most out of Elementor, we’ll connect your account.', 'elementor') + ' ' + __('Then you can:', 'elementor'),
       listItems: [__('Choose from countless professional templates', 'elementor'), __('Manage your site with our handy dashboard', 'elementor'), __('Take part in the community forum, share & grow together', 'elementor')]
@@ -1250,26 +1239,28 @@ function Account() {
       navigate('onboarding/' + nextStep);
     };
   } else {
-    actionButton.text = __('Create my account', 'elementor');
+    actionButton.text = __('Start setup', 'elementor');
     actionButton.href = elementorAppConfig.onboarding.urls.signUp + elementorAppConfig.onboarding.utms.connectCta;
     actionButton.ref = actionButtonRef;
     actionButton.onClick = function () {
-      elementorCommon.events.dispatchEvent({
-        event: 'create account',
-        version: '',
-        details: {
-          placement: elementorAppConfig.onboarding.eventPlacement,
-          source: 'cta'
-        }
+      var _elementorCommon$even3;
+      _onboardingEventTracking.OnboardingEventTracking.trackStepAction(1, 'create');
+      _onboardingEventTracking.OnboardingEventTracking.sendEventOrStore('CREATE_MY_ACCOUNT', {
+        currentStep: 1,
+        createAccountClicked: 'main_cta'
+      });
+      (0, _utils.safeDispatchEvent)('new_account_connect', {
+        location: 'plugin_onboarding',
+        trigger: ((_elementorCommon$even3 = elementorCommon.eventsManager) === null || _elementorCommon$even3 === void 0 || (_elementorCommon$even3 = _elementorCommon$even3.config) === null || _elementorCommon$even3 === void 0 || (_elementorCommon$even3 = _elementorCommon$even3.triggers) === null || _elementorCommon$even3 === void 0 ? void 0 : _elementorCommon$even3.click) || 'click',
+        step_number: 1,
+        step_name: 'account_setup',
+        button_text: 'Start setup'
       });
     };
   }
-  var connectSuccessCallback = function connectSuccessCallback(data) {
+  var connectSuccessCallback = function connectSuccessCallback() {
     var stateToUpdate = getStateObjectToUpdate(state, 'steps', pageId, 'completed');
     stateToUpdate.isLibraryConnected = true;
-    elementorCommon.config.library_connect.is_connected = true;
-    elementorCommon.config.library_connect.current_access_level = data.kits_access_level || data.access_level || 0;
-    elementorCommon.config.library_connect.current_access_tier = data.access_tier;
     updateState(stateToUpdate);
     elementorCommon.events.dispatchEvent({
       event: 'indication prompt',
@@ -1286,6 +1277,7 @@ function Account() {
       icon: 'eicon-check-circle-o',
       message: 'Alrighty - your account is connected.'
     });
+    _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(1);
     navigate('onboarding/' + nextStep);
   };
   function getNextStep() {
@@ -1305,6 +1297,7 @@ function Account() {
         action: 'connect account'
       }
     });
+    _onboardingEventTracking.OnboardingEventTracking.sendConnectionFailureEvents();
     setNoticeState({
       type: 'error',
       icon: 'eicon-warning',
@@ -1324,8 +1317,8 @@ function Account() {
     noticeState: noticeState
   }, actionButton.ref && !state.isLibraryConnected && /*#__PURE__*/_react.default.createElement(_connect.default, {
     buttonRef: actionButton.ref,
-    successCallback: function successCallback(data) {
-      return connectSuccessCallback(data);
+    successCallback: function successCallback(event, data) {
+      return connectSuccessCallback(event, data);
     },
     errorCallback: connectFailureCallback
   }), /*#__PURE__*/_react.default.createElement("span", null, pageTexts.firstLine), /*#__PURE__*/_react.default.createElement("ul", null, pageTexts.listItems.map(function (listItem, index) {
@@ -1334,19 +1327,24 @@ function Account() {
     }, listItem);
   }))), !state.isLibraryConnected && /*#__PURE__*/_react.default.createElement("div", {
     className: "e-onboarding__footnote"
-  }, /*#__PURE__*/_react.default.createElement("p", null, __('Already have one?', 'elementor') + ' ', /*#__PURE__*/_react.default.createElement("a", {
+  }, /*#__PURE__*/_react.default.createElement("p", null, __('Already have an account?', 'elementor') + ' ', /*#__PURE__*/_react.default.createElement("a", {
     ref: alreadyHaveAccountLinkRef,
     href: elementorAppConfig.onboarding.urls.connect + elementorAppConfig.onboarding.utms.connectCtaLink,
     onClick: function onClick() {
-      elementorCommon.events.dispatchEvent({
-        event: 'connect account',
-        version: '',
-        details: {
-          placement: elementorAppConfig.onboarding.eventPlacement
-        }
+      var _elementorCommon$even4;
+      _onboardingEventTracking.OnboardingEventTracking.trackStepAction(1, 'connect');
+      _onboardingEventTracking.OnboardingEventTracking.sendEventOrStore('STEP1_CLICKED_CONNECT', {
+        currentStep: state.currentStep
+      });
+      (0, _utils.safeDispatchEvent)('existing_account_connect', {
+        location: 'plugin_onboarding',
+        trigger: ((_elementorCommon$even4 = elementorCommon.eventsManager) === null || _elementorCommon$even4 === void 0 || (_elementorCommon$even4 = _elementorCommon$even4.config) === null || _elementorCommon$even4 === void 0 || (_elementorCommon$even4 = _elementorCommon$even4.triggers) === null || _elementorCommon$even4 === void 0 ? void 0 : _elementorCommon$even4.click) || 'click',
+        step_number: 1,
+        step_name: 'account_setup',
+        button_text: 'Click here to connect'
       });
     }
-  }, __('Connect your account', 'elementor'))), /*#__PURE__*/_react.default.createElement(_connect.default, {
+  }, __('Click here to connect', 'elementor'))), /*#__PURE__*/_react.default.createElement(_connect.default, {
     buttonRef: alreadyHaveAccountLinkRef,
     successCallback: connectSuccessCallback,
     errorCallback: connectFailureCallback
@@ -1378,6 +1376,7 @@ var _utils = __webpack_require__(/*! ../utils/utils */ "../app/modules/onboardin
 var _layout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/layout */ "../app/modules/onboarding/assets/js/components/layout/layout.js"));
 var _pageContentLayout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/page-content-layout */ "../app/modules/onboarding/assets/js/components/layout/page-content-layout.js"));
 var _useButtonAction2 = _interopRequireDefault(__webpack_require__(/*! ../utils/use-button-action */ "../app/modules/onboarding/assets/js/utils/use-button-action.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function ChooseFeatures() {
   var _useAjax = (0, _useAjax2.default)(),
@@ -1407,6 +1406,12 @@ function ChooseFeatures() {
       href: elementorAppConfig.onboarding.urls.upgrade,
       target: '_blank',
       onClick: function onClick() {
+        _onboardingEventTracking.OnboardingEventTracking.trackStepAction(3, 'pro_features_checked', {
+          features: _onboardingEventTracking.OnboardingEventTracking.extractSelectedFeatureKeys(selectedFeatures)
+        });
+        _onboardingEventTracking.OnboardingEventTracking.trackStepAction(3, 'upgrade_now', {
+          pro_features_checked: _onboardingEventTracking.OnboardingEventTracking.extractSelectedFeatureKeys(selectedFeatures)
+        });
         elementorCommon.events.dispatchEvent({
           event: 'next',
           version: '',
@@ -1415,6 +1420,8 @@ function ChooseFeatures() {
             step: state.currentStep
           }
         });
+        _onboardingEventTracking.OnboardingEventTracking.sendUpgradeNowStep3(selectedFeatures, state.currentStep);
+        _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(3);
         setAjax({
           data: {
             action: 'elementor_save_onboarding_features',
@@ -1431,6 +1438,10 @@ function ChooseFeatures() {
     skipButton = {
       text: __('Skip', 'elementor'),
       action: function action() {
+        _onboardingEventTracking.OnboardingEventTracking.trackStepAction(3, 'pro_features_checked', {
+          features: _onboardingEventTracking.OnboardingEventTracking.extractSelectedFeatureKeys(selectedFeatures)
+        });
+        _onboardingEventTracking.OnboardingEventTracking.trackStepAction(3, 'skipped');
         setAjax({
           data: {
             action: 'elementor_save_onboarding_features',
@@ -1452,7 +1463,11 @@ function ChooseFeatures() {
     } else {
       setTierName(tiers.essential);
     }
-  }, [selectedFeatures]);
+  }, [selectedFeatures, tiers.advanced, tiers.essential]);
+  (0, _react.useEffect)(function () {
+    _onboardingEventTracking.OnboardingEventTracking.setupAllUpgradeButtons(state.currentStep);
+    _onboardingEventTracking.OnboardingEventTracking.onStepLoad(3);
+  }, [state.currentStep]);
   function isFeatureSelected(features) {
     return !!features.advanced.length || !!features.essential.length;
   }
@@ -1506,16 +1521,19 @@ function ChooseFeatures() {
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = GoodToGo;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
 var _grid = _interopRequireDefault(__webpack_require__(/*! elementor-app/ui/grid/grid */ "../app/assets/js/ui/grid/grid.js"));
 var _layout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/layout */ "../app/modules/onboarding/assets/js/components/layout/layout.js"));
 var _card = _interopRequireDefault(__webpack_require__(/*! ../components/card */ "../app/modules/onboarding/assets/js/components/card.js"));
 var _footerButtons = _interopRequireDefault(__webpack_require__(/*! ../components/layout/footer-buttons */ "../app/modules/onboarding/assets/js/components/layout/footer-buttons.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function GoodToGo() {
@@ -1525,6 +1543,10 @@ function GoodToGo() {
       href: elementorAppConfig.onboarding.urls.createNewPage
     },
     kitLibraryLink = elementorAppConfig.onboarding.urls.kitLibrary + '&referrer=onboarding';
+  (0, _react.useEffect)(function () {
+    _onboardingEventTracking.OnboardingEventTracking.checkAndSendReturnToStep4();
+    _onboardingEventTracking.OnboardingEventTracking.onStepLoad(4);
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_layout.default, {
     pageId: pageId
   }, /*#__PURE__*/_react.default.createElement("h1", {
@@ -1541,7 +1563,10 @@ function GoodToGo() {
     image: elementorCommon.config.urls.assets + 'images/app/onboarding/Blank_Canvas.svg',
     imageAlt: __('Click here to create a new page and open it in Elementor Editor', 'elementor'),
     text: __('Edit a blank canvas with the Elementor Editor', 'elementor'),
-    link: elementorAppConfig.onboarding.urls.createNewPage
+    link: elementorAppConfig.onboarding.urls.createNewPage,
+    clickAction: function clickAction() {
+      _onboardingEventTracking.OnboardingEventTracking.handleSiteStarterChoice('blank_canvas');
+    }
   }), /*#__PURE__*/_react.default.createElement(_card.default, {
     name: "template",
     image: elementorCommon.config.urls.assets + 'images/app/onboarding/Library.svg',
@@ -1549,6 +1574,8 @@ function GoodToGo() {
     text: __('Choose a professionally-designed template or import your own', 'elementor'),
     link: kitLibraryLink,
     clickAction: function clickAction() {
+      _onboardingEventTracking.OnboardingEventTracking.handleSiteStarterChoice('kit_library');
+
       // The location is reloaded to make sure the Kit Library's state is re-created.
       location.href = kitLibraryLink;
       location.reload();
@@ -1559,7 +1586,10 @@ function GoodToGo() {
     imageAlt: __('Click here to go to Elementor\'s Site Planner', 'elementor'),
     text: __('Create a professional site in minutes using AI', 'elementor'),
     link: elementorAppConfig.onboarding.urls.sitePlanner,
-    target: "_blank"
+    target: "_blank",
+    clickAction: function clickAction() {
+      _onboardingEventTracking.OnboardingEventTracking.handleSiteStarterChoice('site_planner');
+    }
   })), /*#__PURE__*/_react.default.createElement(_footerButtons.default, {
     skipButton: _objectSpread(_objectSpread({}, skipButton), {}, {
       target: '_self'
@@ -1592,6 +1622,7 @@ var _router = __webpack_require__(/*! @reach/router */ "../node_modules/@reach/r
 var _useAjax2 = _interopRequireDefault(__webpack_require__(/*! elementor-app/hooks/use-ajax */ "../app/assets/js/hooks/use-ajax.js"));
 var _layout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/layout */ "../app/modules/onboarding/assets/js/components/layout/layout.js"));
 var _pageContentLayout = _interopRequireDefault(__webpack_require__(/*! ../components/layout/page-content-layout */ "../app/modules/onboarding/assets/js/components/layout/page-content-layout.js"));
+var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 /* eslint-disable @wordpress/i18n-ellipsis */
 
@@ -1648,6 +1679,8 @@ function HelloTheme() {
       updateState(stateToUpdate);
       goToNextScreen();
     }
+    _onboardingEventTracking.OnboardingEventTracking.setupAllUpgradeButtons(state.currentStep);
+    _onboardingEventTracking.OnboardingEventTracking.onStepLoad(2);
   }, []);
   var resetScreenContent = function resetScreenContent() {
     // Clear any active timeouts for changing the action button text during installation.
@@ -1680,6 +1713,7 @@ function HelloTheme() {
     stateToUpdate.isHelloThemeActivated = true;
     updateState(stateToUpdate);
     setHelloInstalledInOnboarding(true);
+    _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(2);
     goToNextScreen();
   }, []);
   var onErrorInstallHelloTheme = function onErrorInstallHelloTheme() {
@@ -1748,17 +1782,22 @@ function HelloTheme() {
   }
   if (state.isHelloThemeActivated) {
     actionButton.onClick = function () {
+      _onboardingEventTracking.OnboardingEventTracking.trackStepAction(2, 'continue_hello_biz');
       sendNextButtonEvent();
+      _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(2);
       goToNextScreen();
     };
   } else {
     actionButton.onClick = function () {
+      _onboardingEventTracking.OnboardingEventTracking.trackStepAction(2, 'continue_hello_biz');
+      _onboardingEventTracking.OnboardingEventTracking.sendHelloBizContinue(state.currentStep);
       sendNextButtonEvent();
       if (state.isHelloThemeInstalled && !state.isHelloThemeActivated) {
         activateHelloTheme();
       } else if (!state.isHelloThemeInstalled) {
         installHelloTheme();
       } else {
+        _onboardingEventTracking.OnboardingEventTracking.sendStepEndState(2);
         goToNextScreen();
       }
     };
@@ -2491,27 +2530,41 @@ Object.defineProperty(exports, "__esModule", ({
 exports["default"] = Connect;
 var _react = __webpack_require__(/*! react */ "react");
 var _context = __webpack_require__(/*! ../context/context */ "../app/modules/onboarding/assets/js/context/context.js");
+var _onboardingEventTracking = __webpack_require__(/*! ./onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function Connect(props) {
   var _useContext = (0, _react.useContext)(_context.OnboardingContext),
     state = _useContext.state,
     updateState = _useContext.updateState,
     getStateObjectToUpdate = _useContext.getStateObjectToUpdate;
-  var connectSuccessCallback = function connectSuccessCallback(data) {
+  var buttonRef = props.buttonRef,
+    successCallback = props.successCallback,
+    errorCallback = props.errorCallback;
+  var handleCoreConnectionLogic = (0, _react.useCallback)(function (event, data) {
+    var isTrackingOptedInConnect = data.tracking_opted_in && elementorCommon.config.editor_events;
+    _onboardingEventTracking.OnboardingEventTracking.updateLibraryConnectConfig(data);
+    if (isTrackingOptedInConnect) {
+      elementorCommon.config.editor_events.can_send_events = true;
+      _onboardingEventTracking.OnboardingEventTracking.sendConnectionSuccessEvents(data);
+    }
+  }, []);
+  var defaultConnectSuccessCallback = (0, _react.useCallback)(function () {
     var stateToUpdate = getStateObjectToUpdate(state, 'steps', 'account', 'completed');
-    elementorCommon.config.library_connect.is_connected = true;
-    elementorCommon.config.library_connect.current_access_level = data.kits_access_level || data.access_level || 0;
-    elementorCommon.config.library_connect.current_access_tier = data.access_tier;
     stateToUpdate.isLibraryConnected = true;
     updateState(stateToUpdate);
-  };
+  }, [state, getStateObjectToUpdate, updateState]);
   (0, _react.useEffect)(function () {
-    jQuery(props.buttonRef.current).elementorConnect({
-      success: function success(data) {
-        return props.successCallback ? props.successCallback(data) : connectSuccessCallback(data);
+    jQuery(buttonRef.current).elementorConnect({
+      success: function success(event, data) {
+        handleCoreConnectionLogic(event, data);
+        if (successCallback) {
+          successCallback(event, data);
+        } else {
+          defaultConnectSuccessCallback();
+        }
       },
       error: function error() {
-        if (props.errorCallback) {
-          props.errorCallback();
+        if (errorCallback) {
+          errorCallback();
         }
       },
       popup: {
@@ -2519,7 +2572,7 @@ function Connect(props) {
         height: 534
       }
     });
-  }, []);
+  }, [buttonRef, successCallback, errorCallback, handleCoreConnectionLogic, defaultConnectSuccessCallback]);
   return null;
 }
 Connect.propTypes = {
@@ -2527,6 +2580,1105 @@ Connect.propTypes = {
   successCallback: PropTypes.func,
   errorCallback: PropTypes.func
 };
+
+/***/ }),
+
+/***/ "../app/modules/onboarding/assets/js/utils/modules/onboarding-tracker.js":
+/*!*******************************************************************************!*\
+  !*** ../app/modules/onboarding/assets/js/utils/modules/onboarding-tracker.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "ONBOARDING_STEP_NAMES", ({
+  enumerable: true,
+  get: function get() {
+    return _eventDispatcher.ONBOARDING_STEP_NAMES;
+  }
+}));
+Object.defineProperty(exports, "ONBOARDING_STORAGE_KEYS", ({
+  enumerable: true,
+  get: function get() {
+    return _storageManager.ONBOARDING_STORAGE_KEYS;
+  }
+}));
+exports["default"] = void 0;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _eventsConfig = _interopRequireDefault(__webpack_require__(/*! ../../../../../../../core/common/modules/events-manager/assets/js/events-config */ "../core/common/modules/events-manager/assets/js/events-config.js"));
+var _storageManager = _interopRequireWildcard(__webpack_require__(/*! ./storage-manager.js */ "../app/modules/onboarding/assets/js/utils/modules/storage-manager.js"));
+var _eventDispatcher = _interopRequireWildcard(__webpack_require__(/*! ./event-dispatcher.js */ "../app/modules/onboarding/assets/js/utils/modules/event-dispatcher.js"));
+var _timingManager = _interopRequireDefault(__webpack_require__(/*! ./timing-manager.js */ "../app/modules/onboarding/assets/js/utils/modules/timing-manager.js"));
+var _postOnboardingTracker = _interopRequireDefault(__webpack_require__(/*! ./post-onboarding-tracker.js */ "../app/modules/onboarding/assets/js/utils/modules/post-onboarding-tracker.js"));
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+var OnboardingTracker = /*#__PURE__*/function () {
+  function OnboardingTracker() {
+    (0, _classCallCheck2.default)(this, OnboardingTracker);
+    this.initializeEventConfigs();
+    this.initializeEventListeners();
+  }
+  return (0, _createClass2.default)(OnboardingTracker, [{
+    key: "initializeEventConfigs",
+    value: function initializeEventConfigs() {
+      this.EVENT_CONFIGS = {
+        SKIP: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.SKIP,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_SKIP,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: 'skip_clicked'
+          },
+          payloadBuilder: function payloadBuilder(eventData) {
+            return {
+              action_step: eventData.currentStep,
+              skip_timestamp: eventData.timestamp
+            };
+          }
+        },
+        TOP_UPGRADE: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.TOP_UPGRADE,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_TOP_UPGRADE,
+          isArray: true,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: 'upgrade_interaction'
+          },
+          payloadBuilder: function payloadBuilder(eventData) {
+            return {
+              action_step: eventData.currentStep,
+              upgrade_clicked: eventData.upgradeClicked
+            };
+          }
+        },
+        CREATE_MY_ACCOUNT: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.CREATE_MY_ACCOUNT,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CREATE_MY_ACCOUNT,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: 'upgrade_interaction'
+          },
+          payloadBuilder: function payloadBuilder(eventData) {
+            return {
+              action_step: eventData.currentStep,
+              create_account_clicked: eventData.createAccountClicked
+            };
+          }
+        },
+        CREATE_ACCOUNT_STATUS: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.CREATE_ACCOUNT_STATUS,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CREATE_ACCOUNT_STATUS,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: 'create_flow_returns_status'
+          },
+          payloadBuilder: function payloadBuilder(eventData) {
+            return {
+              onboarding_create_account_status: eventData.status
+            };
+          }
+        },
+        CONNECT_STATUS: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.CONNECT_STATUS,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CONNECT_STATUS,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: 'connect_flow_returns_status'
+          },
+          payloadBuilder: function payloadBuilder(eventData) {
+            return {
+              onboarding_connect_status: eventData.status,
+              tracking_opted_in: eventData.trackingOptedIn,
+              user_tier: eventData.userTier
+            };
+          },
+          stepOverride: 1,
+          stepNameOverride: _eventDispatcher.ONBOARDING_STEP_NAMES.CONNECT
+        },
+        STEP1_CLICKED_CONNECT: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.STEP1_CLICKED_CONNECT,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_STEP1_CLICKED_CONNECT,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: _eventsConfig.default.triggers.click
+          },
+          payloadBuilder: function payloadBuilder() {
+            return {};
+          },
+          stepOverride: 1,
+          stepNameOverride: _eventDispatcher.ONBOARDING_STEP_NAMES.CONNECT
+        },
+        STEP1_END_STATE: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.STEP1_END_STATE,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_STEP1_END_STATE,
+          isRawPayload: true,
+          payloadBuilder: function payloadBuilder(eventData) {
+            return eventData;
+          }
+        },
+        EXIT_BUTTON: {
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.EXIT_BUTTON,
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_EXIT_BUTTON,
+          basePayload: {
+            location: 'plugin_onboarding',
+            trigger: 'exit_button_clicked'
+          },
+          payloadBuilder: function payloadBuilder(eventData) {
+            return {
+              action_step: eventData.currentStep
+            };
+          }
+        }
+      };
+    }
+  }, {
+    key: "initializeEventListeners",
+    value: function initializeEventListeners() {
+      var _this = this;
+      if ('undefined' === typeof document) {
+        return;
+      }
+      document.addEventListener('click', function (event) {
+        var cardGridElement = event.target.closest('.e-onboarding__cards-grid');
+        if (cardGridElement) {
+          _this.handleStep4CardClick(event);
+        }
+      }, true);
+      this.setupUrlChangeDetection();
+    }
+  }, {
+    key: "setupUrlChangeDetection",
+    value: function setupUrlChangeDetection() {
+      var _this2 = this;
+      var lastUrl = window.location.href;
+      var urlChangeDetector = function urlChangeDetector() {
+        var currentUrl = window.location.href;
+        if (currentUrl !== lastUrl) {
+          var isStep4 = currentUrl.includes('goodToGo') || currentUrl.includes('step4') || currentUrl.includes('site_starter');
+          if (isStep4) {
+            setTimeout(function () {
+              _timingManager.default.trackStepStartTime(4);
+              _this2.checkAndSendReturnToStep4();
+            }, 100);
+          }
+          lastUrl = currentUrl;
+        }
+      };
+      setInterval(urlChangeDetector, 500);
+      window.addEventListener('popstate', function () {
+        setTimeout(urlChangeDetector, 100);
+      });
+    }
+  }, {
+    key: "dispatchEvent",
+    value: function dispatchEvent(eventName, payload) {
+      return _eventDispatcher.default.dispatch(eventName, payload);
+    }
+  }, {
+    key: "sendEventOrStore",
+    value: function sendEventOrStore(eventType, eventData) {
+      if ('TOP_UPGRADE' === eventType && 'no_click' !== eventData.upgradeClicked) {
+        var stepNumber = this.getStepNumber(eventData.currentStep);
+        this.markUpgradeClickSent(stepNumber);
+      }
+      if (_eventDispatcher.default.canSendEvents()) {
+        return this.sendEventDirect(eventType, eventData);
+      }
+      this.storeEventForLater(eventType, eventData);
+    }
+  }, {
+    key: "sendEventDirect",
+    value: function sendEventDirect(eventType, eventData) {
+      var config = this.EVENT_CONFIGS[eventType];
+      if (!config) {
+        return;
+      }
+      if (config.isRawPayload) {
+        return this.dispatchEvent(config.eventName, eventData);
+      }
+      var stepNumber = config.stepOverride || this.getStepNumber(eventData.currentStep);
+      var stepName = config.stepNameOverride || this.getStepName(stepNumber);
+      var eventPayload = _eventDispatcher.default.createStepEventPayload(stepNumber, stepName, _objectSpread(_objectSpread({}, config.basePayload), config.payloadBuilder(eventData)));
+      return this.dispatchEvent(config.eventName, eventPayload);
+    }
+  }, {
+    key: "storeEventForLater",
+    value: function storeEventForLater(eventType, eventData) {
+      var config = this.EVENT_CONFIGS[eventType];
+      if (!config) {
+        return;
+      }
+      var dataWithTimestamp = _objectSpread(_objectSpread({}, eventData), {}, {
+        timestamp: _timingManager.default.getCurrentTime()
+      });
+      if (config.isArray) {
+        var existingEvents = _storageManager.default.getArray(config.storageKey);
+        existingEvents.push(dataWithTimestamp);
+        _storageManager.default.setObject(config.storageKey, existingEvents);
+      } else {
+        _storageManager.default.setObject(config.storageKey, dataWithTimestamp);
+      }
+    }
+  }, {
+    key: "sendStoredEvent",
+    value: function sendStoredEvent(eventType) {
+      var _this3 = this;
+      var config = this.EVENT_CONFIGS[eventType];
+      if (!config) {
+        return;
+      }
+      var storedData = config.isArray ? _storageManager.default.getArray(config.storageKey) : _storageManager.default.getObject(config.storageKey);
+      if (!storedData || config.isArray && 0 === storedData.length) {
+        return;
+      }
+      var processEvent = function processEvent(eventData) {
+        if (config.isRawPayload) {
+          _this3.dispatchEvent(config.eventName, eventData);
+          return;
+        }
+        var stepNumber = config.stepOverride || _this3.getStepNumber(eventData.currentStep);
+        var stepName = config.stepNameOverride || _this3.getStepName(stepNumber);
+        var eventPayload = _eventDispatcher.default.createStepEventPayload(stepNumber, stepName, _objectSpread(_objectSpread({}, config.basePayload), config.payloadBuilder(eventData)));
+        _this3.dispatchEvent(config.eventName, eventPayload);
+      };
+      if (config.isArray) {
+        storedData.forEach(processEvent);
+      } else {
+        processEvent(storedData);
+      }
+      _storageManager.default.remove(config.storageKey);
+    }
+  }, {
+    key: "updateLibraryConnectConfig",
+    value: function updateLibraryConnectConfig(data) {
+      if (!elementorCommon.config.library_connect) {
+        return;
+      }
+      elementorCommon.config.library_connect.is_connected = true;
+      elementorCommon.config.library_connect.current_access_level = data.kits_access_level || data.access_level || 0;
+      elementorCommon.config.library_connect.current_access_tier = data.access_tier;
+      elementorCommon.config.library_connect.plan_type = data.plan_type;
+      elementorCommon.config.library_connect.user_id = data.user_id || null;
+    }
+  }, {
+    key: "sendUpgradeNowStep3",
+    value: function sendUpgradeNowStep3(selectedFeatures, currentStep) {
+      var proFeaturesChecked = this.extractSelectedFeatureKeys(selectedFeatures);
+      return _eventDispatcher.default.dispatchStepEvent(_eventDispatcher.ONBOARDING_EVENTS_MAP.UPGRADE_NOW_S3, currentStep, _eventDispatcher.ONBOARDING_STEP_NAMES.PRO_FEATURES, {
+        location: 'plugin_onboarding',
+        trigger: _eventsConfig.default.triggers.click,
+        pro_features_checked: proFeaturesChecked
+      });
+    }
+  }, {
+    key: "extractSelectedFeatureKeys",
+    value: function extractSelectedFeatureKeys(selectedFeatures) {
+      if (!selectedFeatures || !Array.isArray(selectedFeatures)) {
+        return [];
+      }
+      return selectedFeatures.filter(function (feature) {
+        return feature && feature.is_checked;
+      }).map(function (feature) {
+        return feature.key;
+      }).filter(function (key) {
+        return key;
+      });
+    }
+  }, {
+    key: "sendHelloBizContinue",
+    value: function sendHelloBizContinue(stepNumber) {
+      if (_eventDispatcher.default.canSendEvents()) {
+        return _eventDispatcher.default.dispatchStepEvent(_eventDispatcher.ONBOARDING_EVENTS_MAP.HELLO_BIZ_CONTINUE, stepNumber, _eventDispatcher.ONBOARDING_STEP_NAMES.HELLO_BIZ, {
+          location: 'plugin_onboarding',
+          trigger: _eventsConfig.default.triggers.click
+        });
+      }
+    }
+  }, {
+    key: "sendTopUpgrade",
+    value: function sendTopUpgrade(currentStep, upgradeClicked) {
+      return this.sendEventOrStore('TOP_UPGRADE', {
+        currentStep: currentStep,
+        upgradeClicked: upgradeClicked
+      });
+    }
+  }, {
+    key: "cancelDelayedNoClickEvent",
+    value: function cancelDelayedNoClickEvent() {
+      _storageManager.default.remove(_storageManager.ONBOARDING_STORAGE_KEYS.PENDING_TOP_UPGRADE_NO_CLICK);
+    }
+  }, {
+    key: "initiateCoreOnboarding",
+    value: function initiateCoreOnboarding() {
+      _timingManager.default.clearStaleSessionData();
+      _timingManager.default.initializeOnboardingStartTime();
+    }
+  }, {
+    key: "sendCoreOnboardingInitiated",
+    value: function sendCoreOnboardingInitiated() {
+      var startTime = _timingManager.default.initializeOnboardingStartTime();
+      var currentTime = _timingManager.default.getCurrentTime();
+      var totalOnboardingTime = Math.round((currentTime - startTime) / 1000);
+      var eventData = _timingManager.default.addTimingToEventData({
+        location: 'plugin_onboarding',
+        trigger: 'core_onboarding_initiated',
+        step_number: 1,
+        step_name: _eventDispatcher.ONBOARDING_STEP_NAMES.ONBOARDING_START,
+        onboarding_start_time: startTime,
+        total_onboarding_time_seconds: totalOnboardingTime
+      });
+      this.dispatchEvent(_eventDispatcher.ONBOARDING_EVENTS_MAP.CORE_ONBOARDING, eventData);
+      _storageManager.default.remove(_storageManager.ONBOARDING_STORAGE_KEYS.INITIATED);
+    }
+  }, {
+    key: "storeSiteStarterChoice",
+    value: function storeSiteStarterChoice(siteStarter) {
+      var choiceData = {
+        site_starter: siteStarter,
+        timestamp: _timingManager.default.getCurrentTime(),
+        return_event_sent: false
+      };
+      _storageManager.default.setObject(_storageManager.ONBOARDING_STORAGE_KEYS.STEP4_SITE_STARTER_CHOICE, choiceData);
+    }
+  }, {
+    key: "checkAndSendReturnToStep4",
+    value: function checkAndSendReturnToStep4() {
+      var choiceData = _storageManager.default.getObject(_storageManager.ONBOARDING_STORAGE_KEYS.STEP4_SITE_STARTER_CHOICE);
+      if (!choiceData) {
+        return;
+      }
+      if (!choiceData.return_event_sent) {
+        var returnEventPayload = _eventDispatcher.default.createStepEventPayload(4, _eventDispatcher.ONBOARDING_STEP_NAMES.SITE_STARTER, {
+          location: 'plugin_onboarding',
+          trigger: 'user_returns_to_onboarding',
+          return_to_onboarding: choiceData.site_starter,
+          original_choice_timestamp: choiceData.timestamp
+        });
+        this.dispatchEvent(_eventDispatcher.ONBOARDING_EVENTS_MAP.STEP4_RETURN_STEP4, returnEventPayload);
+        choiceData.return_event_sent = true;
+        _storageManager.default.setObject(_storageManager.ONBOARDING_STORAGE_KEYS.STEP4_SITE_STARTER_CHOICE, choiceData);
+      }
+    }
+  }, {
+    key: "handleSiteStarterChoice",
+    value: function handleSiteStarterChoice(siteStarter) {
+      _timingManager.default.trackStepStartTime(4);
+      this.storeSiteStarterChoice(siteStarter);
+      this.trackStepAction(4, 'site_starter', {
+        source_type: siteStarter
+      });
+      this.sendStepEndState(4);
+    }
+  }, {
+    key: "storeExitEventForLater",
+    value: function storeExitEventForLater(exitType, currentStep) {
+      var exitData = {
+        exitType: exitType,
+        currentStep: currentStep,
+        timestamp: _timingManager.default.getCurrentTime()
+      };
+      _storageManager.default.setObject(_storageManager.ONBOARDING_STORAGE_KEYS.PENDING_EXIT, exitData);
+    }
+  }, {
+    key: "checkAndSendEditorLoadedFromOnboarding",
+    value: function checkAndSendEditorLoadedFromOnboarding() {
+      return _postOnboardingTracker.default.checkAndSendEditorLoadedFromOnboarding();
+    }
+  }, {
+    key: "sendExitButtonEvent",
+    value: function sendExitButtonEvent(currentStep) {
+      var stepNumber = this.getStepNumber(currentStep);
+      this.trackStepAction(stepNumber, 'exit_button');
+      this.sendStepEndState(stepNumber);
+      return this.sendEventOrStore('EXIT_BUTTON', {
+        currentStep: currentStep
+      });
+    }
+  }, {
+    key: "trackStepAction",
+    value: function trackStepAction(stepNumber, action) {
+      var additionalData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var stepConfig = this.getStepConfig(stepNumber);
+      if (stepConfig) {
+        this.trackStepActionInternal(stepNumber, action, stepConfig.storageKey, additionalData);
+      }
+    }
+  }, {
+    key: "sendStepEndState",
+    value: function sendStepEndState(stepNumber) {
+      var stepConfig = this.getStepConfig(stepNumber);
+      if (stepConfig) {
+        this.sendStepEndStateInternal(stepNumber, stepConfig.storageKey, stepConfig.eventName, stepConfig.stepName, stepConfig.endStateProperty);
+      }
+    }
+  }, {
+    key: "trackStepActionInternal",
+    value: function trackStepActionInternal(stepNumber, action, storageKey) {
+      var additionalData = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      // Always store the action, regardless of global timing availability
+      var existingActions = _storageManager.default.getArray(storageKey);
+      var actionData = _objectSpread({
+        action: action,
+        timestamp: _timingManager.default.getCurrentTime()
+      }, additionalData);
+      existingActions.push(actionData);
+      _storageManager.default.setObject(storageKey, existingActions);
+    }
+  }, {
+    key: "sendStepEndStateInternal",
+    value: function sendStepEndStateInternal(stepNumber, storageKey, eventName, stepName, endStateProperty) {
+      var actions = _storageManager.default.getArray(storageKey);
+      if (0 === actions.length) {
+        return;
+      }
+      var eventData = _eventDispatcher.default.createStepEventPayload(stepNumber, stepName, {
+        location: 'plugin_onboarding',
+        trigger: 'user_redirects_out_of_step'
+      });
+      eventData = _timingManager.default.addTimingToEventData(eventData, stepNumber);
+      var filteredActions = actions.filter(function (action) {
+        return 'upgrade_hover' !== action.action && 'upgrade_topbar' !== action.action && 'upgrade_now' !== action.action && 'upgrade_already_pro' !== action.action;
+      });
+      eventData[endStateProperty] = filteredActions;
+      if (_eventDispatcher.default.canSendEvents()) {
+        this.sendHoverEventsFromStepActions(actions, stepNumber);
+        this.dispatchEvent(eventName, eventData);
+        _storageManager.default.remove(storageKey);
+        _timingManager.default.clearStepStartTime(stepNumber);
+      } else if (1 === stepNumber) {
+        this.storeStep1EndStateForLater(eventData, storageKey);
+      } else {
+        this.sendHoverEventsFromStepActions(actions, stepNumber);
+        this.dispatchEvent(eventName, eventData);
+        _storageManager.default.remove(storageKey);
+        _timingManager.default.clearStepStartTime(stepNumber);
+      }
+    }
+  }, {
+    key: "getStepNumber",
+    value: function getStepNumber(pageId) {
+      if (this.isNumericPageId(pageId)) {
+        return pageId;
+      }
+      if (this.isStringNumericPageId(pageId)) {
+        return this.convertStringToNumber(pageId);
+      }
+      return this.mapPageIdToStepNumber(pageId);
+    }
+  }, {
+    key: "isNumericPageId",
+    value: function isNumericPageId(pageId) {
+      return 'number' === typeof pageId;
+    }
+  }, {
+    key: "isStringNumericPageId",
+    value: function isStringNumericPageId(pageId) {
+      return 'string' === typeof pageId && !isNaN(pageId);
+    }
+  }, {
+    key: "convertStringToNumber",
+    value: function convertStringToNumber(pageId) {
+      return parseInt(pageId, 10);
+    }
+  }, {
+    key: "mapPageIdToStepNumber",
+    value: function mapPageIdToStepNumber(pageId) {
+      var stepMappings = this.getStepMappings();
+      var mappedStep = stepMappings[pageId];
+      return mappedStep || null;
+    }
+  }, {
+    key: "getStepMappings",
+    value: function getStepMappings() {
+      return {
+        account: 1,
+        connect: 1,
+        hello: 2,
+        hello_biz: 2,
+        chooseFeatures: 3,
+        pro_features: 3,
+        site_starter: 4,
+        goodToGo: 4,
+        siteName: 5,
+        siteLogo: 6
+      };
+    }
+  }, {
+    key: "getStepName",
+    value: function getStepName(stepNumber) {
+      var stepNames = {
+        1: _eventDispatcher.ONBOARDING_STEP_NAMES.CONNECT,
+        2: _eventDispatcher.ONBOARDING_STEP_NAMES.HELLO_BIZ,
+        3: _eventDispatcher.ONBOARDING_STEP_NAMES.PRO_FEATURES,
+        4: _eventDispatcher.ONBOARDING_STEP_NAMES.SITE_STARTER,
+        5: _eventDispatcher.ONBOARDING_STEP_NAMES.SITE_NAME,
+        6: _eventDispatcher.ONBOARDING_STEP_NAMES.SITE_LOGO
+      };
+      return stepNames[stepNumber] || 'unknown';
+    }
+  }, {
+    key: "getStepConfig",
+    value: function getStepConfig(stepNumber) {
+      var stepConfigs = {
+        1: {
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.STEP1_ACTIONS,
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.STEP1_END_STATE,
+          stepName: _eventDispatcher.ONBOARDING_STEP_NAMES.CONNECT,
+          endStateProperty: 'step1_actions'
+        },
+        2: {
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.STEP2_ACTIONS,
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.STEP2_END_STATE,
+          stepName: _eventDispatcher.ONBOARDING_STEP_NAMES.HELLO_BIZ,
+          endStateProperty: 'step2_actions'
+        },
+        3: {
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.STEP3_ACTIONS,
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.STEP3_END_STATE,
+          stepName: _eventDispatcher.ONBOARDING_STEP_NAMES.PRO_FEATURES,
+          endStateProperty: 'step3_actions'
+        },
+        4: {
+          storageKey: _storageManager.ONBOARDING_STORAGE_KEYS.STEP4_ACTIONS,
+          eventName: _eventDispatcher.ONBOARDING_EVENTS_MAP.STEP4_END_STATE,
+          stepName: _eventDispatcher.ONBOARDING_STEP_NAMES.SITE_STARTER,
+          endStateProperty: 'step4_actions'
+        }
+      };
+      return stepConfigs[stepNumber] || null;
+    }
+  }, {
+    key: "sendConnectionSuccessEvents",
+    value: function sendConnectionSuccessEvents(data) {
+      this.sendCoreOnboardingInitiated();
+      this.sendAppropriateStatusEvent('success', data);
+      this.sendAllStoredEvents();
+    }
+  }, {
+    key: "sendConnectionFailureEvents",
+    value: function sendConnectionFailureEvents() {
+      this.sendAppropriateStatusEvent('fail');
+    }
+  }, {
+    key: "sendAppropriateStatusEvent",
+    value: function sendAppropriateStatusEvent(status) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var hasCreateAccountAction = _storageManager.default.exists(_storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CREATE_MY_ACCOUNT);
+      var hasConnectAction = _storageManager.default.exists(_storageManager.ONBOARDING_STORAGE_KEYS.PENDING_STEP1_CLICKED_CONNECT);
+      if (hasCreateAccountAction) {
+        this.sendEventDirect('CREATE_ACCOUNT_STATUS', {
+          status: status,
+          currentStep: 1
+        });
+      } else if (hasConnectAction) {
+        if (data) {
+          this.sendEventDirect('CONNECT_STATUS', {
+            status: status,
+            trackingOptedIn: data.tracking_opted_in,
+            userTier: data.access_tier
+          });
+        } else {
+          this.sendEventDirect('CONNECT_STATUS', {
+            status: status,
+            trackingOptedIn: false,
+            userTier: null
+          });
+        }
+      } else if (data) {
+        this.sendEventDirect('CONNECT_STATUS', {
+          status: status,
+          trackingOptedIn: data.tracking_opted_in,
+          userTier: data.access_tier
+        });
+      } else {
+        this.sendEventDirect('CONNECT_STATUS', {
+          status: status,
+          trackingOptedIn: false,
+          userTier: null
+        });
+      }
+    }
+  }, {
+    key: "sendAllStoredEvents",
+    value: function sendAllStoredEvents() {
+      this.sendStoredEvent('SKIP');
+      this.sendStoredEvent('TOP_UPGRADE');
+      this.sendStoredEvent('CREATE_MY_ACCOUNT');
+      this.sendStoredEvent('CREATE_ACCOUNT_STATUS');
+      this.sendStoredEvent('CONNECT_STATUS');
+      this.sendStoredEvent('STEP1_CLICKED_CONNECT');
+      this.sendStoredEvent('STEP1_END_STATE');
+      this.sendStoredEvent('EXIT_BUTTON');
+    }
+  }, {
+    key: "handleStep4CardClick",
+    value: function handleStep4CardClick() {
+      var hasPreviousClick = _storageManager.default.exists(_storageManager.ONBOARDING_STORAGE_KEYS.STEP4_HAS_PREVIOUS_CLICK);
+      if (hasPreviousClick) {
+        this.checkAndSendReturnToStep4();
+      } else {
+        _storageManager.default.setString(_storageManager.ONBOARDING_STORAGE_KEYS.STEP4_HAS_PREVIOUS_CLICK, 'true');
+      }
+    }
+  }, {
+    key: "setupAllUpgradeButtons",
+    value: function setupAllUpgradeButtons(currentStep) {
+      var _this4 = this;
+      var upgradeButtons = document.querySelectorAll('.elementor-button[href*="upgrade"], .e-btn[href*="upgrade"], .eps-button[href*="upgrade"]');
+      upgradeButtons.forEach(function (button) {
+        _this4.setupSingleUpgradeButton(button, currentStep);
+      });
+      return upgradeButtons.length;
+    }
+  }, {
+    key: "setupSingleUpgradeButton",
+    value: function setupSingleUpgradeButton(buttonElement, currentStep) {
+      var _this5 = this;
+      if (!this.isValidButtonElement(buttonElement)) {
+        return null;
+      }
+      this.cleanupButtonTracking(buttonElement);
+      if (this.isButtonAlreadyTrackedForStep(buttonElement, currentStep)) {
+        return null;
+      }
+      this.markButtonAsTracked(buttonElement, currentStep);
+      var eventHandlers = this.createUpgradeButtonEventHandlers(buttonElement, currentStep);
+      this.attachEventHandlersToButton(buttonElement, eventHandlers);
+      return function () {
+        _this5.cleanupButtonTracking(buttonElement);
+      };
+    }
+  }, {
+    key: "isValidButtonElement",
+    value: function isValidButtonElement(buttonElement) {
+      return !!buttonElement;
+    }
+  }, {
+    key: "isButtonAlreadyTrackedForStep",
+    value: function isButtonAlreadyTrackedForStep(buttonElement, currentStep) {
+      var existingStep = buttonElement.dataset.onboardingStep;
+      return buttonElement.dataset.onboardingTracked && existingStep === currentStep;
+    }
+  }, {
+    key: "markButtonAsTracked",
+    value: function markButtonAsTracked(buttonElement, currentStep) {
+      buttonElement.dataset.onboardingTracked = 'true';
+      buttonElement.dataset.onboardingStep = currentStep;
+    }
+  }, {
+    key: "createUpgradeButtonEventHandlers",
+    value: function createUpgradeButtonEventHandlers(buttonElement, currentStep) {
+      var _this6 = this;
+      var hasClicked = false;
+      var hasHovered = false;
+      var handleMouseEnter = function handleMouseEnter() {
+        if (!hasHovered) {
+          hasHovered = true;
+          _this6.trackUpgradeHoverAction(currentStep, buttonElement);
+        }
+      };
+      var handleMouseLeave = function handleMouseLeave() {};
+      var handleClick = function handleClick() {
+        if (_this6.preventDuplicateClick(hasClicked)) {
+          return;
+        }
+        hasClicked = true;
+        _this6.sendUpgradeClickEvent(buttonElement, currentStep);
+      };
+      return {
+        handleMouseEnter: handleMouseEnter,
+        handleMouseLeave: handleMouseLeave,
+        handleClick: handleClick
+      };
+    }
+  }, {
+    key: "preventDuplicateClick",
+    value: function preventDuplicateClick(hasClicked) {
+      return hasClicked;
+    }
+  }, {
+    key: "sendUpgradeClickEvent",
+    value: function sendUpgradeClickEvent(buttonElement, currentStep) {
+      var upgradeClickedValue = this.determineUpgradeClickedValue(buttonElement);
+      this.sendEventOrStore('TOP_UPGRADE', {
+        currentStep: currentStep,
+        upgradeClicked: upgradeClickedValue
+      });
+    }
+  }, {
+    key: "trackUpgradeHoverAction",
+    value: function trackUpgradeHoverAction(currentStep, buttonElement) {
+      var stepNumber = this.getStepNumber(currentStep);
+      if (!stepNumber) {
+        return;
+      }
+      var upgradeHoverValue = this.determineUpgradeClickedValue(buttonElement);
+      this.trackStepAction(stepNumber, 'upgrade_hover', {
+        upgrade_hovered: upgradeHoverValue,
+        hover_timestamp: _timingManager.default.getCurrentTime()
+      });
+    }
+  }, {
+    key: "sendHoverEventsFromStepActions",
+    value: function sendHoverEventsFromStepActions(actions, stepNumber) {
+      var _this7 = this;
+      var hoverActions = actions.filter(function (action) {
+        return 'upgrade_hover' === action.action;
+      });
+      if (0 === hoverActions.length) {
+        return;
+      }
+      var hasUpgradeClickInActions = actions.some(function (action) {
+        return 'upgrade_topbar' === action.action || 'upgrade_tooltip' === action.action || 'upgrade_now' === action.action || 'upgrade_already_pro' === action.action;
+      });
+      var hasStoredClickEvent = this.hasExistingUpgradeClickEvent(stepNumber);
+      var hasClickBeenSent = this.hasUpgradeClickBeenSent(stepNumber);
+      if (hasUpgradeClickInActions || hasStoredClickEvent || hasClickBeenSent) {
+        return;
+      }
+      hoverActions.forEach(function (hoverAction) {
+        _this7.sendEventOrStore('TOP_UPGRADE', {
+          currentStep: stepNumber,
+          upgradeClicked: 'no_click',
+          upgradeHovered: hoverAction.upgrade_hovered,
+          hoverTimestamp: hoverAction.hover_timestamp
+        });
+      });
+    }
+  }, {
+    key: "markUpgradeClickSent",
+    value: function markUpgradeClickSent(stepNumber) {
+      if (!this.sentUpgradeClicks) {
+        this.sentUpgradeClicks = new Set();
+      }
+      this.sentUpgradeClicks.add(stepNumber);
+    }
+  }, {
+    key: "hasUpgradeClickBeenSent",
+    value: function hasUpgradeClickBeenSent(stepNumber) {
+      return this.sentUpgradeClicks && this.sentUpgradeClicks.has(stepNumber);
+    }
+  }, {
+    key: "hasExistingUpgradeClickEvent",
+    value: function hasExistingUpgradeClickEvent(stepNumber) {
+      var _this8 = this;
+      var config = this.EVENT_CONFIGS.TOP_UPGRADE;
+      var storedEvents = _storageManager.default.getArray(config.storageKey);
+      return storedEvents.some(function (event) {
+        var eventStepNumber = _this8.getStepNumber(event.currentStep);
+        return eventStepNumber === stepNumber && event.upgradeClicked && 'no_click' !== event.upgradeClicked;
+      });
+    }
+  }, {
+    key: "attachEventHandlersToButton",
+    value: function attachEventHandlersToButton(buttonElement, eventHandlers) {
+      var handleMouseEnter = eventHandlers.handleMouseEnter,
+        handleMouseLeave = eventHandlers.handleMouseLeave,
+        handleClick = eventHandlers.handleClick;
+      buttonElement._onboardingHandlers = {
+        mouseenter: handleMouseEnter,
+        mouseleave: handleMouseLeave,
+        click: handleClick
+      };
+      buttonElement.addEventListener('mouseenter', handleMouseEnter);
+      buttonElement.addEventListener('mouseleave', handleMouseLeave);
+      buttonElement.addEventListener('click', handleClick);
+    }
+  }, {
+    key: "cleanupButtonTracking",
+    value: function cleanupButtonTracking(buttonElement) {
+      if (!buttonElement) {
+        return;
+      }
+      this.removeExistingEventHandlers(buttonElement);
+      this.clearTrackingDataAttributes(buttonElement);
+    }
+  }, {
+    key: "removeExistingEventHandlers",
+    value: function removeExistingEventHandlers(buttonElement) {
+      if (buttonElement._onboardingHandlers) {
+        var handlers = buttonElement._onboardingHandlers;
+        buttonElement.removeEventListener('mouseenter', handlers.mouseenter);
+        buttonElement.removeEventListener('mouseleave', handlers.mouseleave);
+        buttonElement.removeEventListener('click', handlers.click);
+        delete buttonElement._onboardingHandlers;
+      }
+    }
+  }, {
+    key: "clearTrackingDataAttributes",
+    value: function clearTrackingDataAttributes(buttonElement) {
+      delete buttonElement.dataset.onboardingTracked;
+      delete buttonElement.dataset.onboardingStep;
+    }
+  }, {
+    key: "determineUpgradeClickedValue",
+    value: function determineUpgradeClickedValue(buttonElement) {
+      var _elementorCommon$conf, _elementorCommon$conf2;
+      if ((_elementorCommon$conf = elementorCommon.config.library_connect) !== null && _elementorCommon$conf !== void 0 && _elementorCommon$conf.is_connected && 'pro' === ((_elementorCommon$conf2 = elementorCommon.config.library_connect) === null || _elementorCommon$conf2 === void 0 ? void 0 : _elementorCommon$conf2.current_access_tier)) {
+        return 'already_pro_user';
+      }
+      if (buttonElement.closest('.e-app__popover') || buttonElement.closest('.elementor-tooltip') || buttonElement.closest('.e-onboarding__go-pro-content')) {
+        return 'on_tooltip';
+      }
+      if (buttonElement.closest('.eps-app__header')) {
+        return 'on_topbar';
+      }
+      return 'on_topbar';
+    }
+  }, {
+    key: "trackExitAndSendEndState",
+    value: function trackExitAndSendEndState(currentStep) {
+      this.trackStepAction(currentStep, 'exit');
+      this.sendStepEndState(currentStep);
+    }
+  }, {
+    key: "storeStep1EndStateForLater",
+    value: function storeStep1EndStateForLater(eventData, storageKey) {
+      this.storeEventForLater('STEP1_END_STATE', eventData);
+      _storageManager.default.remove(storageKey);
+    }
+  }, {
+    key: "onStepLoad",
+    value: function onStepLoad(currentStep) {
+      _timingManager.default.trackStepStartTime(this.getStepNumber(currentStep));
+      if (2 === this.getStepNumber(currentStep) || 'hello' === currentStep || 'hello_biz' === currentStep) {
+        this.sendStoredStep1EventsOnStep2();
+      }
+      if (4 === this.getStepNumber(currentStep) || 'goodToGo' === currentStep) {
+        this.checkAndSendReturnToStep4();
+      }
+    }
+  }, {
+    key: "sendStoredStep1EventsOnStep2",
+    value: function sendStoredStep1EventsOnStep2() {
+      this.sendStoredEvent('STEP1_CLICKED_CONNECT');
+      var step1Actions = _storageManager.default.getArray(_storageManager.ONBOARDING_STORAGE_KEYS.STEP1_ACTIONS);
+      if (step1Actions.length > 0) {
+        this.sendHoverEventsFromStepActions(step1Actions, 1);
+      }
+      this.sendStoredEvent('STEP1_END_STATE');
+    }
+  }, {
+    key: "setupPostOnboardingClickTracking",
+    value: function setupPostOnboardingClickTracking() {
+      return _postOnboardingTracker.default.setupPostOnboardingClickTracking();
+    }
+  }, {
+    key: "cleanupPostOnboardingTracking",
+    value: function cleanupPostOnboardingTracking() {
+      return _postOnboardingTracker.default.cleanupPostOnboardingTracking();
+    }
+  }, {
+    key: "clearAllOnboardingStorage",
+    value: function clearAllOnboardingStorage() {
+      return _postOnboardingTracker.default.clearAllOnboardingStorage();
+    }
+  }]);
+}();
+var onboardingTracker = new OnboardingTracker();
+var _default = exports["default"] = onboardingTracker;
+
+/***/ }),
+
+/***/ "../app/modules/onboarding/assets/js/utils/modules/timing-manager.js":
+/*!***************************************************************************!*\
+  !*** ../app/modules/onboarding/assets/js/utils/modules/timing-manager.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.addTimingToEventData = addTimingToEventData;
+exports.calculateStepTimeSpent = calculateStepTimeSpent;
+exports.calculateTotalTimeSpent = calculateTotalTimeSpent;
+exports.clearStaleSessionData = clearStaleSessionData;
+exports.clearStepStartTime = clearStepStartTime;
+exports.createTimeSpentData = createTimeSpentData;
+exports["default"] = void 0;
+exports.formatTimeForEvent = formatTimeForEvent;
+exports.getCurrentTime = getCurrentTime;
+exports.getOnboardingStartTime = getOnboardingStartTime;
+exports.hasOnboardingStarted = hasOnboardingStarted;
+exports.initializeOnboardingStartTime = initializeOnboardingStartTime;
+exports.isWithinTimeThreshold = isWithinTimeThreshold;
+exports.trackStepStartTime = trackStepStartTime;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _storageManager = _interopRequireWildcard(__webpack_require__(/*! ./storage-manager.js */ "../app/modules/onboarding/assets/js/utils/modules/storage-manager.js"));
+var StorageManager = _storageManager;
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function getCurrentTime() {
+  return Date.now();
+}
+function initializeOnboardingStartTime() {
+  var startTime = getCurrentTime();
+  StorageManager.setNumber(_storageManager.ONBOARDING_STORAGE_KEYS.START_TIME, startTime);
+  StorageManager.setString(_storageManager.ONBOARDING_STORAGE_KEYS.INITIATED, 'true');
+  return startTime;
+}
+function getOnboardingStartTime() {
+  return StorageManager.getNumber(_storageManager.ONBOARDING_STORAGE_KEYS.START_TIME);
+}
+function hasOnboardingStarted() {
+  return StorageManager.exists(_storageManager.ONBOARDING_STORAGE_KEYS.START_TIME);
+}
+function trackStepStartTime(stepNumber) {
+  var existingStartTime = StorageManager.getStepStartTime(stepNumber);
+  if (existingStartTime) {
+    return existingStartTime;
+  }
+  var currentTime = getCurrentTime();
+  StorageManager.setStepStartTime(stepNumber, currentTime);
+  return currentTime;
+}
+function calculateStepTimeSpent(stepNumber) {
+  var stepStartTime = StorageManager.getStepStartTime(stepNumber);
+  if (!stepStartTime) {
+    return null;
+  }
+  var currentTime = getCurrentTime();
+  var stepTimeSpent = Math.round((currentTime - stepStartTime) / 1000);
+  return stepTimeSpent;
+}
+function clearStepStartTime(stepNumber) {
+  StorageManager.clearStepStartTime(stepNumber);
+}
+function calculateTotalTimeSpent() {
+  var startTime = getOnboardingStartTime();
+  if (!startTime) {
+    return null;
+  }
+  var currentTime = getCurrentTime();
+  var timeSpent = Math.round((currentTime - startTime) / 1000);
+  return {
+    startTime: startTime,
+    currentTime: currentTime,
+    timeSpent: timeSpent
+  };
+}
+function formatTimeForEvent(timeInSeconds) {
+  if (null === timeInSeconds || timeInSeconds === undefined) {
+    return null;
+  }
+  return "".concat(timeInSeconds, "s");
+}
+function createTimeSpentData() {
+  var stepNumber = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var totalTimeData = calculateTotalTimeSpent();
+  var result = {};
+  if (totalTimeData) {
+    result.time_spent = formatTimeForEvent(totalTimeData.timeSpent);
+    result.total_onboarding_time_seconds = totalTimeData.timeSpent;
+    result.onboarding_start_time = totalTimeData.startTime;
+  }
+  if (stepNumber) {
+    var stepTimeSpent = calculateStepTimeSpent(stepNumber);
+    if (stepTimeSpent !== null) {
+      result.step_time_spent = formatTimeForEvent(stepTimeSpent);
+    }
+  }
+  return Object.keys(result).length > 0 ? result : null;
+}
+function addTimingToEventData(eventData) {
+  var stepNumber = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var timingData = createTimeSpentData(stepNumber);
+  if (timingData) {
+    return _objectSpread(_objectSpread({}, eventData), timingData);
+  }
+  return eventData;
+}
+function clearStaleSessionData() {
+  var recentStepStartTimes = [];
+  var currentTime = getCurrentTime();
+  var recentStepStartTimeThresholdMs = 5000;
+  [_storageManager.ONBOARDING_STORAGE_KEYS.STEP1_START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.STEP2_START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.STEP3_START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.STEP4_START_TIME].forEach(function (key) {
+    var value = StorageManager.getString(key);
+    if (value) {
+      var timestamp = parseInt(value, 10);
+      var age = currentTime - timestamp;
+      if (age < recentStepStartTimeThresholdMs) {
+        recentStepStartTimes.push(key);
+      }
+    }
+  });
+  var keysToRemove = [_storageManager.ONBOARDING_STORAGE_KEYS.START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.INITIATED, _storageManager.ONBOARDING_STORAGE_KEYS.STEP1_ACTIONS, _storageManager.ONBOARDING_STORAGE_KEYS.STEP2_ACTIONS, _storageManager.ONBOARDING_STORAGE_KEYS.STEP3_ACTIONS, _storageManager.ONBOARDING_STORAGE_KEYS.STEP4_ACTIONS, _storageManager.ONBOARDING_STORAGE_KEYS.STEP4_SITE_STARTER_CHOICE, _storageManager.ONBOARDING_STORAGE_KEYS.STEP4_HAS_PREVIOUS_CLICK, _storageManager.ONBOARDING_STORAGE_KEYS.EDITOR_LOAD_TRACKED, _storageManager.ONBOARDING_STORAGE_KEYS.POST_ONBOARDING_CLICK_COUNT, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_SKIP, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CONNECT_STATUS, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CREATE_ACCOUNT_STATUS, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_CREATE_MY_ACCOUNT, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_TOP_UPGRADE, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_TOP_UPGRADE_NO_CLICK, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_STEP1_CLICKED_CONNECT, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_STEP1_END_STATE, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_EXIT_BUTTON, _storageManager.ONBOARDING_STORAGE_KEYS.PENDING_TOP_UPGRADE_MOUSEOVER];
+  keysToRemove.forEach(function (key) {
+    if (!recentStepStartTimes.includes(key)) {
+      StorageManager.remove(key);
+    }
+  });
+  [_storageManager.ONBOARDING_STORAGE_KEYS.STEP1_START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.STEP2_START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.STEP3_START_TIME, _storageManager.ONBOARDING_STORAGE_KEYS.STEP4_START_TIME].forEach(function (key) {
+    if (!recentStepStartTimes.includes(key)) {
+      StorageManager.remove(key);
+    }
+  });
+}
+function isWithinTimeThreshold(timestamp) {
+  var thresholdMs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
+  var currentTime = getCurrentTime();
+  return currentTime - timestamp < thresholdMs;
+}
+var TimingManager = {
+  getCurrentTime: getCurrentTime,
+  initializeOnboardingStartTime: initializeOnboardingStartTime,
+  getOnboardingStartTime: getOnboardingStartTime,
+  hasOnboardingStarted: hasOnboardingStarted,
+  trackStepStartTime: trackStepStartTime,
+  calculateStepTimeSpent: calculateStepTimeSpent,
+  clearStepStartTime: clearStepStartTime,
+  calculateTotalTimeSpent: calculateTotalTimeSpent,
+  formatTimeForEvent: formatTimeForEvent,
+  createTimeSpentData: createTimeSpentData,
+  addTimingToEventData: addTimingToEventData,
+  clearStaleSessionData: clearStaleSessionData,
+  isWithinTimeThreshold: isWithinTimeThreshold
+};
+var _default = exports["default"] = TimingManager;
+
+/***/ }),
+
+/***/ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js":
+/*!******************************************************************************!*\
+  !*** ../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "ONBOARDING_STEP_NAMES", ({
+  enumerable: true,
+  get: function get() {
+    return _onboardingTracker.ONBOARDING_STEP_NAMES;
+  }
+}));
+Object.defineProperty(exports, "ONBOARDING_STORAGE_KEYS", ({
+  enumerable: true,
+  get: function get() {
+    return _onboardingTracker.ONBOARDING_STORAGE_KEYS;
+  }
+}));
+exports.OnboardingEventTracking = void 0;
+var _onboardingTracker = _interopRequireWildcard(__webpack_require__(/*! ./modules/onboarding-tracker.js */ "../app/modules/onboarding/assets/js/utils/modules/onboarding-tracker.js"));
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
+var OnboardingEventTracking = exports.OnboardingEventTracking = _onboardingTracker.default;
 
 /***/ }),
 
@@ -2577,7 +3729,7 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.setSelectedFeatureList = exports.options = void 0;
+exports.setSelectedFeatureList = exports.safeDispatchEvent = exports.options = void 0;
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "../node_modules/@babel/runtime/helpers/toConsumableArray.js"));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -2635,8 +3787,16 @@ var setSelectedFeatureList = exports.setSelectedFeatureList = function setSelect
     }))));
   }
 };
+var safeDispatchEvent = exports.safeDispatchEvent = function safeDispatchEvent(eventName, eventData) {
+  try {
+    var _elementorCommon, _elementorCommon$disp;
+    (_elementorCommon = elementorCommon) === null || _elementorCommon === void 0 || (_elementorCommon = _elementorCommon.eventsManager) === null || _elementorCommon === void 0 || (_elementorCommon$disp = _elementorCommon.dispatchEvent) === null || _elementorCommon$disp === void 0 || _elementorCommon$disp.call(_elementorCommon, eventName, eventData);
+  } catch (error) {
+    // Silently fail - don't let tracking break the user experience
+  }
+};
 
 /***/ })
 
 }]);
-//# sourceMappingURL=onboarding.04d189eccf40ae88f85d.bundle.js.map
+//# sourceMappingURL=onboarding.50bce36b17131b8d21b7.bundle.js.map
