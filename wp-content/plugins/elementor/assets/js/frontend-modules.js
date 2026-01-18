@@ -87,9 +87,10 @@ class AppsEventTracking {
     });
   }
   static sendKitImportStatus(error = null) {
+    const isError = !!error;
     return this.dispatchEvent(EVENTS_MAP.KIT_IMPORT_STATUS, {
-      kit_import_status: !error,
-      ...(error && {
+      kit_import_status: !isError,
+      ...(isError && {
         kit_import_error: error.message
       })
     });
@@ -124,36 +125,110 @@ exports.AppsEventTracking = AppsEventTracking;
 
 /***/ }),
 
-/***/ "../app/assets/js/event-track/dashboard/action-control.js":
-/*!****************************************************************!*\
-  !*** ../app/assets/js/event-track/dashboard/action-control.js ***!
-  \****************************************************************/
+/***/ "../app/assets/js/event-track/dashboard/action-controls.js":
+/*!*****************************************************************!*\
+  !*** ../app/assets/js/event-track/dashboard/action-controls.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
 __webpack_require__(/*! core-js/modules/esnext.iterator.constructor.js */ "../node_modules/core-js/modules/esnext.iterator.constructor.js");
-__webpack_require__(/*! core-js/modules/esnext.iterator.filter.js */ "../node_modules/core-js/modules/esnext.iterator.filter.js");
+__webpack_require__(/*! core-js/modules/esnext.iterator.for-each.js */ "../node_modules/core-js/modules/esnext.iterator.for-each.js");
 var _wpDashboardTracking = _interopRequireWildcard(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
 var _utils = __webpack_require__(/*! ./utils */ "../app/assets/js/event-track/dashboard/utils.js");
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 const EXCLUDED_SELECTORS = {
   ADMIN_MENU: '#adminmenu',
   TOP_BAR: '.e-admin-top-bar',
   WP_ADMIN_BAR: '#wpadminbar',
-  SUBMENU: '.wp-submenu'
+  SUBMENU: '.wp-submenu',
+  PROMO_PAGE: '.e-feature-promotion',
+  PROMO_BLANK_STATE: '.elementor-blank_state',
+  APP: '.e-app'
 };
-class ActionControlTracking {
+class ActionControlTracking extends _baseTracking.default {
   static init() {
     if (!_utils.DashboardUtils.isElementorPage()) {
       return;
     }
     this.attachDelegatedHandlers();
+    this.addTrackingAttributesToFilterButtons();
+    this.initializeLinkDataIds();
+  }
+  static initializeLinkDataIds() {
+    const initializeLinks = () => {
+      const links = document.querySelectorAll('a[href]');
+      links.forEach(link => {
+        if (this.isExcludedElement(link) || this.isNavigationLink(link) || link.hasAttribute('data-id')) {
+          return;
+        }
+        const href = link.getAttribute('href');
+        if (!href) {
+          return;
+        }
+        const cleanedHref = this.removeNonceFromUrl(href);
+        if (cleanedHref) {
+          link.setAttribute('data-id', cleanedHref);
+        }
+      });
+    };
+    if ('loading' === document.readyState) {
+      document.addEventListener('DOMContentLoaded', initializeLinks);
+    } else {
+      initializeLinks();
+    }
+  }
+  static addTrackingAttributesToFilterButtons() {
+    const body = document.body;
+    if (!body) {
+      return;
+    }
+    let screenPrefix = '';
+    switch (true) {
+      case body.classList.contains('post-type-elementor_library'):
+        screenPrefix = 'elementor_library-library';
+        break;
+      case body.classList.contains('post-type-e-floating-buttons'):
+        screenPrefix = 'e-floating-buttons';
+        break;
+      default:
+        return;
+    }
+    const addDataIdToListTableButtons = () => {
+      const buttonConfigs = [{
+        id: 'post-query-submit',
+        suffix: 'filter'
+      }, {
+        id: 'search-submit',
+        suffix: 'search'
+      }, {
+        id: 'doaction',
+        suffix: 'apply'
+      }, {
+        id: 'doaction2',
+        suffix: 'apply-bottom'
+      }];
+      buttonConfigs.forEach(config => {
+        const button = document.getElementById(config.id);
+        if (!button || button.hasAttribute('data-id')) {
+          return;
+        }
+        button.setAttribute('data-id', `${screenPrefix}-button-${config.suffix}`);
+      });
+    };
+    if ('loading' === document.readyState) {
+      document.addEventListener('DOMContentLoaded', addDataIdToListTableButtons);
+    } else {
+      addDataIdToListTableButtons();
+    }
   }
   static isExcludedElement(element) {
     for (const selector of Object.values(EXCLUDED_SELECTORS)) {
@@ -161,16 +236,24 @@ class ActionControlTracking {
         return true;
       }
     }
+    if (element.classList.contains('go-pro')) {
+      return true;
+    }
     return false;
   }
   static attachDelegatedHandlers() {
-    document.addEventListener('click', event => {
+    const FILTER_BUTTON_IDS = ['search-submit', 'post-query-submit'];
+    this.addEventListenerTracked(document, 'click', event => {
       const base = event.target && 1 === event.target.nodeType ? event.target : event.target?.parentElement;
       if (!base) {
         return;
       }
       const button = base.closest('button, input[type="submit"], input[type="button"], .button, .e-btn');
       if (button && !this.isExcludedElement(button)) {
+        if (FILTER_BUTTON_IDS.includes(button.id)) {
+          this.trackControl(button, _wpDashboardTracking.CONTROL_TYPES.FILTER);
+          return;
+        }
         this.trackControl(button, _wpDashboardTracking.CONTROL_TYPES.BUTTON);
         return;
       }
@@ -181,12 +264,12 @@ class ActionControlTracking {
     }, {
       capture: false
     });
-    document.addEventListener('change', event => {
+    this.addEventListenerTracked(document, 'change', event => {
       const base = event.target && 1 === event.target.nodeType ? event.target : event.target?.parentElement;
       if (!base) {
         return;
       }
-      const toggle = base.closest('.elementor-control-type-switcher input, [role="switch"], .toggle-control input');
+      const toggle = base.closest('.components-toggle-control');
       if (toggle && !this.isExcludedElement(toggle)) {
         this.trackControl(toggle, _wpDashboardTracking.CONTROL_TYPES.TOGGLE);
         return;
@@ -222,52 +305,218 @@ class ActionControlTracking {
     return !!isInNavigation;
   }
   static trackControl(element, controlType) {
-    const controlData = this.extractControlData(element, controlType);
-    _wpDashboardTracking.default.trackActionControl(controlData, controlType);
+    const controlIdentifier = this.extractControlIdentifier(element, controlType);
+    if (!controlIdentifier) {
+      return;
+    }
+    _wpDashboardTracking.default.trackActionControl(controlIdentifier, controlType);
   }
-  static extractControlData(element, controlType) {
-    const data = {};
-    const id = element.getAttribute('id');
-    if (id) {
-      data.id = id;
+  static extractControlIdentifier(element, controlType) {
+    if (_wpDashboardTracking.CONTROL_TYPES.RADIO === controlType) {
+      const name = element.getAttribute('name');
+      const value = element.value || element.getAttribute('value');
+      if (name && value) {
+        return `${name}-${value}`;
+      }
+      if (name) {
+        return name;
+      }
     }
-    const name = element.getAttribute('name');
-    if (name) {
-      data.name = name;
+    if (_wpDashboardTracking.CONTROL_TYPES.SELECT === controlType) {
+      const name = element.getAttribute('name');
+      if (name) {
+        return name;
+      }
     }
-    let text = '';
-    if (_wpDashboardTracking.CONTROL_TYPES.BUTTON === controlType) {
-      text = element.value || element.textContent.trim() || element.getAttribute('aria-label');
-    } else if (_wpDashboardTracking.CONTROL_TYPES.LINK === controlType) {
-      text = element.textContent.trim() || element.getAttribute('aria-label') || element.getAttribute('title');
-    } else if (_wpDashboardTracking.CONTROL_TYPES.SELECT === controlType) {
-      const selectedOption = element.options[element.selectedIndex];
-      text = selectedOption ? selectedOption.textContent.trim() : '';
-    } else if (_wpDashboardTracking.CONTROL_TYPES.CHECKBOX === controlType || _wpDashboardTracking.CONTROL_TYPES.TOGGLE === controlType || _wpDashboardTracking.CONTROL_TYPES.RADIO === controlType) {
-      const label = element.labels ? element.labels[0] : null;
-      text = label ? label.textContent.trim() : '';
-      data.checked = element.checked;
-    }
-    if (text) {
-      data.text = text;
-    }
-    const classes = element.className;
-    if (classes && 'string' === typeof classes) {
-      const relevantClasses = classes.split(' ').filter(cls => cls && !cls.startsWith('elementor-control-') && !cls.startsWith('wp-')).slice(0, 3);
-      if (relevantClasses.length > 0) {
-        data.classes = relevantClasses.join(' ');
+    if (_wpDashboardTracking.CONTROL_TYPES.CHECKBOX === controlType) {
+      const name = element.getAttribute('name');
+      if (name) {
+        const checkboxesWithSameName = document.querySelectorAll(`input[type="checkbox"][name="${CSS.escape(name)}"]`);
+        if (checkboxesWithSameName.length > 1) {
+          const value = element.value || element.getAttribute('value');
+          if (value) {
+            return `${name}-${value}`;
+          }
+        }
+        return name;
       }
     }
     if (_wpDashboardTracking.CONTROL_TYPES.LINK === controlType) {
+      const dataId = element.getAttribute('data-id');
+      if (dataId) {
+        return dataId;
+      }
       const href = element.getAttribute('href');
-      if (href && !href.startsWith('#')) {
-        data.href = href;
+      if (href) {
+        return this.removeNonceFromUrl(href);
       }
     }
-    return data;
+    if (_wpDashboardTracking.CONTROL_TYPES.BUTTON === controlType || _wpDashboardTracking.CONTROL_TYPES.TOGGLE === controlType || _wpDashboardTracking.CONTROL_TYPES.FILTER === controlType) {
+      const dataId = element.getAttribute('data-id');
+      if (dataId) {
+        return dataId;
+      }
+      const classIdMatch = this.extractClassId(element);
+      if (classIdMatch) {
+        return classIdMatch;
+      }
+    }
+    return '';
+  }
+  static extractClassId(element) {
+    const classes = element.className;
+    if (!classes || 'string' !== typeof classes) {
+      return '';
+    }
+    const classList = classes.split(' ');
+    for (const cls of classList) {
+      if (cls.startsWith('e-id-')) {
+        return cls.substring(5);
+      }
+    }
+    return '';
+  }
+  static removeNonceFromUrl(url) {
+    try {
+      const urlObj = new URL(url, window.location.origin);
+      urlObj.searchParams.delete('_wpnonce');
+      const postParam = urlObj.searchParams.get('post');
+      if (postParam !== null && /^[0-9]+$/.test(postParam)) {
+        urlObj.searchParams.delete('post');
+      }
+      return urlObj.pathname + urlObj.search + urlObj.hash;
+    } catch (e) {
+      return url;
+    }
   }
 }
 var _default = exports["default"] = ActionControlTracking;
+
+/***/ }),
+
+/***/ "../app/assets/js/event-track/dashboard/base-tracking.js":
+/*!***************************************************************!*\
+  !*** ../app/assets/js/event-track/dashboard/base-tracking.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+__webpack_require__(/*! core-js/modules/es.array.push.js */ "../node_modules/core-js/modules/es.array.push.js");
+__webpack_require__(/*! core-js/modules/esnext.iterator.constructor.js */ "../node_modules/core-js/modules/esnext.iterator.constructor.js");
+__webpack_require__(/*! core-js/modules/esnext.iterator.for-each.js */ "../node_modules/core-js/modules/esnext.iterator.for-each.js");
+class BaseTracking {
+  static ensureOwnArrays() {
+    if (!Object.prototype.hasOwnProperty.call(this, 'observers')) {
+      this.observers = [];
+    }
+    if (!Object.prototype.hasOwnProperty.call(this, 'eventListeners')) {
+      this.eventListeners = [];
+    }
+  }
+  static destroy() {
+    this.ensureOwnArrays();
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+    this.eventListeners.forEach(({
+      target,
+      type,
+      handler,
+      options
+    }) => {
+      target.removeEventListener(type, handler, options);
+    });
+    this.eventListeners = [];
+  }
+  static addObserver(target, options, callback) {
+    this.ensureOwnArrays();
+    const observer = new MutationObserver(callback);
+    observer.observe(target, options);
+    this.observers.push(observer);
+    return observer;
+  }
+  static addEventListenerTracked(target, type, handler, options = {}) {
+    this.ensureOwnArrays();
+    target.addEventListener(type, handler, options);
+    this.eventListeners.push({
+      target,
+      type,
+      handler,
+      options
+    });
+  }
+}
+var _default = exports["default"] = BaseTracking;
+
+/***/ }),
+
+/***/ "../app/assets/js/event-track/dashboard/menu-promotion.js":
+/*!****************************************************************!*\
+  !*** ../app/assets/js/event-track/dashboard/menu-promotion.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _wpDashboardTracking = _interopRequireDefault(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
+const PROMO_MENU_ITEMS = {
+  go_elementor_pro: 'Upgrade'
+};
+class MenuPromotionTracking extends _baseTracking.default {
+  static init() {
+    this.attachDelegatedTracking();
+  }
+  static attachDelegatedTracking() {
+    this.addEventListenerTracked(document, 'click', event => {
+      const target = event.target;
+      if (!target) {
+        return;
+      }
+      const link = target.closest('a');
+      if (!link) {
+        return;
+      }
+      const href = link.getAttribute('href');
+      if (!href) {
+        return;
+      }
+      const menuItemKey = this.extractPromoMenuKey(href);
+      if (!menuItemKey) {
+        return;
+      }
+      this.handleMenuPromoClick(link, menuItemKey);
+    }, {
+      capture: true
+    });
+  }
+  static extractPromoMenuKey(href) {
+    for (const menuItemKey of Object.keys(PROMO_MENU_ITEMS)) {
+      if (href.includes(`page=${menuItemKey}`)) {
+        return menuItemKey;
+      }
+    }
+    return null;
+  }
+  static handleMenuPromoClick(menuItem, menuItemKey) {
+    const destination = menuItem.getAttribute('href');
+    const promoName = PROMO_MENU_ITEMS[menuItemKey];
+    const path = menuItemKey.replace('elementor_', '').replace(/_/g, '/');
+    _wpDashboardTracking.default.trackPromoClicked(promoName, destination, path);
+  }
+}
+var _default = exports["default"] = MenuPromotionTracking;
 
 /***/ }),
 
@@ -280,13 +529,13 @@ var _default = exports["default"] = ActionControlTracking;
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
-__webpack_require__(/*! core-js/modules/esnext.iterator.constructor.js */ "../node_modules/core-js/modules/esnext.iterator.constructor.js");
-__webpack_require__(/*! core-js/modules/esnext.iterator.for-each.js */ "../node_modules/core-js/modules/esnext.iterator.for-each.js");
 var _wpDashboardTracking = _interopRequireWildcard(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 const ELEMENTOR_MENU_SELECTORS = {
   ELEMENTOR_TOP_LEVEL: 'li#toplevel_page_elementor',
@@ -297,7 +546,7 @@ const ELEMENTOR_MENU_SELECTORS = {
   SUBMENU_ITEM: '.wp-submenu li a',
   SUBMENU_ITEM_TOP_LEVEL: '.wp-has-submenu'
 };
-class NavigationTracking {
+class NavigationTracking extends _baseTracking.default {
   static init() {
     this.attachElementorMenuTracking();
     this.attachTemplatesMenuTracking();
@@ -317,56 +566,19 @@ class NavigationTracking {
     this.attachMenuTracking(templatesMenu, 'Templates');
   }
   static attachMenuTracking(menuElement, menuName) {
-    const topLevelLink = menuElement.querySelector('a.menu-top');
-    const submenuContainer = menuElement.querySelector(ELEMENTOR_MENU_SELECTORS.SUBMENU_CONTAINER);
-    if (topLevelLink) {
-      topLevelLink.addEventListener('click', event => {
-        this.handleTopLevelClick(event);
-      });
-    }
-    if (submenuContainer) {
-      const submenuItems = submenuContainer.querySelectorAll('li a');
-      submenuItems.forEach(submenuItem => {
-        submenuItem.addEventListener('click', event => {
-          this.handleSubmenuClick(event, menuName);
-        });
-      });
-      this.observeSubmenuChanges(submenuContainer, menuName);
-    }
-  }
-  static observeSubmenuChanges(submenuContainer, menuName) {
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if ('childList' === mutation.type) {
-          mutation.addedNodes.forEach(node => {
-            if (1 === node.nodeType && 'LI' === node.tagName) {
-              const link = node.querySelector('a');
-              if (link) {
-                link.addEventListener('click', event => {
-                  this.handleSubmenuClick(event, menuName);
-                });
-              }
-            }
-          });
-        }
-      });
-    });
-    observer.observe(submenuContainer, {
-      childList: true,
-      subtree: false
+    this.addEventListenerTracked(menuElement, 'click', event => {
+      this.handleMenuClick(event, menuName);
     });
   }
-  static handleTopLevelClick(event) {
-    const link = event.currentTarget;
+  static handleMenuClick(event, menuName) {
+    const link = event.target.closest('a');
+    if (!link) {
+      return;
+    }
+    const isTopLevel = link.classList.contains('menu-top');
     const itemId = this.extractItemId(link);
     const area = this.determineNavArea(link);
-    _wpDashboardTracking.default.trackNavClicked(itemId, null, area);
-  }
-  static handleSubmenuClick(event, menuName) {
-    const link = event.currentTarget;
-    const itemId = this.extractItemId(link);
-    const area = this.determineNavArea(link);
-    _wpDashboardTracking.default.trackNavClicked(itemId, menuName, area);
+    _wpDashboardTracking.default.trackNavClicked(itemId, isTopLevel ? null : menuName, area);
   }
   static extractItemId(link) {
     const textContent = link.textContent.trim();
@@ -411,6 +623,232 @@ var _default = exports["default"] = NavigationTracking;
 
 /***/ }),
 
+/***/ "../app/assets/js/event-track/dashboard/plugin-actions.js":
+/*!****************************************************************!*\
+  !*** ../app/assets/js/event-track/dashboard/plugin-actions.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _wpDashboardTracking = _interopRequireDefault(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
+const PLUGIN_TYPE = {
+  ELEMENTOR: 'core',
+  ELEMENTOR_PRO: 'pro'
+};
+class PluginActions extends _baseTracking.default {
+  static selectedReason = null;
+  static init() {
+    this.attachCoreDeactivationTracking();
+    this.attachProDeactivationTracking();
+    this.attachProDeletionTracking();
+  }
+  static attachCoreDeactivationTracking() {
+    const dialogForm = document.querySelector('#elementor-deactivate-feedback-dialog-form');
+    if (!dialogForm) {
+      return;
+    }
+    this.addEventListenerTracked(dialogForm, 'change', event => {
+      const target = event.target;
+      if (target.classList.contains('elementor-deactivate-feedback-dialog-input')) {
+        this.selectedReason = target.value;
+      }
+    });
+    this.observeModalButtons();
+  }
+  static attachProDeactivationTracking() {
+    const pluginsTable = document.querySelector('.plugins');
+    if (!pluginsTable) {
+      return;
+    }
+    this.addEventListenerTracked(pluginsTable, 'click', event => {
+      const link = event.target.closest('a');
+      if (link && 'deactivate-elementor-pro' === link.id) {
+        this.trackProDeactivation();
+      }
+    }, {
+      capture: true
+    });
+  }
+  static observeModalButtons() {
+    const checkAndAttachDelegation = () => {
+      const modal = document.querySelector('#elementor-deactivate-feedback-modal');
+      if (!modal) {
+        return false;
+      }
+      this.addEventListenerTracked(modal, 'click', event => {
+        const submitButton = event.target.closest('.dialog-submit');
+        const skipButton = event.target.closest('.dialog-skip');
+        if (submitButton) {
+          this.trackCoreDeactivation('submit&deactivate');
+        } else if (skipButton) {
+          this.trackCoreDeactivation('skip&deactivate');
+        }
+      }, {
+        capture: true
+      });
+      return true;
+    };
+    if (checkAndAttachDelegation()) {
+      return;
+    }
+    this.addObserver(document.body, {
+      childList: true,
+      subtree: true
+    }, (mutations, observer) => {
+      if (checkAndAttachDelegation()) {
+        observer.disconnect();
+      }
+    });
+  }
+  static getUserInput() {
+    const reasonsWithInput = ['found_a_better_plugin', 'other'];
+    if (!this.selectedReason || !reasonsWithInput.includes(this.selectedReason)) {
+      return null;
+    }
+    const inputField = document.querySelector(`input[name="reason_${this.selectedReason}"]`);
+    if (inputField && inputField.value) {
+      return inputField.value;
+    }
+    return null;
+  }
+  static trackCoreDeactivation(action) {
+    const properties = {
+      deactivate_form_submit: action,
+      deactivate_plugin_type: PLUGIN_TYPE.ELEMENTOR
+    };
+    if (this.selectedReason) {
+      properties.deactivate_feedback_reason = this.selectedReason;
+    }
+    const userInput = this.getUserInput();
+    if (userInput) {
+      properties.deactivate_feedback_reason += `/${userInput}`;
+    }
+    _wpDashboardTracking.default.dispatchEvent('wpdash_deactivate_plugin', properties, {
+      send_immediately: true
+    });
+  }
+  static trackProDeactivation() {
+    this.trackProAction('deactivate');
+  }
+  static attachProDeletionTracking() {
+    if ('undefined' === typeof jQuery) {
+      return;
+    }
+    jQuery(document).on('wp-plugin-deleting', (event, args) => {
+      if ('elementor-pro' === args?.slug) {
+        this.trackProAction('delete');
+      }
+    });
+  }
+  static destroy() {
+    if ('undefined' !== typeof jQuery) {
+      jQuery(document).off('wp-plugin-deleting');
+    }
+    _baseTracking.default.destroy.call(this);
+  }
+  static trackProAction(action) {
+    const eventMap = {
+      deactivate: {
+        eventName: 'wpdash_deactivate_plugin',
+        propertyKey: 'deactivate_plugin_type'
+      },
+      delete: {
+        eventName: 'wpdash_delete_plugin',
+        propertyKey: 'plugin_delete'
+      }
+    };
+    const config = eventMap[action];
+    if (!config) {
+      return;
+    }
+    const properties = {
+      [config.propertyKey]: PLUGIN_TYPE.ELEMENTOR_PRO
+    };
+    _wpDashboardTracking.default.dispatchEvent(config.eventName, properties, {
+      send_immediately: true
+    });
+  }
+}
+var _default = exports["default"] = PluginActions;
+
+/***/ }),
+
+/***/ "../app/assets/js/event-track/dashboard/promotion.js":
+/*!***********************************************************!*\
+  !*** ../app/assets/js/event-track/dashboard/promotion.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _wpDashboardTracking = _interopRequireDefault(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
+const PROMO_SELECTORS = {
+  PROMO_PAGE: '.e-feature-promotion, .elementor-settings-form-page, #elementor-element-manager-wrap',
+  PROMO_BLANK_STATE: '.elementor-blank_state',
+  CTA_BUTTON: '.go-pro',
+  TITLE: 'h3'
+};
+class PromotionTracking extends _baseTracking.default {
+  static init() {
+    this.attachDelegatedTracking();
+  }
+  static attachDelegatedTracking() {
+    this.addEventListenerTracked(document, 'click', event => {
+      const target = event.target;
+      if (!target) {
+        return;
+      }
+      const button = target.closest(`a${PROMO_SELECTORS.CTA_BUTTON}`);
+      if (!button) {
+        return;
+      }
+      const promoPage = button.closest(`${PROMO_SELECTORS.PROMO_PAGE}, ${PROMO_SELECTORS.PROMO_BLANK_STATE}`);
+      if (!promoPage) {
+        return;
+      }
+      this.handlePromoClick(button, promoPage);
+    }, {
+      capture: true
+    });
+  }
+  static handlePromoClick(button, promoPage) {
+    const promoTitle = this.extractPromoTitle(promoPage, button);
+    const destination = button.getAttribute('href');
+    const path = this.extractPromoPath();
+    _wpDashboardTracking.default.trackPromoClicked(promoTitle, destination, path);
+  }
+  static extractPromoTitle(promoPage, button) {
+    const titleElement = promoPage.querySelector(PROMO_SELECTORS.TITLE);
+    return titleElement ? titleElement.textContent.trim() : button.textContent.trim();
+  }
+  static extractPromoPath() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    if (!page) {
+      return 'elementor';
+    }
+    return page.replace('elementor_', '').replace(/_/g, '/');
+  }
+}
+var _default = exports["default"] = PromotionTracking;
+
+/***/ }),
+
 /***/ "../app/assets/js/event-track/dashboard/screen-view.js":
 /*!*************************************************************!*\
   !*** ../app/assets/js/event-track/dashboard/screen-view.js ***!
@@ -420,45 +858,39 @@ var _default = exports["default"] = NavigationTracking;
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
 __webpack_require__(/*! core-js/modules/esnext.iterator.constructor.js */ "../node_modules/core-js/modules/esnext.iterator.constructor.js");
+__webpack_require__(/*! core-js/modules/esnext.iterator.filter.js */ "../node_modules/core-js/modules/esnext.iterator.filter.js");
 __webpack_require__(/*! core-js/modules/esnext.iterator.for-each.js */ "../node_modules/core-js/modules/esnext.iterator.for-each.js");
 var _wpDashboardTracking = _interopRequireWildcard(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
 var _utils = __webpack_require__(/*! ./utils */ "../app/assets/js/event-track/dashboard/utils.js");
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 const SCREEN_SELECTORS = {
   NAV_TAB_WRAPPER: '.nav-tab-wrapper',
   NAV_TAB: '.nav-tab',
   NAV_TAB_ACTIVE: '.nav-tab-active',
   SETTINGS_FORM_PAGE: '.elementor-settings-form-page',
-  SETTINGS_FORM_PAGE_ACTIVE: '.elementor-settings-form-page.elementor-active'
+  SETTINGS_FORM_PAGE_ACTIVE: '.elementor-settings-form-page.elementor-active',
+  FLOATING_ELEMENTS_MODAL: '#elementor-new-floating-elements-modal',
+  TEMPLATE_DIALOG_MODAL: '#elementor-new-template-dialog-content'
 };
-class ScreenViewTracking {
+const TRACKED_MODALS = [SCREEN_SELECTORS.FLOATING_ELEMENTS_MODAL, SCREEN_SELECTORS.TEMPLATE_DIALOG_MODAL];
+class ScreenViewTracking extends _baseTracking.default {
   static trackedScreens = new Set();
   static init() {
     if (!_utils.DashboardUtils.isElementorPage()) {
       return;
     }
-    this.trackInitialPageView();
     this.attachTabChangeTracking();
   }
-  static trackInitialPageView() {
-    const run = () => {
-      const screenData = this.getScreenData();
-      if (screenData) {
-        this.trackScreen(screenData.screenId, screenData.screenType);
-      }
-    };
-    if ('loading' === document.readyState) {
-      document.addEventListener('DOMContentLoaded', run, {
-        once: true
-      });
-    } else {
-      run();
-    }
+  static destroy() {
+    super.destroy();
+    this.trackedScreens.clear();
   }
   static getScreenData() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -466,7 +898,7 @@ class ScreenViewTracking {
     const postType = urlParams.get('post_type');
     const hash = window.location.hash;
     let screenId = '';
-    let screenType = _wpDashboardTracking.SCREEN_TYPES.APP_SCREEN;
+    let screenType = '';
     if (page) {
       screenId = page;
     } else if (postType) {
@@ -474,9 +906,15 @@ class ScreenViewTracking {
     } else {
       screenId = this.getScreenIdFromBody();
     }
+    if (this.isElementorAppPage()) {
+      const appScreenData = this.getAppScreenData(hash);
+      if (appScreenData) {
+        return appScreenData;
+      }
+    }
     const hasNavTabs = document.querySelector(SCREEN_SELECTORS.NAV_TAB_WRAPPER);
     const hasSettingsTabs = document.querySelectorAll(SCREEN_SELECTORS.SETTINGS_FORM_PAGE).length > 1;
-    if (hasNavTabs || hasSettingsTabs || hash) {
+    if (hasNavTabs || hasSettingsTabs || hash && !this.isElementorAppPage()) {
       screenType = _wpDashboardTracking.SCREEN_TYPES.TAB;
       if (hash) {
         const tabId = hash.replace(/^#(tab-)?/, '');
@@ -508,6 +946,29 @@ class ScreenViewTracking {
       screenType
     };
   }
+  static isElementorAppPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return 'elementor-app' === urlParams.get('page');
+  }
+  static getAppScreenData(hash) {
+    if (!hash) {
+      return null;
+    }
+    const cleanHash = hash.replace(/^#/, '');
+    if (!cleanHash.startsWith('/')) {
+      return null;
+    }
+    const pathParts = cleanHash.split('/').filter(Boolean);
+    if (0 === pathParts.length) {
+      return null;
+    }
+    const screenId = pathParts.join('/');
+    const screenType = _wpDashboardTracking.SCREEN_TYPES.APP_SCREEN;
+    return {
+      screenId,
+      screenType
+    };
+  }
   static getScreenIdFromBody() {
     const body = document.body;
     const bodyClasses = body.className.split(' ');
@@ -525,42 +986,25 @@ class ScreenViewTracking {
     this.attachNavTabTracking();
     this.attachHashChangeTracking();
     this.attachSettingsTabTracking();
+    this.attachModalTracking();
   }
   static attachNavTabTracking() {
     const wrapper = document.querySelector(SCREEN_SELECTORS.NAV_TAB_WRAPPER);
     if (!wrapper) {
       return;
     }
-    const observer = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        if ('childList' === mutation.type) {
-          const screenData = this.getScreenData();
-          if (screenData) {
-            this.trackScreen(screenData.screenId, screenData.screenType);
-          }
-          break;
-        }
-        if ('attributes' === mutation.type && 'class' === mutation.attributeName) {
-          const target = mutation.target;
-          if (target && target.classList && target.classList.contains('nav-tab')) {
-            const screenData = this.getScreenData();
-            if (screenData) {
-              this.trackScreen(screenData.screenId, screenData.screenType);
-            }
-            break;
-          }
+    this.addEventListenerTracked(wrapper, 'click', event => {
+      const navTab = event.target.closest(SCREEN_SELECTORS.NAV_TAB);
+      if (navTab && !navTab.classList.contains('nav-tab-active')) {
+        const screenData = this.getScreenData();
+        if (screenData) {
+          this.trackScreen(screenData.screenId, screenData.screenType);
         }
       }
     });
-    observer.observe(wrapper, {
-      attributes: true,
-      attributeFilter: ['class'],
-      subtree: true,
-      childList: true
-    });
   }
   static attachHashChangeTracking() {
-    window.addEventListener('hashchange', () => {
+    this.addEventListenerTracked(window, 'hashchange', () => {
       const screenData = this.getScreenData();
       if (screenData) {
         this.trackScreen(screenData.screenId, screenData.screenType);
@@ -568,21 +1012,48 @@ class ScreenViewTracking {
     });
   }
   static attachSettingsTabTracking() {
-    const observer = new MutationObserver(() => {
-      const screenData = this.getScreenData();
-      if (screenData) {
-        this.trackScreen(screenData.screenId, screenData.screenType);
-      }
-    });
     const settingsPages = document.querySelectorAll(SCREEN_SELECTORS.SETTINGS_FORM_PAGE);
+    if (0 === settingsPages.length) {
+      return;
+    }
     settingsPages.forEach(page => {
-      observer.observe(page, {
+      this.addObserver(page, {
         attributes: true,
         attributeFilter: ['class']
+      }, () => {
+        const screenData = this.getScreenData();
+        if (screenData) {
+          this.trackScreen(screenData.screenId, screenData.screenType);
+        }
       });
     });
   }
-  static trackScreen(screenId, screenType = _wpDashboardTracking.SCREEN_TYPES.APP_SCREEN) {
+  static attachModalTracking() {
+    this.addObserver(document.body, {
+      childList: true,
+      subtree: true
+    }, mutations => {
+      for (const mutation of mutations) {
+        if ('childList' === mutation.type) {
+          TRACKED_MODALS.forEach(modalSelector => {
+            const modal = document.querySelector(modalSelector);
+            if (modal && this.isModalVisible(modal)) {
+              const modalId = modalSelector.replace('#', '');
+              this.trackScreen(modalId, _wpDashboardTracking.SCREEN_TYPES.POPUP);
+            }
+          });
+        }
+      }
+    });
+  }
+  static isModalVisible(element) {
+    if (!element) {
+      return false;
+    }
+    const style = window.getComputedStyle(element);
+    return 'none' !== style.display && 0 !== parseFloat(style.opacity);
+  }
+  static trackScreen(screenId, screenType = _wpDashboardTracking.SCREEN_TYPES.TOP_LEVEL_PAGE) {
     const trackingKey = `${screenId}-${screenType}`;
     if (this.trackedScreens.has(trackingKey)) {
       return;
@@ -604,6 +1075,7 @@ var _default = exports["default"] = ScreenViewTracking;
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
@@ -612,6 +1084,7 @@ __webpack_require__(/*! core-js/modules/esnext.iterator.constructor.js */ "../no
 __webpack_require__(/*! core-js/modules/esnext.iterator.filter.js */ "../node_modules/core-js/modules/esnext.iterator.filter.js");
 __webpack_require__(/*! core-js/modules/esnext.iterator.for-each.js */ "../node_modules/core-js/modules/esnext.iterator.for-each.js");
 var _wpDashboardTracking = _interopRequireWildcard(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
+var _baseTracking = _interopRequireDefault(__webpack_require__(/*! ./base-tracking */ "../app/assets/js/event-track/dashboard/base-tracking.js"));
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 const TOP_BAR_SELECTORS = {
   TOP_BAR_ROOT: '.e-admin-top-bar',
@@ -620,7 +1093,7 @@ const TOP_BAR_SELECTORS = {
   MAIN_AREA: '.e-admin-top-bar__main-area',
   SECONDARY_AREA: '.e-admin-top-bar__secondary-area'
 };
-class TopBarTracking {
+class TopBarTracking extends _baseTracking.default {
   static init() {
     this.waitForTopBar();
   }
@@ -630,44 +1103,47 @@ class TopBarTracking {
       this.attachTopBarTracking(topBar);
       return;
     }
-    const observer = new MutationObserver((mutations, observerInstance) => {
+    const observer = this.addObserver(document.body, {
+      childList: true,
+      subtree: true
+    }, () => {
       const foundTopBar = document.querySelector(TOP_BAR_SELECTORS.TOP_BAR_ROOT);
       if (foundTopBar) {
         this.attachTopBarTracking(foundTopBar);
-        observerInstance.disconnect();
+        observer.disconnect();
+        clearTimeout(timeoutId);
       }
     });
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       observer.disconnect();
     }, 10000);
   }
   static attachTopBarTracking(topBar) {
     const buttons = topBar.querySelectorAll(TOP_BAR_SELECTORS.BAR_BUTTON);
     buttons.forEach(button => {
-      button.addEventListener('click', event => {
+      this.addEventListenerTracked(button, 'click', event => {
         this.handleTopBarClick(event);
       });
     });
     this.observeTopBarChanges(topBar);
   }
   static observeTopBarChanges(topBar) {
-    const observer = new MutationObserver(mutations => {
+    this.addObserver(topBar, {
+      childList: true,
+      subtree: true
+    }, mutations => {
       mutations.forEach(mutation => {
         if ('childList' === mutation.type) {
           mutation.addedNodes.forEach(node => {
             if (1 === node.nodeType) {
               if (node.matches && node.matches(TOP_BAR_SELECTORS.BAR_BUTTON)) {
-                node.addEventListener('click', event => {
+                this.addEventListenerTracked(node, 'click', event => {
                   this.handleTopBarClick(event);
                 });
               } else {
                 const buttons = node.querySelectorAll ? node.querySelectorAll(TOP_BAR_SELECTORS.BAR_BUTTON) : [];
                 buttons.forEach(button => {
-                  button.addEventListener('click', event => {
+                  this.addEventListenerTracked(button, 'click', event => {
                     this.handleTopBarClick(event);
                   });
                 });
@@ -676,10 +1152,6 @@ class TopBarTracking {
           });
         }
       });
-    });
-    observer.observe(topBar, {
-      childList: true,
-      subtree: true
     });
   }
   static handleTopBarClick(event) {
@@ -754,7 +1226,7 @@ const DashboardUtils = exports.DashboardUtils = {
       return true;
     }
     const postType = urlParams.get('post_type');
-    if ('elementor_library' === postType) {
+    if ('elementor_library' === postType || 'e-floating-buttons' === postType) {
       return true;
     }
     const body = document.body;
@@ -779,21 +1251,30 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = exports.SCREEN_TYPES = exports.NAV_AREAS = exports.CONTROL_TYPES = void 0;
+__webpack_require__(/*! core-js/modules/es.array.push.js */ "../node_modules/core-js/modules/es.array.push.js");
+__webpack_require__(/*! core-js/modules/esnext.iterator.constructor.js */ "../node_modules/core-js/modules/esnext.iterator.constructor.js");
+__webpack_require__(/*! core-js/modules/esnext.iterator.for-each.js */ "../node_modules/core-js/modules/esnext.iterator.for-each.js");
 var _navigation = _interopRequireDefault(__webpack_require__(/*! ./dashboard/navigation */ "../app/assets/js/event-track/dashboard/navigation.js"));
-var _topBar = _interopRequireDefault(__webpack_require__(/*! ./dashboard/top-bar */ "../app/assets/js/event-track/dashboard/top-bar.js"));
+var _pluginActions = _interopRequireDefault(__webpack_require__(/*! ./dashboard/plugin-actions */ "../app/assets/js/event-track/dashboard/plugin-actions.js"));
+var _promotion = _interopRequireDefault(__webpack_require__(/*! ./dashboard/promotion */ "../app/assets/js/event-track/dashboard/promotion.js"));
 var _screenView = _interopRequireDefault(__webpack_require__(/*! ./dashboard/screen-view */ "../app/assets/js/event-track/dashboard/screen-view.js"));
-var _actionControl = _interopRequireDefault(__webpack_require__(/*! ./dashboard/action-control */ "../app/assets/js/event-track/dashboard/action-control.js"));
+var _topBar = _interopRequireDefault(__webpack_require__(/*! ./dashboard/top-bar */ "../app/assets/js/event-track/dashboard/top-bar.js"));
+var _menuPromotion = _interopRequireDefault(__webpack_require__(/*! ./dashboard/menu-promotion */ "../app/assets/js/event-track/dashboard/menu-promotion.js"));
+var _actionControls = _interopRequireDefault(__webpack_require__(/*! ./dashboard/action-controls */ "../app/assets/js/event-track/dashboard/action-controls.js"));
 const SESSION_TIMEOUT_MINUTES = 30;
 const MINUTE_MS = 60 * 1000;
 const SESSION_TIMEOUT = SESSION_TIMEOUT_MINUTES * MINUTE_MS;
 const ACTIVITY_CHECK_INTERVAL = 1 * MINUTE_MS;
+const SESSION_STORAGE_KEY = 'elementor_wpdash_session';
+const PENDING_NAV_CLICK_KEY = 'elementor_wpdash_pending_nav';
 const CONTROL_TYPES = exports.CONTROL_TYPES = {
   BUTTON: 'button',
   CHECKBOX: 'checkbox',
   RADIO: 'radio',
   LINK: 'link',
   SELECT: 'select',
-  TOGGLE: 'toggle'
+  TOGGLE: 'toggle',
+  FILTER: 'filter'
 };
 const NAV_AREAS = exports.NAV_AREAS = {
   LEFT_MENU: 'left_menu',
@@ -812,57 +1293,181 @@ class WpDashboardTracking {
   static sessionEnded = false;
   static navItemsVisited = new Set();
   static activityCheckInterval = null;
-  static config = null;
-  static canSendEvents = false;
   static initialized = false;
+  static navigationListeners = [];
+  static isNavigatingToElementor = false;
   static init() {
     if (this.initialized) {
       return;
     }
-    this.sessionStartTime = Date.now();
-    this.lastActivityTime = Date.now();
-    this.sessionEnded = false;
-    this.navItemsVisited = new Set();
-    this.config = elementorCommon?.config || {};
-    const editorEvents = this.config.editor_events || {};
-    this.canSendEvents = editorEvents.can_send_events || false;
+    this.restoreOrCreateSession();
     if (this.isEventsManagerAvailable()) {
       this.startSessionMonitoring();
       this.attachActivityListeners();
+      this.attachNavigationListener();
       this.initialized = true;
     }
+  }
+  static restoreOrCreateSession() {
+    const storedSession = this.getStoredSession();
+    if (storedSession) {
+      this.sessionStartTime = storedSession.sessionStartTime;
+      this.navItemsVisited = new Set(storedSession.navItemsVisited);
+      this.lastActivityTime = Date.now();
+      this.sessionEnded = false;
+    } else {
+      this.sessionStartTime = Date.now();
+      this.lastActivityTime = Date.now();
+      this.sessionEnded = false;
+      this.navItemsVisited = new Set();
+    }
+    this.processPendingNavClick();
+    this.saveSessionToStorage();
+  }
+  static processPendingNavClick() {
+    try {
+      const pendingNav = sessionStorage.getItem(PENDING_NAV_CLICK_KEY);
+      if (pendingNav) {
+        const {
+          itemId,
+          rootItem,
+          area
+        } = JSON.parse(pendingNav);
+        this.navItemsVisited.add(itemId);
+        const properties = {
+          wpdash_nav_item_id: itemId,
+          wpdash_nav_area: area
+        };
+        if (rootItem) {
+          properties.wpdash_nav_item_root = rootItem;
+        }
+        this.dispatchEvent('wpdash_nav_clicked', properties, {
+          send_immediately: true
+        });
+        sessionStorage.removeItem(PENDING_NAV_CLICK_KEY);
+      }
+    } catch (error) {
+      sessionStorage.removeItem(PENDING_NAV_CLICK_KEY);
+    }
+  }
+  static getStoredSession() {
+    try {
+      const stored = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+  static saveSessionToStorage() {
+    const sessionData = {
+      sessionStartTime: this.sessionStartTime,
+      navItemsVisited: Array.from(this.navItemsVisited)
+    };
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessionData));
+  }
+  static clearStoredSession() {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
   }
   static isEventsManagerAvailable() {
     return elementorCommon?.eventsManager && 'function' === typeof elementorCommon.eventsManager.dispatchEvent;
   }
-  static dispatchEvent(eventName, properties = {}) {
-    if (!this.canSendEvents || !this.isEventsManagerAvailable()) {
+  static canSendEvents() {
+    return elementorCommon?.config?.editor_events?.can_send_events || false;
+  }
+  static dispatchEvent(eventName, properties = {}, options = {}) {
+    if (!this.isEventsManagerAvailable() || !this.canSendEvents()) {
       return;
     }
-    try {
-      elementorCommon.eventsManager.dispatchEvent(eventName, properties);
-    } catch (error) {
-      this.canSendEvents = false;
-    }
+    elementorCommon.eventsManager.dispatchEvent(eventName, properties, options);
   }
   static updateActivity() {
     this.lastActivityTime = Date.now();
-    this.sessionEnded = false;
   }
   static startSessionMonitoring() {
     this.activityCheckInterval = setInterval(() => {
       this.checkSessionTimeout();
     }, ACTIVITY_CHECK_INTERVAL);
     window.addEventListener('beforeunload', () => {
-      this.trackSessionEnd('page_unload');
+      if (!this.sessionEnded && !this.isNavigatingToElementor) {
+        this.trackSessionEnd('tab_closed');
+      }
     });
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
+      if (!this.sessionEnded && document.hidden) {
         const timeSinceLastActivity = Date.now() - this.lastActivityTime;
         if (timeSinceLastActivity > SESSION_TIMEOUT) {
           this.trackSessionEnd('tab_inactive');
         }
       }
+    });
+  }
+  static isElementorPage(url) {
+    try {
+      const urlObj = new URL(url, window.location.origin);
+      const params = urlObj.searchParams;
+      const page = params.get('page');
+      const postType = params.get('post_type');
+      const action = params.get('action');
+      const elementorPages = ['elementor', 'go_knowledge_base_site', 'e-form-submissions'];
+      const elementorPostTypes = ['elementor_library', 'e-floating-buttons'];
+      return page && elementorPages.some(p => page.includes(p)) || postType && elementorPostTypes.includes(postType) || action && action.includes('elementor');
+    } catch (error) {
+      return false;
+    }
+  }
+  static isPluginsPage(url) {
+    try {
+      const urlObj = new URL(url, window.location.origin);
+      return urlObj.pathname.includes('plugins.php');
+    } catch (error) {
+      return false;
+    }
+  }
+  static isNavigatingAwayFromElementor(targetUrl) {
+    if (!targetUrl) {
+      return false;
+    }
+    if (targetUrl.startsWith('#')) {
+      return false;
+    }
+    return !this.isElementorPage(targetUrl);
+  }
+  static isLinkOpeningInNewTab(link) {
+    const target = link.getAttribute('target');
+    return '_blank' === target || '_new' === target;
+  }
+  static attachNavigationListener() {
+    const handleLinkClick = event => {
+      const link = event.target.closest('a');
+      if (link && link.href) {
+        if (this.isLinkOpeningInNewTab(link)) {
+          return;
+        }
+        if (!this.sessionEnded && this.isNavigatingAwayFromElementor(link.href)) {
+          this.trackSessionEnd('navigate_away');
+        } else if (this.isElementorPage(link.href)) {
+          this.isNavigatingToElementor = true;
+        }
+      }
+    };
+    const handleFormSubmit = event => {
+      const form = event.target;
+      if (form.action) {
+        if (!this.sessionEnded && this.isNavigatingAwayFromElementor(form.action)) {
+          this.trackSessionEnd('navigate_away');
+        } else if (this.isElementorPage(form.action)) {
+          this.isNavigatingToElementor = true;
+        }
+      }
+    };
+    document.addEventListener('click', handleLinkClick, true);
+    document.addEventListener('submit', handleFormSubmit, true);
+    this.navigationListeners.push({
+      type: 'click',
+      handler: handleLinkClick
+    }, {
+      type: 'submit',
+      handler: handleFormSubmit
     });
   }
   static checkSessionTimeout() {
@@ -884,13 +1489,21 @@ class WpDashboardTracking {
   }
   static formatDuration(milliseconds) {
     const totalSeconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return Number(totalSeconds.toFixed(2));
   }
   static trackNavClicked(itemId, rootItem = null, area = NAV_AREAS.LEFT_MENU) {
+    if (!this.initialized) {
+      const pendingNav = {
+        itemId,
+        rootItem,
+        area
+      };
+      sessionStorage.setItem(PENDING_NAV_CLICK_KEY, JSON.stringify(pendingNav));
+      return;
+    }
     this.updateActivity();
     this.navItemsVisited.add(itemId);
+    this.saveSessionToStorage();
     const properties = {
       wpdash_nav_item_id: itemId,
       wpdash_nav_area: area
@@ -908,10 +1521,10 @@ class WpDashboardTracking {
     };
     this.dispatchEvent('wpdash_screen_viewed', properties);
   }
-  static trackActionControl(controlData, controlType) {
+  static trackActionControl(controlIdentifier, controlType) {
     this.updateActivity();
     const properties = {
-      wpdash_action_control_interacted: controlData,
+      wpdash_action_control_interacted: controlIdentifier,
       wpdash_control_type: controlType
     };
     this.dispatchEvent('wpdash_action_control', properties);
@@ -930,6 +1543,10 @@ class WpDashboardTracking {
       return;
     }
     this.sessionEnded = true;
+    if (this.activityCheckInterval) {
+      clearInterval(this.activityCheckInterval);
+      this.activityCheckInterval = null;
+    }
     const duration = Date.now() - this.sessionStartTime;
     const properties = {
       wpdash_endstate_nav_summary: Array.from(this.navItemsVisited),
@@ -938,21 +1555,49 @@ class WpDashboardTracking {
       reason
     };
     this.dispatchEvent('wpdash_session_end_state', properties);
+    this.clearStoredSession();
   }
   static destroy() {
     if (this.activityCheckInterval) {
       clearInterval(this.activityCheckInterval);
     }
+    this.navigationListeners.forEach(({
+      type,
+      handler
+    }) => {
+      document.removeEventListener(type, handler, true);
+    });
+    this.navigationListeners = [];
+    _topBar.default.destroy();
+    _screenView.default.destroy();
+    _promotion.default.destroy();
+    _menuPromotion.default.destroy();
+    _actionControls.default.destroy();
     this.initialized = false;
   }
 }
 exports["default"] = WpDashboardTracking;
 window.addEventListener('elementor/admin/init', () => {
-  WpDashboardTracking.init();
+  const currentUrl = window.location.href;
+  const isPluginsPage = WpDashboardTracking.isPluginsPage(currentUrl);
+  const isElementorPage = WpDashboardTracking.isElementorPage(currentUrl);
+  if (isPluginsPage) {
+    _pluginActions.default.init();
+  }
   _navigation.default.init();
-  _topBar.default.init();
-  _screenView.default.init();
-  _actionControl.default.init();
+  if (isElementorPage) {
+    WpDashboardTracking.init();
+    _topBar.default.init();
+    _screenView.default.init();
+    _promotion.default.init();
+    _menuPromotion.default.init();
+    _actionControls.default.init();
+  }
+});
+window.addEventListener('beforeunload', () => {
+  _navigation.default.destroy();
+  _pluginActions.default.destroy();
+  WpDashboardTracking.destroy();
 });
 
 /***/ }),
@@ -2682,6 +3327,8 @@ exports["default"] = void 0;
 const eventsConfig = {
   triggers: {
     click: 'Click',
+    rightClick: 'Right Click',
+    doubleClick: 'Double Click',
     accordionClick: 'Accordion Click',
     toggleClick: 'Toggle Click',
     dropdownClick: 'Click Dropdown',
@@ -2703,7 +3350,10 @@ const eventsConfig = {
       cloudKitLibrary: 'Cloud Kit Library'
     },
     variables: 'Variables Panel',
-    admin: 'WP admin'
+    variablesManager: 'Variables Manager',
+    admin: 'WP admin',
+    structurePanel: 'Structure Panel',
+    canvas: 'Canvas'
   },
   secondaryLocations: {
     layout: 'Layout Section',
@@ -2776,7 +3426,9 @@ const eventsConfig = {
     admin: {
       pluginToolsTab: 'plugin_tools_tab',
       pluginWebsiteTemplatesTab: 'plugin_website_templates_tab'
-    }
+    },
+    componentsTab: 'Components Tab',
+    canvasElement: 'Canvas Element'
   },
   elements: {
     accordionSection: 'Accordion section',
@@ -2840,7 +3492,37 @@ const eventsConfig = {
       open: 'open_variables_popover',
       add: 'add_new_variable',
       connect: 'connect_variable',
-      save: 'save_new_variable'
+      save: 'save_new_variable',
+      openManager: 'open_variables_manager',
+      saveChanges: 'save_variables_changes',
+      delete: 'delete_variable'
+    },
+    components: {
+      createClicked: 'component_create_clicked',
+      createCancelled: 'component_creation_cancelled',
+      created: 'component_created',
+      instanceAdded: 'component_instance_added',
+      edited: 'component_edited'
+    },
+    global_classes: {
+      classApplied: 'class_applied',
+      classRemoved: 'class_removed',
+      classManagerFilterCleared: 'class_manager_filter_cleared',
+      classDeleted: 'class_deleted',
+      classPublishConflict: 'class_publish_conflict',
+      classRenamed: 'class_renamed',
+      classCreated: 'class_created',
+      classManagerSearched: 'class_manager_searched',
+      classManagerFiltersOpened: 'class_manager_filters_opened',
+      classManagerOpened: 'class_manager_opened',
+      classManagerReorder: 'class_manager_reorder',
+      classManagerFilterUsed: 'class_manager_filter_used',
+      classUsageLocate: 'class_usage_locate',
+      classUsageHovered: 'class_usage_hovered',
+      classStyled: 'class_styled',
+      classStateClicked: 'class_state_clicked',
+      classUsageClicked: 'class_usage_clicked',
+      classDuplicate: 'class_duplicate'
     }
   }
 };
@@ -3715,7 +4397,7 @@ module.exports = function (namespace, method) {
 "use strict";
 
 // `GetIteratorDirect(obj)` abstract operation
-// https://tc39.es/proposal-iterator-helpers/#sec-getiteratordirect
+// https://tc39.es/ecma262/#sec-getiteratordirect
 module.exports = function (obj) {
   return {
     iterator: obj,
@@ -4365,7 +5047,7 @@ var getMethod = __webpack_require__(/*! ../internals/get-method */ "../node_modu
 var IteratorPrototype = (__webpack_require__(/*! ../internals/iterators-core */ "../node_modules/core-js/internals/iterators-core.js").IteratorPrototype);
 var createIterResultObject = __webpack_require__(/*! ../internals/create-iter-result-object */ "../node_modules/core-js/internals/create-iter-result-object.js");
 var iteratorClose = __webpack_require__(/*! ../internals/iterator-close */ "../node_modules/core-js/internals/iterator-close.js");
-var iteratorCloseAll = __webpack_require__(/*! ./iterator-close-all */ "../node_modules/core-js/internals/iterator-close-all.js");
+var iteratorCloseAll = __webpack_require__(/*! ../internals/iterator-close-all */ "../node_modules/core-js/internals/iterator-close-all.js");
 
 var TO_STRING_TAG = wellKnownSymbol('toStringTag');
 var ITERATOR_HELPER = 'IteratorHelper';
@@ -5172,10 +5854,10 @@ var SHARED = '__core-js_shared__';
 var store = module.exports = globalThis[SHARED] || defineGlobalProperty(SHARED, {});
 
 (store.versions || (store.versions = [])).push({
-  version: '3.43.0',
+  version: '3.46.0',
   mode: IS_PURE ? 'pure' : 'global',
-  copyright: '© 2014-2025 Denis Pushkarev (zloirock.ru)',
-  license: 'https://github.com/zloirock/core-js/blob/v3.43.0/LICENSE',
+  copyright: '© 2014-2025 Denis Pushkarev (zloirock.ru), 2025 CoreJS Company (core-js.io)',
+  license: 'https://github.com/zloirock/core-js/blob/v3.46.0/LICENSE',
   source: 'https://github.com/zloirock/core-js'
 });
 

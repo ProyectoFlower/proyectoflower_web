@@ -63,7 +63,6 @@ __( 'Spread', 'elementor' );
 __( 'Auto', 'elementor' );
 __( 'Custom', 'elementor' );
 __( 'CSS function', 'elementor' );
-__( 'Drag item', 'elementor' );
 __( 'Learn More', 'elementor' );
 __(
 		'To add a link to this element, first remove the link from the elements inside of it.',
@@ -72,16 +71,17 @@ __(
 __( 'To add a link to this element, first remove the link from its parent container.', 'elementor' );
 __( 'Take me there', 'elementor' );
 __( 'Nested links', 'elementor' );
-__( 'Add item', 'elementor' );
-__( 'Duplicate', 'elementor' );
-__( 'Show', 'elementor' );
-__( 'Hide', 'elementor' );
-__( 'Remove', 'elementor' );
-__( 'Open item', 'elementor' );
 __( 'Search', 'elementor' );
 __( 'Sorry, nothing matched', 'elementor' );
 __( 'Try something else.', 'elementor' );
 __( 'Clear & try again', 'elementor' );
+__( 'Clear', 'elementor' );
+__( 'Bold', 'elementor' );
+__( 'Italic', 'elementor' );
+__( 'Underline', 'elementor' );
+__( 'Strikethrough', 'elementor' );
+__( 'Superscript', 'elementor' );
+__( 'Subscript', 'elementor' );
 __( 'Enable Unfiltered Uploads', 'elementor' );
 __(
 	'Before you enable unfiltered files upload, note that such files include a security risk. Elementor does run a process to remove possible malicious code, but there is still risk involved when using such files.',
@@ -142,6 +142,13 @@ __( 'Content edges', 'elementor' );
 __( 'Text', 'elementor' );
 __( 'Color', 'elementor' );
 __( 'Clipping', 'elementor' );
+__( 'Drag item', 'elementor' );
+__( 'Add item', 'elementor' );
+__( 'Duplicate', 'elementor' );
+__( 'Show', 'elementor' );
+__( 'Hide', 'elementor' );
+__( 'Remove', 'elementor' );
+__( 'Open item', 'elementor' );
 __( 'Origin X', 'elementor' );
 __( 'Origin Y', 'elementor' );
 __( 'Origin Z', 'elementor' );
