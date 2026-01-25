@@ -920,7 +920,7 @@ function Header(props) {
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "eps-app__logo-title-wrapper e-onboarding__header-logo"
   }, /*#__PURE__*/_react.default.createElement("i", {
-    className: "eps-app__logo eicon-elementor"
+    className: "eps-app__logo eicon-elementor-circle"
   }), /*#__PURE__*/_react.default.createElement("img", {
     src: elementorCommon.config.urls.assets + 'images/logo-platform.svg',
     alt: __('Elementor Logo', 'elementor')
@@ -2209,13 +2209,20 @@ var _useButtonAction2 = _interopRequireDefault(__webpack_require__(/*! ../utils/
 var _onboardingEventTracking = __webpack_require__(/*! ../utils/onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function ChooseFeatures() {
+  var _elementorAppConfig$o, _elementorAppConfig;
+  var isEditorOneActive = (_elementorAppConfig$o = (_elementorAppConfig = elementorAppConfig) === null || _elementorAppConfig === void 0 || (_elementorAppConfig = _elementorAppConfig.onboarding) === null || _elementorAppConfig === void 0 ? void 0 : _elementorAppConfig.isEditorOneActive) !== null && _elementorAppConfig$o !== void 0 ? _elementorAppConfig$o : false;
+  var options = (0, _react.useMemo)(function () {
+    return (0, _utils.getOptions)(isEditorOneActive);
+  }, [isEditorOneActive]);
   var _useAjax = (0, _useAjax2.default)(),
     setAjax = _useAjax.setAjax,
     tiers = {
+      one: __('One', 'elementor'),
       advanced: __('Advanced', 'elementor'),
       essential: __('Essential', 'elementor')
     },
     _useState = (0, _react.useState)({
+      one: [],
       essential: [],
       advanced: []
     }),
@@ -2231,9 +2238,12 @@ function ChooseFeatures() {
     _useButtonAction = (0, _useButtonAction2.default)(pageId, nextStep),
     state = _useButtonAction.state,
     handleAction = _useButtonAction.handleAction,
+    upgradeUrl = elementorAppConfig.onboarding.urls.upgrade,
+    pageHeading = elementorAppConfig.onboarding.pageHeading,
+    pageSubheading = elementorAppConfig.onboarding.pageSubheading,
     actionButton = {
       text: __('Upgrade Now', 'elementor'),
-      href: (0, _utils.addExperimentTrackingToUrl)(elementorAppConfig.onboarding.urls.upgrade, 'upgrade-step3'),
+      href: (0, _utils.addExperimentTrackingToUrl)(upgradeUrl, 'upgrade-step3'),
       target: '_blank',
       onClick: function onClick() {
         _onboardingEventTracking.OnboardingEventTracking.trackStepAction(3, 'upgrade_now', {
@@ -2282,30 +2292,32 @@ function ChooseFeatures() {
     actionButton.className = 'e-onboarding__button--disabled';
   }
   (0, _react.useEffect)(function () {
-    if (selectedFeatures.advanced.length > 0) {
+    if (isEditorOneActive && selectedFeatures.one && selectedFeatures.one.length > 0) {
+      setTierName(tiers.one);
+    } else if (selectedFeatures.advanced && selectedFeatures.advanced.length > 0) {
       setTierName(tiers.advanced);
     } else {
       setTierName(tiers.essential);
     }
-  }, [selectedFeatures, tiers.advanced, tiers.essential]);
+  }, [selectedFeatures, isEditorOneActive, tiers.one, tiers.advanced, tiers.essential]);
   (0, _react.useEffect)(function () {
     _onboardingEventTracking.OnboardingEventTracking.setupAllUpgradeButtons(state.currentStep);
     _onboardingEventTracking.OnboardingEventTracking.onStepLoad(3);
   }, [state.currentStep]);
   function isFeatureSelected(features) {
-    return !!features.advanced.length || !!features.essential.length;
+    return !!features.one.length || !!features.advanced.length || !!features.essential.length;
   }
   return /*#__PURE__*/_react.default.createElement(_layout.default, {
     pageId: pageId,
     nextStep: nextStep
   }, /*#__PURE__*/_react.default.createElement(_pageContentLayout.default, {
     image: elementorCommon.config.urls.assets + 'images/app/onboarding/Illustration_Setup.svg',
-    title: __('Elevate your website with additional Pro features.', 'elementor'),
+    title: pageHeading,
     actionButton: actionButton,
     skipButton: skipButton
-  }, /*#__PURE__*/_react.default.createElement("p", null, __('Which Elementor Pro features do you need to bring your creative vision to life?', 'elementor')), /*#__PURE__*/_react.default.createElement("form", {
+  }, /*#__PURE__*/_react.default.createElement("p", null, pageSubheading), /*#__PURE__*/_react.default.createElement("form", {
     className: "e-onboarding__choose-features-section"
-  }, _utils.options.map(function (option, index) {
+  }, options.map(function (option, index) {
     var itemId = "".concat(option.plan, "-").concat(index);
     return /*#__PURE__*/_react.default.createElement("label", {
       key: itemId,
@@ -3896,6 +3908,9 @@ var OnboardingTracker = /*#__PURE__*/function () {
     key: "extractFromObjectFormat",
     value: function extractFromObjectFormat(selectedFeatures) {
       var allFeatures = [];
+      if (Array.isArray(selectedFeatures.one)) {
+        allFeatures.push.apply(allFeatures, (0, _toConsumableArray2.default)(selectedFeatures.one));
+      }
       if (Array.isArray(selectedFeatures.essential)) {
         allFeatures.push.apply(allFeatures, (0, _toConsumableArray2.default)(selectedFeatures.essential));
       }
@@ -5111,7 +5126,7 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.setSelectedFeatureList = exports.safeDispatchEvent = exports.options = exports.addExperimentTrackingToUrl = void 0;
+exports.setSelectedFeatureList = exports.safeDispatchEvent = exports.getOptions = exports.addExperimentTrackingToUrl = void 0;
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "../node_modules/@babel/runtime/helpers/toConsumableArray.js"));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
 var _onboardingEventTracking = __webpack_require__(/*! ./onboarding-event-tracking */ "../app/modules/onboarding/assets/js/utils/onboarding-event-tracking.js");
@@ -5120,7 +5135,7 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
 /**
  * Checkboxes data.
  */
-var options = exports.options = [{
+var optionsWithoutOne = [{
   plan: 'essential',
   text: __('Templates & Theme Builder', 'elementor')
 }, {
@@ -5145,6 +5160,50 @@ var options = exports.options = [{
   plan: 'advanced',
   text: __('Notes & Collaboration', 'elementor')
 }];
+
+/**
+ * Updated checkboxes data with ONE features (when editor_one is active).
+ * Order matches Figma design: 2 columns, 4 rows
+ * Row 1: Theme Builder | AI for code, images, & layouts
+ * Row 2: Lead Collection | Image optimization
+ * Row 3: Custom Code & CSS | Accessibility scans and fixes
+ * Row 4: Email deliverability | WooCommerce Builder
+ */
+var optionsWithOne = [{
+  plan: 'essential',
+  text: __('Theme Builder', 'elementor')
+}, {
+  plan: 'one',
+  text: __('AI for code, images, & layouts', 'elementor')
+}, {
+  plan: 'essential',
+  text: __('Lead Collection', 'elementor')
+}, {
+  plan: 'one',
+  text: __('Image optimization', 'elementor')
+}, {
+  plan: 'advanced',
+  text: __('Custom Code & CSS', 'elementor')
+}, {
+  plan: 'one',
+  text: __('Accessibility scans and fixes', 'elementor')
+}, {
+  plan: 'one',
+  text: __('Email deliverability', 'elementor')
+}, {
+  plan: 'advanced',
+  text: __('WooCommerce Builder', 'elementor')
+}];
+
+/**
+ * Get checkboxes data based on editor_one feature status.
+ * @param {boolean} isEditorOneActive - Whether editor_one feature is active.
+ * @return {Array} Array of feature options.
+ */
+var getOptions = exports.getOptions = function getOptions() {
+  var isEditorOneActive = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  return isEditorOneActive ? optionsWithOne : optionsWithoutOne;
+};
 
 /**
  * Set the selected feature list.
@@ -5222,4 +5281,4 @@ var addExperimentTrackingToUrl = exports.addExperimentTrackingToUrl = function a
 /***/ })
 
 }]);
-//# sourceMappingURL=onboarding.8bbe239db42fe0d8d99f.bundle.js.map
+//# sourceMappingURL=onboarding.b9c68f81fb52ea524d8b.bundle.js.map

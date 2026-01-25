@@ -58,6 +58,8 @@ var _router = __webpack_require__(/*! @reach/router */ "../node_modules/@reach/r
 var _settingsContext = __webpack_require__(/*! ./context/settings-context */ "../app/modules/kit-library/assets/js/context/settings-context.js");
 var _connectStateContext = __webpack_require__(/*! ./context/connect-state-context */ "../app/modules/kit-library/assets/js/context/connect-state-context.js");
 var _trackingContext = __webpack_require__(/*! ./context/tracking-context */ "../app/modules/kit-library/assets/js/context/tracking-context.js");
+var _returnToContext = __webpack_require__(/*! ./context/return-to-context */ "../app/modules/kit-library/assets/js/context/return-to-context.js");
+var _useQueryParams = _interopRequireDefault(__webpack_require__(/*! elementor-app/hooks/use-query-params */ "../app/assets/js/hooks/use-query-params.js"));
 var queryClient = new _reactQuery.QueryClient({
   defaultOptions: {
     queries: {
@@ -68,8 +70,12 @@ var queryClient = new _reactQuery.QueryClient({
   }
 });
 function AppContent() {
+  var _useQueryParams$getAl = (0, _useQueryParams.default)().getAll(),
+    returnTo = _useQueryParams$getAl.return_to;
   return /*#__PURE__*/_react.default.createElement(_settingsContext.SettingsProvider, {
     value: elementorAppConfig['kit-library']
+  }, /*#__PURE__*/_react.default.createElement(_returnToContext.ReturnToProvider, {
+    value: returnTo
   }, /*#__PURE__*/_react.default.createElement(_connectStateContext.ConnectStateProvider, null, /*#__PURE__*/_react.default.createElement(_trackingContext.TrackingProvider, null, /*#__PURE__*/_react.default.createElement(_lastFilterContext.LastFilterProvider, null, /*#__PURE__*/_react.default.createElement(_router.Router, null, /*#__PURE__*/_react.default.createElement(_index.default, {
     path: "/"
   }), /*#__PURE__*/_react.default.createElement(_favorites.default, {
@@ -80,7 +86,7 @@ function AppContent() {
     path: "/overview/:id"
   }), /*#__PURE__*/_react.default.createElement(_cloud.default, {
     path: "/cloud"
-  }))))));
+  })))))));
 }
 function App() {
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -114,10 +120,12 @@ var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
 var _router = __webpack_require__(/*! @reach/router */ "../node_modules/@reach/router/es/index.js");
 var _appUi = __webpack_require__(/*! @elementor/app-ui */ "@elementor/app-ui");
 var _trackingContext = __webpack_require__(/*! ../context/tracking-context */ "../app/modules/kit-library/assets/js/context/tracking-context.js");
+var _returnToContext = __webpack_require__(/*! ../context/return-to-context */ "../app/modules/kit-library/assets/js/context/return-to-context.js");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function ApplyKitDialog(props) {
   var navigate = (0, _router.useNavigate)();
   var tracking = (0, _trackingContext.useTracking)();
+  var returnTo = (0, _returnToContext.useReturnTo)();
   var startImportProcess = (0, _react.useCallback)(function () {
     var _elementorCommon;
     var applyAll = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -127,16 +135,22 @@ function ApplyKitDialog(props) {
       if (applyAll) {
         url += '&action_type=apply-all';
       }
+      if (returnTo) {
+        url += "&return_to=".concat(encodeURIComponent(returnTo), "&no_automatic_redirect=true");
+      }
     } else {
       url = '/import/process' + "?id=".concat(props.id) + "&file_url=".concat(encodeURIComponent(props.downloadLink)) + "&nonce=".concat(props.nonce, "&referrer=kit-library");
       if (applyAll) {
         url += '&action_type=apply-all';
       }
+      if (returnTo) {
+        url += "&return_to=".concat(encodeURIComponent(returnTo), "&no_automatic_redirect=true");
+      }
     }
     tracking.trackKitdemoApplyAllOrCustomize(applyAll, function () {
       return navigate(url);
     });
-  }, [props.downloadLink, props.nonce, props.id, tracking, navigate]);
+  }, [props.downloadLink, props.nonce, props.id, tracking, navigate, returnTo]);
   return /*#__PURE__*/_react.default.createElement(_appUi.Dialog
   // Translators: %s is the kit name.
   , {
@@ -955,13 +969,23 @@ exports["default"] = KitAlreadyAppliedDialog;
 var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
 var _appUi = __webpack_require__(/*! @elementor/app-ui */ "@elementor/app-ui");
 var _trackingContext = __webpack_require__(/*! ../context/tracking-context */ "../app/modules/kit-library/assets/js/context/tracking-context.js");
+var _useQueryParams = _interopRequireDefault(__webpack_require__(/*! elementor-app/hooks/use-query-params */ "../app/assets/js/hooks/use-query-params.js"));
 function KitAlreadyAppliedDialog(props) {
   var tracking = (0, _trackingContext.useTracking)();
+  var _useQueryParams$getAl = (0, _useQueryParams.default)().getAll(),
+    returnToParam = _useQueryParams$getAl.return_to,
+    noAutomaticRedirectParam = _useQueryParams$getAl.no_automatic_redirect;
   var getRemoveKitUrl = function getRemoveKitUrl() {
     var elementorToolsUrl = elementorAppConfig['import-export'].tools_url;
     var url = new URL(elementorToolsUrl);
     url.searchParams.append('referrer_kit', props.id);
     url.searchParams.append('scroll_to_revert', '1');
+    if (returnToParam) {
+      url.searchParams.append('return_to', returnToParam);
+    }
+    if (noAutomaticRedirectParam) {
+      url.searchParams.append('no_automatic_redirect', noAutomaticRedirectParam);
+    }
     url.hash = 'tab-import-export-kit';
     return url.toString();
   };
@@ -1592,17 +1616,25 @@ HeaderBackButton.propTypes = {
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = Header;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
 var _appUi = __webpack_require__(/*! @elementor/app-ui */ "@elementor/app-ui");
 var _headerButtons = _interopRequireDefault(__webpack_require__(/*! ../../../../../../assets/js/layout/header-buttons */ "../app/assets/js/layout/header-buttons.js"));
+var _returnToContext = __webpack_require__(/*! ../../context/return-to-context */ "../app/modules/kit-library/assets/js/context/return-to-context.js");
+var _redirect = _interopRequireDefault(__webpack_require__(/*! ../../../../../import-export/assets/js/shared/utils/redirect */ "../app/modules/import-export/assets/js/shared/utils/redirect.js"));
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function Header(props) {
-  var onClose = function onClose() {
+  var returnTo = (0, _returnToContext.useReturnTo)();
+  var onClose = (0, _react.useCallback)(function () {
+    if (returnTo && (0, _redirect.default)(returnTo)) {
+      return;
+    }
     window.top.location = elementorAppConfig.admin_url;
-  };
+  }, [returnTo]);
   return /*#__PURE__*/_react.default.createElement(_appUi.Grid, {
     container: true,
     alignItems: "center",
@@ -1612,7 +1644,7 @@ function Header(props) {
     className: "eps-app__logo-title-wrapper",
     href: "#/kit-library"
   }, /*#__PURE__*/_react.default.createElement("i", {
-    className: "eps-app__logo eicon-elementor"
+    className: "eps-app__logo eicon-elementor-circle"
   }), /*#__PURE__*/_react.default.createElement("h1", {
     className: "eps-app__title"
   }, __('Website Templates', 'elementor'))), props.centerColumn || /*#__PURE__*/_react.default.createElement("span", null), props.endColumn || /*#__PURE__*/_react.default.createElement("div", {
@@ -2467,6 +2499,42 @@ function LastFilterProvider(props) {
 }
 LastFilterProvider.propTypes = {
   children: PropTypes.any
+};
+
+/***/ }),
+
+/***/ "../app/modules/kit-library/assets/js/context/return-to-context.js":
+/*!*************************************************************************!*\
+  !*** ../app/modules/kit-library/assets/js/context/return-to-context.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
+
+
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.ReturnToProvider = ReturnToProvider;
+exports.useReturnTo = useReturnTo;
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
+var ReturnToContext = (0, _react.createContext)(null);
+function useReturnTo() {
+  return (0, _react.useContext)(ReturnToContext);
+}
+function ReturnToProvider(_ref) {
+  var value = _ref.value,
+    children = _ref.children;
+  return /*#__PURE__*/_react.default.createElement(ReturnToContext.Provider, {
+    value: value
+  }, children);
+}
+ReturnToProvider.propTypes = {
+  children: PropTypes.any,
+  value: PropTypes.string
 };
 
 /***/ }),
@@ -5220,6 +5288,7 @@ var _header = _interopRequireDefault(__webpack_require__(/*! ../../components/la
 var _appUi = __webpack_require__(/*! @elementor/app-ui */ "@elementor/app-ui");
 var _router = __webpack_require__(/*! @reach/router */ "../node_modules/@reach/router/es/index.js");
 var _popoverDialog = _interopRequireDefault(__webpack_require__(/*! elementor-app/ui/popover-dialog/popover-dialog */ "../app/assets/js/ui/popover-dialog/popover-dialog.js"));
+var _returnToContext = __webpack_require__(/*! ../../context/return-to-context */ "../app/modules/kit-library/assets/js/context/return-to-context.js");
 __webpack_require__(/*! ./index-header.scss */ "../app/modules/kit-library/assets/js/pages/index/index-header.scss");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
 function IndexHeader(props) {
@@ -5230,6 +5299,7 @@ function IndexHeader(props) {
     isInfoModalOpen = _useState2[0],
     setIsInfoModalOpen = _useState2[1];
   var importRef = (0, _react.useRef)();
+  var returnTo = (0, _returnToContext.useReturnTo)();
   var shouldShowImportButton = elementorAppConfig.user.is_administrator || ((_elementorAppConfig$u = (_elementorAppConfig$u2 = elementorAppConfig.user.restrictions) === null || _elementorAppConfig$u2 === void 0 ? void 0 : _elementorAppConfig$u2.includes('json-upload')) !== null && _elementorAppConfig$u !== void 0 ? _elementorAppConfig$u : false);
   var buttons = (0, _react.useMemo)(function () {
     return [{
@@ -5255,10 +5325,14 @@ function IndexHeader(props) {
       icon: 'eicon-upload-circle-o',
       elRef: importRef,
       onClick: function onClick() {
-        navigate('/import?referrer=kit-library');
+        var importUrl = '/import?referrer=kit-library';
+        if (returnTo) {
+          importUrl += "&return_to=".concat(encodeURIComponent(returnTo));
+        }
+        navigate(importUrl);
       }
     }];
-  }, [props.isFetching, props.refetch, shouldShowImportButton, navigate]);
+  }, [props.isFetching, props.refetch, shouldShowImportButton, navigate, returnTo]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_header.default, {
     buttons: buttons
   }), /*#__PURE__*/_react.default.createElement(_popoverDialog.default, {
@@ -6360,4 +6434,4 @@ var isTierAtLeast = exports.isTierAtLeast = function isTierAtLeast(currentTier, 
 /***/ })
 
 }]);
-//# sourceMappingURL=kit-library.ab2ea8474ed4764e95c7.bundle.js.map
+//# sourceMappingURL=kit-library.6fbef525614a7b49f293.bundle.js.map
