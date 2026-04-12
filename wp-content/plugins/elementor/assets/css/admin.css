@@ -1271,6 +1271,10 @@ body.post-type-attachment table.media .column-title .media-icon img[src$=".svg"]
   --e-context-cta-color-dark: rgb(32.7094972067, 25, 255);
   --e-context-cta-tint-4: rgba(82, 76, 255, 0.4);
   --e-context-cta-tint-1: rgba(82, 76, 255, 0.04);
+  --e-context-promotion-color: #93003f;
+  --e-context-promotion-color-dark: rgb(96, 0, 41.1428571429);
+  --e-context-promotion-tint-4: rgba(147, 0, 63, 0.4);
+  --e-context-promotion-tint-1: rgba(147, 0, 63, 0.04);
 }
 
 :root {
@@ -1283,6 +1287,47 @@ body.post-type-attachment table.media .column-title .media-icon img[src$=".svg"]
   --e-button-context-color: var(--e-context-primary-color);
   --e-button-context-color-dark: var(--e-context-primary-color-dark);
   --e-button-context-tint: var(--e-context-primary-tint-1);
+}
+
+.notice a.e-button,
+.error a.e-button,
+.updated a.e-button {
+  color: #ffffff;
+  text-decoration: none;
+}
+.notice a.e-button:hover, .notice a.e-button:focus, .notice a.e-button:active,
+.error a.e-button:hover,
+.error a.e-button:focus,
+.error a.e-button:active,
+.updated a.e-button:hover,
+.updated a.e-button:focus,
+.updated a.e-button:active {
+  color: #ffffff;
+  text-decoration: none;
+}
+.notice a.e-button.e-button--outline,
+.error a.e-button.e-button--outline,
+.updated a.e-button.e-button--outline {
+  color: var(--e-button-context-color);
+}
+.notice a.e-button.e-button--outline:hover, .notice a.e-button.e-button--outline:focus,
+.error a.e-button.e-button--outline:hover,
+.error a.e-button.e-button--outline:focus,
+.updated a.e-button.e-button--outline:hover,
+.updated a.e-button.e-button--outline:focus {
+  color: var(--e-button-context-color-dark);
+}
+.notice a.e-button.e-button--link,
+.error a.e-button.e-button--link,
+.updated a.e-button.e-button--link {
+  color: var(--e-button-context-color);
+}
+.notice a.e-button.e-button--link:hover, .notice a.e-button.e-button--link:focus,
+.error a.e-button.e-button--link:hover,
+.error a.e-button.e-button--link:focus,
+.updated a.e-button.e-button--link:hover,
+.updated a.e-button.e-button--link:focus {
+  color: var(--e-button-context-color-dark);
 }
 
 .e-button {
@@ -1358,6 +1403,12 @@ body.post-type-attachment table.media .column-title .media-icon img[src$=".svg"]
   --e-button-context-color-dark: var(--e-context-cta-color-dark);
   --e-button-context-tint: var(--e-context-cta-tint-1);
   --e-focus-color: var(--e-context-cta-tint-4);
+}
+.e-button--promotion {
+  --e-button-context-color: var(--e-context-promotion-color);
+  --e-button-context-color-dark: var(--e-context-promotion-color-dark);
+  --e-button-context-tint: var(--e-context-promotion-tint-1);
+  --e-focus-color: var(--e-context-promotion-tint-4);
 }
 .e-button.e-button--outline {
   color: var(--e-button-context-color);
@@ -1459,6 +1510,11 @@ fieldset:disabled a.e-button {
   --e-notice-context-color: var(--e-context-cta-color);
   --e-notice-context-color-dark: var(--e-context-cta-color-dark);
   --e-notice-context-tint: var(--e-context-cta-tint-1);
+}
+.e-notice--promotion {
+  --e-notice-context-color: var(--e-context-promotion-color);
+  --e-notice-context-color-dark: var(--e-context-promotion-color-dark);
+  --e-notice-context-tint: var(--e-context-promotion-tint-1);
 }
 .e-notice--extended {
   --e-notice-is-extended: 1;
@@ -2271,6 +2327,12 @@ fieldset:disabled a.e-button {
   font-weight: 500;
 }
 
+[class*=branch-7].wp-core-ui .button .dashicons {
+  vertical-align: middle;
+  line-height: 1.2;
+  color: var(--wp-admin-theme-color);
+}
+
 #e-dashboard-ally .ui-sortable-handle {
   justify-content: flex-start;
   gap: 8px;
@@ -2541,9 +2603,6 @@ label[for=e-dashboard-ally-hide] svg {
 #elementor-beta-tester-modal .elementor-templates-modal__header__items-area:hover .elementor-templates-modal__header__item > i {
   color: var(--e-a-color-txt-hover);
 }
-#elementor-beta-tester-modal .elementor-templates-modal__header__items-area .elementor-templates-modal__header__close {
-  border: none;
-}
 #elementor-beta-tester-modal .elementor-templates-modal__header__items-area .elementor-beta-tester-do-not-show-again {
   text-transform: uppercase;
   font-weight: bold;
@@ -2600,6 +2659,7 @@ label[for=e-dashboard-ally-hide] svg {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  position: relative;
 }
 .e-experiment__title__indicator {
   position: absolute;
