@@ -1146,15 +1146,16 @@ function createAtomicElementBaseView(type) {
       return (_resolvedTagCache$get = resolvedTagCache.get(this.model)) !== null && _resolvedTagCache$get !== void 0 ? _resolvedTagCache$get : this._resolveTag();
     },
     _resolveTag: function _resolveTag() {
-      var _this$getResolverRend, _resolvedTag$value;
+      var _this$getResolverRend, _linkSetting$value, _resolvedLinkTag$valu, _resolvedTag$value;
       var renderContext = (_this$getResolverRend = this.getResolverRenderContext) === null || _this$getResolverRend === void 0 ? void 0 : _this$getResolverRend.call(this);
       var tagSetting = this.model.getSetting('tag');
       var resolvedTag = this._resolvePropValue(tagSetting, renderContext);
-      var tagValue = (_resolvedTag$value = resolvedTag === null || resolvedTag === void 0 ? void 0 : resolvedTag.value) !== null && _resolvedTag$value !== void 0 ? _resolvedTag$value : resolvedTag;
-      if (this._hasLink(renderContext)) {
-        return 'a';
-      }
-      return tagValue || this.model.config.default_html_tag || 'div';
+      var linkSetting = this.model.getSetting('link');
+      var resolvedLinkTag = this._resolvePropValue(linkSetting === null || linkSetting === void 0 || (_linkSetting$value = linkSetting.value) === null || _linkSetting$value === void 0 ? void 0 : _linkSetting$value.tag, renderContext);
+      var linkTag = (_resolvedLinkTag$valu = resolvedLinkTag === null || resolvedLinkTag === void 0 ? void 0 : resolvedLinkTag.value) !== null && _resolvedLinkTag$valu !== void 0 ? _resolvedLinkTag$valu : resolvedLinkTag;
+      var baseTag = (_resolvedTag$value = resolvedTag === null || resolvedTag === void 0 ? void 0 : resolvedTag.value) !== null && _resolvedTag$value !== void 0 ? _resolvedTag$value : resolvedTag;
+      var resultTag = linkTag !== null && linkTag !== void 0 ? linkTag : baseTag;
+      return resultTag || this.model.config.default_html_tag || 'div';
     },
     getChildViewContainer: function getChildViewContainer() {
       this.childViewContainer = '';
@@ -1400,25 +1401,32 @@ function createAtomicElementBaseView(type) {
       return true;
     },
     _applyLinkAttributes: function _applyLinkAttributes() {
+      var _this6 = this;
       this.$el.removeAttr('href');
       this.$el.removeAttr('data-action-link');
-      var link = this.getLink();
-      if (link) {
-        this.$el.attr(link.attr, link.value);
+      var link = this.getLinkAttributes();
+      if (!link) {
+        return;
       }
+      Object.entries(link).forEach(function (_ref7) {
+        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+          key = _ref8[0],
+          value = _ref8[1];
+        _this6.$el.attr(key, value);
+      });
     },
     _waitForChildrenToComplete: function _waitForChildrenToComplete() {
-      var _this6 = this;
+      var _this7 = this;
       return (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee() {
         return _regenerator.default.wrap(function (_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              if (!(_this6._childrenRenderPromises.length > 0)) {
+              if (!(_this7._childrenRenderPromises.length > 0)) {
                 _context.next = 1;
                 break;
               }
               _context.next = 1;
-              return Promise.all(_this6._childrenRenderPromises);
+              return Promise.all(_this7._childrenRenderPromises);
             case 1:
             case "end":
               return _context.stop();
@@ -1439,23 +1447,23 @@ function createAtomicElementBaseView(type) {
     },
     _collectChildrenRenderPromises: function _collectChildrenRenderPromises() {
       var _this$children3,
-        _this7 = this;
+        _this8 = this;
       this._childrenRenderPromises = [];
       (_this$children3 = this.children) === null || _this$children3 === void 0 || _this$children3.each(function (childView) {
         if (childView._currentRenderPromise) {
-          _this7._childrenRenderPromises.push(childView._currentRenderPromise);
+          _this8._childrenRenderPromises.push(childView._currentRenderPromise);
         }
       });
     },
     onRender: function onRender() {
-      var _this8 = this;
+      var _this9 = this;
       this.dispatchPreviewEvent('elementor/element/render');
       BaseElementView.prototype.onRender.apply(this, arguments);
 
       // Defer to wait for everything to render.
       setTimeout(function () {
-        _this8.droppableInitialize();
-        _this8.updateHandlesPosition();
+        _this9.droppableInitialize();
+        _this9.updateHandlesPosition();
       });
     },
     onDestroy: function onDestroy() {
@@ -1482,7 +1490,7 @@ function createAtomicElementBaseView(type) {
       var destination = this._resolvePropValue((_resolvedLink$value = resolvedLink.value) === null || _resolvedLink$value === void 0 ? void 0 : _resolvedLink$value.destination, renderContext);
       return !!(destination !== null && destination !== void 0 && destination.value);
     },
-    getLink: function getLink() {
+    getLinkAttributes: function getLinkAttributes() {
       var _this$getResolverRend2, _resolvedLink$value2;
       var renderContext = (_this$getResolverRend2 = this.getResolverRenderContext) === null || _this$getResolverRend2 === void 0 ? void 0 : _this$getResolverRend2.call(this);
       var linkSetting = this.model.getSetting('link');
@@ -1497,21 +1505,17 @@ function createAtomicElementBaseView(type) {
       var $$type = destination.$$type,
         value = destination.value;
       if ('dynamic' === $$type) {
-        var _value$settings;
         var resolvedValue = this.handleDynamicLink(value);
         if (!resolvedValue) {
           return null;
         }
-        return {
-          attr: 'action' === ((_value$settings = value.settings) === null || _value$settings === void 0 ? void 0 : _value$settings.group) ? 'data-action-link' : 'href',
-          value: resolvedValue
-        };
+        var attributeKey = 'action' === (value === null || value === void 0 ? void 0 : value.group) ? 'data-action-link' : 'href';
+        return (0, _defineProperty2.default)({}, attributeKey, resolvedValue);
       }
       var isPostId = 'number' === $$type;
       var hrefPrefix = isPostId ? elementor.config.home_url + '/?p=' : '';
       return {
-        attr: 'href',
-        value: hrefPrefix + value
+        href: hrefPrefix + value
       };
     },
     droppableInitialize: function droppableInitialize() {
@@ -1523,14 +1527,14 @@ function createAtomicElementBaseView(type) {
      * @return {Object} groups
      */
     getContextMenuGroups: function getContextMenuGroups() {
-      var _this9 = this,
+      var _this0 = this,
         _elementorCommon$conf;
       var saveActions = [{
         name: 'save',
         title: __('Save as a template', 'elementor'),
         callback: this.saveAsTemplate.bind(this),
         isEnabled: function isEnabled() {
-          return !_this9.getContainer().isLocked();
+          return !_this0.getContainer().isLocked();
         }
       }];
       var isAdministrator = elementor.config.user.is_administrator;
@@ -1551,7 +1555,7 @@ function createAtomicElementBaseView(type) {
           hasShortcutAction: showPromoBadge,
           callback: this.saveAsComponent.bind(this),
           isEnabled: function isEnabled() {
-            return (isProActive || isProOutdated) && !_this9.getContainer().isLocked();
+            return (isProActive || isProOutdated) && !_this0.getContainer().isLocked();
           }
         });
       }
@@ -1636,7 +1640,7 @@ function createAtomicElementBaseView(type) {
       };
     },
     getDroppableOptions: function getDroppableOptions() {
-      var _this0 = this;
+      var _this1 = this;
       var items = '> .elementor-element, > .elementor-empty-view .elementor-first-add';
       return {
         axis: null,
@@ -1648,7 +1652,7 @@ function createAtomicElementBaseView(type) {
         placeholderClass: 'elementor-sortable-placeholder elementor-widget-placeholder',
         hasDraggingOnChildClass: 'e-dragging-over',
         getDropContainer: function getDropContainer() {
-          return _this0.getContainer();
+          return _this1.getContainer();
         },
         onDropping: function onDropping(side, event) {
           event.stopPropagation();
@@ -1660,12 +1664,12 @@ function createAtomicElementBaseView(type) {
             containerElement = event.currentTarget.parentElement,
             elements = Array.from((containerElement === null || containerElement === void 0 ? void 0 : containerElement.querySelectorAll(':scope > .elementor-element')) || []);
           var targetIndex = elements.indexOf(event.currentTarget);
-          if (_this0.isPanelElement(draggedView, draggedElement)) {
+          if (_this1.isPanelElement(draggedView, draggedElement)) {
             var _elementorCommon;
-            if (_this0.draggingOnBottomOrRightSide(side) && !_this0.emptyViewIsCurrentlyBeingDraggedOver()) {
+            if (_this1.draggingOnBottomOrRightSide(side) && !_this1.emptyViewIsCurrentlyBeingDraggedOver()) {
               targetIndex++;
             }
-            _this0.onDrop(event, {
+            _this1.onDrop(event, {
               at: targetIndex
             });
             if ((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.eventsManager) !== null && _elementorCommon !== void 0 && _elementorCommon.dispatchEvent) {
@@ -1685,14 +1689,14 @@ function createAtomicElementBaseView(type) {
             }
             return;
           }
-          if (_this0.isParentElement(draggedView.getContainer().id)) {
+          if (_this1.isParentElement(draggedView.getContainer().id)) {
             return;
           }
-          if (_this0.emptyViewIsCurrentlyBeingDraggedOver()) {
-            _this0.moveDroppedItem(draggedView, 0);
+          if (_this1.emptyViewIsCurrentlyBeingDraggedOver()) {
+            _this1.moveDroppedItem(draggedView, 0);
             return;
           }
-          _this0.moveExistingElement(side, draggedView, containerElement, elements, targetIndex, draggedElement);
+          _this1.moveExistingElement(side, draggedView, containerElement, elements, targetIndex, draggedElement);
         }
       };
     },
@@ -1858,10 +1862,10 @@ function createAtomicElementBaseView(type) {
     },
     getDynamicLinkValue: function getDynamicLinkValue(name, settings) {
       var simpleTransform = function simpleTransform(props) {
-        var transformed = Object.entries(props).map(function (_ref7) {
-          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-            settingKey = _ref8[0],
-            settingValue = _ref8[1];
+        var transformed = Object.entries(props).map(function (_ref0) {
+          var _ref1 = (0, _slicedToArray2.default)(_ref0, 2),
+            settingKey = _ref1[0],
+            settingValue = _ref1[1];
           var value = 'object' === (0, _typeof2.default)(settingValue) && 'value' in settingValue ? settingValue.value : settingValue;
           return [settingKey, value];
         });
@@ -1886,7 +1890,7 @@ function createAtomicElementBaseView(type) {
       });
     },
     handleDynamicLink: function handleDynamicLink(linkValue) {
-      var _this1 = this;
+      var _this10 = this;
       var result = this.getDynamicLinkValue(linkValue.name, linkValue.settings);
       if (!result) {
         return null;
@@ -1895,11 +1899,11 @@ function createAtomicElementBaseView(type) {
         return result;
       }
       result.then(function (href) {
-        _this1.el.removeAttribute('href');
+        _this10.el.removeAttribute('href');
         var attribute = 'action' === linkValue.group ? 'data-action-link' : 'href';
-        _this1.el.setAttribute(attribute, href);
+        _this10.el.setAttribute(attribute, href);
       }).then(function () {
-        return _this1.dispatchPreviewEvent('elementor/element/render');
+        return _this10.dispatchPreviewEvent('elementor/element/render');
       });
       return null;
     },

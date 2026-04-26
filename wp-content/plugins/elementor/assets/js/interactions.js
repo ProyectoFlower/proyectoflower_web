@@ -673,11 +673,9 @@ function initInteractions() {
         if (!elementId || !interactions || !Array.isArray(interactions)) {
           return;
         }
-        var element = document.querySelector("[data-interaction-id=\"".concat(elementId, "\"]"));
-        if (!element) {
-          return;
-        }
-        processElementInteractions(element, interactions, animateFunc, inViewFunc);
+        document.querySelectorAll("[data-interaction-id=\"".concat(elementId, "\"]")).forEach(function (element) {
+          processElementInteractions(element, interactions, animateFunc, inViewFunc);
+        });
       });
       return;
     }

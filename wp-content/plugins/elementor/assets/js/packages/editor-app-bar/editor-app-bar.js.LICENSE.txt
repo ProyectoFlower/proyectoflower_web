@@ -114,8 +114,6 @@
 
 /*! ./structure */
 
-/*! ./structure-icon-with-popup */
-
 /*! ./sync/redirect-old-menus */
 
 /*! ./sync/sync-panel-title */
@@ -443,10 +441,6 @@
 /*!***********************************************************************************************************!*\
   !*** ./packages/packages/core/editor-app-bar/src/extensions/keyboard-shortcuts/hooks/use-action-props.ts ***!
   \***********************************************************************************************************/
-
-/*!************************************************************************************************************!*\
-  !*** ./packages/packages/core/editor-app-bar/src/extensions/structure/hooks/structure-icon-with-popup.tsx ***!
-  \************************************************************************************************************/
 
 /*!*************************************************************************************************************!*\
   !*** ./packages/packages/core/editor-app-bar/src/extensions/responsive/components/breakpoints-switcher.tsx ***!

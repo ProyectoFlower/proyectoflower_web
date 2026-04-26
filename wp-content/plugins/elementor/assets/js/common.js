@@ -1722,12 +1722,14 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
       if (_.has(this.cache, cacheKey)) {
         deferred = jQuery.Deferred().done(request.success).resolve(this.cache[cacheKey]);
       } else {
+        var _request$error;
         deferred = this.addRequest(request.action, {
           data: request.data,
           unique_id: request.unique_id,
           success: function success(data) {
             return _this3.cache[cacheKey] = data;
-          }
+          },
+          error: (_request$error = request.error) !== null && _request$error !== void 0 ? _request$error : function () {}
         }, immediately).done(request.success);
       }
       return deferred;
@@ -2457,6 +2459,7 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
     }
     _this = _callSuper(this, _default, [].concat(args));
     (0, _defineProperty2.default)(_this, "trackingEnabled", false);
+    (0, _defineProperty2.default)(_this, "availableExperiments", []);
     return _this;
   }
   (0, _inherits2.default)(_default, _elementorModules$Mod);
@@ -2493,7 +2496,7 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
       if (!this.isMixpanelReady()) {
         return;
       }
-      var userId = (_elementorCommon$conf2 = elementorCommon.config.library_connect) === null || _elementorCommon$conf2 === void 0 ? void 0 : _elementorCommon$conf2.user_id;
+      var userId = (_elementorCommon$conf2 = elementorCommon.config.editor_events) === null || _elementorCommon$conf2 === void 0 ? void 0 : _elementorCommon$conf2.user_id;
       if (userId) {
         var _elementorCommon$conf3;
         _mixpanelBrowser.default.identify(userId);
@@ -2507,6 +2510,7 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         });
       }
       this.trackingEnabled = true;
+      this.availableExperiments = Object.keys(elementorCommon.config.experimentalFeatures || {});
     }
   }, {
     key: "dispatchEvent",
@@ -2520,7 +2524,7 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         this.enableTracking();
       }
       var eventData = _objectSpread({
-        user_id: ((_elementorCommon$conf4 = elementorCommon.config.library_connect) === null || _elementorCommon$conf4 === void 0 ? void 0 : _elementorCommon$conf4.user_id) || null,
+        user_id: ((_elementorCommon$conf4 = elementorCommon.config.editor_events) === null || _elementorCommon$conf4 === void 0 ? void 0 : _elementorCommon$conf4.user_id) || null,
         user_roles: ((_elementorCommon$conf5 = elementorCommon.config.library_connect) === null || _elementorCommon$conf5 === void 0 ? void 0 : _elementorCommon$conf5.user_roles) || [],
         subscription_id: ((_elementorCommon$conf6 = elementorCommon.config.editor_events) === null || _elementorCommon$conf6 === void 0 ? void 0 : _elementorCommon$conf6.subscription_id) || null,
         user_tier: ((_elementorCommon$conf7 = elementorCommon.config.library_connect) === null || _elementorCommon$conf7 === void 0 ? void 0 : _elementorCommon$conf7.current_access_tier) || null,
@@ -2528,7 +2532,8 @@ var _default = exports["default"] = /*#__PURE__*/function (_elementorModules$Mod
         wp_version: (_elementorCommon$conf9 = elementorCommon.config.editor_events) === null || _elementorCommon$conf9 === void 0 ? void 0 : _elementorCommon$conf9.wp_version,
         client_id: (_elementorCommon$conf0 = elementorCommon.config.editor_events) === null || _elementorCommon$conf0 === void 0 ? void 0 : _elementorCommon$conf0.site_key,
         app_version: (_elementorCommon$conf1 = elementorCommon.config.editor_events) === null || _elementorCommon$conf1 === void 0 ? void 0 : _elementorCommon$conf1.elementor_version,
-        site_language: (_elementorCommon$conf10 = elementorCommon.config.editor_events) === null || _elementorCommon$conf10 === void 0 ? void 0 : _elementorCommon$conf10.site_language
+        site_language: (_elementorCommon$conf10 = elementorCommon.config.editor_events) === null || _elementorCommon$conf10 === void 0 ? void 0 : _elementorCommon$conf10.site_language,
+        experiments: this.availableExperiments
       }, data);
       _mixpanelBrowser.default.track(name, eventData, options);
     }

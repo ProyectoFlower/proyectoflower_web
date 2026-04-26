@@ -39727,6 +39727,16 @@ PanelElementsLayoutView = Marionette.LayoutView.extend({
         editable: false
       });
     });
+    jQuery.each(elementor.config.atomicFormPromotionWidgets || [], function (index, widget) {
+      elementsCollection.add({
+        name: widget.name,
+        title: widget.title,
+        icon: widget.icon,
+        categories: JSON.parse(widget.categories),
+        editable: false,
+        atomicFormPromotion: true
+      });
+    });
     if (elementor.config.integrationWidgets) {
       var injectionPoint = elementsCollection.findIndex({
         widgetType: 'image-carousel'
@@ -40069,7 +40079,7 @@ module.exports = Marionette.ItemView.extend({
   template: '#tmpl-elementor-element-library-element',
   className: function className() {
     var className = 'elementor-element-wrapper';
-    if (!this.isEditable()) {
+    if (!this.isEditable() && !this.isAtomicFormPromotion()) {
       className += ' elementor-element--promotion';
     }
     if (this.isIntegration()) {
@@ -40105,6 +40115,9 @@ module.exports = Marionette.ItemView.extend({
   isIntegration: function isIntegration() {
     return !!this.model.get('integration');
   },
+  isAtomicFormPromotion: function isAtomicFormPromotion() {
+    return !!this.model.get('atomicFormPromotion');
+  },
   onRender: function onRender() {
     var _this = this;
     if (!elementor.userCan('design') || !this.isEditable()) {
@@ -40125,7 +40138,16 @@ module.exports = Marionette.ItemView.extend({
       groups: ['elementor-element']
     });
   },
-  onMouseDown: function onMouseDown() {
+  onMouseDown: function onMouseDown(event) {
+    if (this.isAtomicFormPromotion()) {
+      event.stopPropagation();
+      document.dispatchEvent(new CustomEvent('atomic-form-promotion:open', {
+        detail: {
+          target: this.el
+        }
+      }));
+      return;
+    }
     var title = this.model.get('title'),
       widgetType = this.model.get('name') || this.model.get('widgetType'),
       isIntegration = this.isIntegration(),

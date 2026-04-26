@@ -22,6 +22,9 @@
       if (!response.ok) {
         return;
       }
+      if (204 === response.status) {
+        return;
+      }
       return response.json();
     }).then(function (data) {
       if (!data) {
@@ -37,8 +40,7 @@
     globals === null || globals === void 0 || globals.populateGlobalData();
   }
   function reloadCanvasDesignSyncStyles(_ref) {
-    var url = _ref.url,
-      version = _ref.version;
+    var url = _ref.url;
     var previewFrame = document.getElementById('elementor-preview-iframe');
     if (!(previewFrame !== null && previewFrame !== void 0 && previewFrame.contentDocument)) {
       return;
@@ -50,7 +52,7 @@
       link.rel = 'stylesheet';
       previewFrame.contentDocument.head.appendChild(link);
     }
-    link.href = url + '?ver=' + version;
+    link.href = url;
   }
   function onClassesUpdated(event) {
     var context = event.detail.context;
