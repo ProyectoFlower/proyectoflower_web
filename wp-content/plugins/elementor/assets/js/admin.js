@@ -1030,6 +1030,10 @@ var ScreenViewTracking = /*#__PURE__*/function (_BaseTracking) {
       if (!_utils.DashboardUtils.isElementorPage()) {
         return;
       }
+      var screenData = this.getScreenData();
+      if (screenData) {
+        this.trackScreen(screenData.screenId, screenData.screenType);
+      }
       this.attachTabChangeTracking();
     }
   }, {
@@ -1265,24 +1269,28 @@ var _default = exports["default"] = ScreenViewTracking;
 /*!*******************************************************!*\
   !*** ../app/assets/js/event-track/dashboard/utils.js ***!
   \*******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.DashboardUtils = void 0;
+var _wpDashboardTracking = _interopRequireDefault(__webpack_require__(/*! ../wp-dashboard-tracking */ "../app/assets/js/event-track/wp-dashboard-tracking.js"));
 var DashboardUtils = exports.DashboardUtils = {
   isElementorPage: function isElementorPage() {
     var urlParams = new URLSearchParams(window.location.search);
     var page = urlParams.get('page');
-    if (page && (page.startsWith('elementor') || page.includes('elementor'))) {
+    if (page && _wpDashboardTracking.default.elementorPages.some(function (p) {
+      return page.includes(p);
+    })) {
       return true;
     }
     var postType = urlParams.get('post_type');
-    if ('elementor_library' === postType || 'e-floating-buttons' === postType) {
+    if (_wpDashboardTracking.default.elementorPostTypes.includes(postType)) {
       return true;
     }
     var body = document.body;
@@ -1318,6 +1326,7 @@ var _promotion = _interopRequireDefault(__webpack_require__(/*! ./dashboard/prom
 var _screenView = _interopRequireDefault(__webpack_require__(/*! ./dashboard/screen-view */ "../app/assets/js/event-track/dashboard/screen-view.js"));
 var _menuPromotion = _interopRequireDefault(__webpack_require__(/*! ./dashboard/menu-promotion */ "../app/assets/js/event-track/dashboard/menu-promotion.js"));
 var _actionControls = _interopRequireDefault(__webpack_require__(/*! ./dashboard/action-controls */ "../app/assets/js/event-track/dashboard/action-controls.js"));
+var _WpDashboardTracking;
 var SESSION_TIMEOUT_MINUTES = 30;
 var MINUTE_MS = 60 * 1000;
 var SESSION_TIMEOUT = SESSION_TIMEOUT_MINUTES * MINUTE_MS;
@@ -1504,11 +1513,9 @@ var WpDashboardTracking = exports["default"] = /*#__PURE__*/function () {
         var page = params.get('page');
         var postType = params.get('post_type');
         var action = params.get('action');
-        var elementorPages = ['elementor-home', 'e-form-submissions'];
-        var elementorPostTypes = ['elementor_library', 'e-floating-buttons'];
-        return page && elementorPages.some(function (p) {
+        return !!(page && this.elementorPages.some(function (p) {
           return page.includes(p);
-        }) || postType && elementorPostTypes.includes(postType) || action && action.includes('elementor');
+        }) || postType && this.elementorPostTypes.includes(postType) || action && action.includes(this.anyPageWithElementorString));
       } catch (error) {
         return false;
       }
@@ -1709,6 +1716,10 @@ var WpDashboardTracking = exports["default"] = /*#__PURE__*/function () {
     }
   }]);
 }();
+_WpDashboardTracking = WpDashboardTracking;
+(0, _defineProperty2.default)(WpDashboardTracking, "anyPageWithElementorString", 'elementor');
+(0, _defineProperty2.default)(WpDashboardTracking, "elementorPages", [_WpDashboardTracking.anyPageWithElementorString, 'e-form-submissions', 'popup_templates']);
+(0, _defineProperty2.default)(WpDashboardTracking, "elementorPostTypes", ['elementor_library', 'e-floating-buttons', 'elementor_snippet', 'elementor_font', 'elementor_icons']);
 (0, _defineProperty2.default)(WpDashboardTracking, "sessionStartTime", Date.now());
 (0, _defineProperty2.default)(WpDashboardTracking, "lastActivityTime", Date.now());
 (0, _defineProperty2.default)(WpDashboardTracking, "sessionEnded", false);

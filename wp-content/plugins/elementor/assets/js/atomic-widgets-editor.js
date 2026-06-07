@@ -828,8 +828,12 @@ var AtomicElementBaseModel = exports["default"] = /*#__PURE__*/function (_elemen
   }, {
     key: "initialize",
     value: function initialize(attributes, options) {
+      var _this$config;
       var elementType = this.get('elType');
       this.config = elementor.config.elements[elementType];
+      if ((_this$config = this.config) !== null && _this$config !== void 0 && (_this$config = _this$config.meta) !== null && _this$config !== void 0 && _this$config.permanently_locked) {
+        this.set('isLocked', true);
+      }
       var isNewElementCreate = 0 === this.get('elements').length && $e.commands.currentTrace.includes('document/elements/create');
       if (isNewElementCreate) {
         this.onElementCreate();
@@ -846,6 +850,12 @@ var AtomicElementBaseModel = exports["default"] = /*#__PURE__*/function (_elemen
     key: "onElementCreate",
     value: function onElementCreate() {
       var _this = this;
+      if (this.get('skipDefaultChildren')) {
+        this.unset('skipDefaultChildren', {
+          silent: true
+        });
+        return;
+      }
       this.set('elements', this.getDefaultChildren().map(function (element) {
         return _this.buildElement(element);
       }));
@@ -871,7 +881,8 @@ var AtomicElementBaseModel = exports["default"] = /*#__PURE__*/function (_elemen
         settings: (_element$settings = element.settings) !== null && _element$settings !== void 0 ? _element$settings : {},
         elements: elements,
         isLocked: element.isLocked || false,
-        editor_settings: element.editor_settings || {}
+        editor_settings: element.editor_settings || {},
+        meta: element.meta || {}
       };
     }
   }]);
@@ -1117,18 +1128,13 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = createAtomicElementBaseView;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
-var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js"));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "../node_modules/@babel/runtime/helpers/toConsumableArray.js"));
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
 var _elementTypes = __webpack_require__(/*! elementor-editor/utils/element-types */ "../assets/dev/js/editor/utils/element-types.js");
 var _atomicElementEmptyView = _interopRequireDefault(__webpack_require__(/*! ./container/atomic-element-empty-view */ "../modules/atomic-widgets/assets/js/editor/container/atomic-element-empty-view.js"));
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 var BaseElementView = elementor.modules.elements.views.BaseElement;
 function createAtomicElementBaseView(type) {
-  var resolvedTagCache = new WeakMap();
   var AtomicElementView = BaseElementView.extend({
     template: Marionette.TemplateCache.get("#tmpl-elementor-".concat(type, "-content")),
     emptyView: _atomicElementEmptyView.default,
@@ -1140,22 +1146,6 @@ function createAtomicElementBaseView(type) {
         return previewDocument.createElement(tag);
       }
       return document.createElement(tag);
-    },
-    tagName: function tagName() {
-      var _resolvedTagCache$get;
-      return (_resolvedTagCache$get = resolvedTagCache.get(this.model)) !== null && _resolvedTagCache$get !== void 0 ? _resolvedTagCache$get : this._resolveTag();
-    },
-    _resolveTag: function _resolveTag() {
-      var _this$getResolverRend, _linkSetting$value, _resolvedLinkTag$valu, _resolvedTag$value;
-      var renderContext = (_this$getResolverRend = this.getResolverRenderContext) === null || _this$getResolverRend === void 0 ? void 0 : _this$getResolverRend.call(this);
-      var tagSetting = this.model.getSetting('tag');
-      var resolvedTag = this._resolvePropValue(tagSetting, renderContext);
-      var linkSetting = this.model.getSetting('link');
-      var resolvedLinkTag = this._resolvePropValue(linkSetting === null || linkSetting === void 0 || (_linkSetting$value = linkSetting.value) === null || _linkSetting$value === void 0 ? void 0 : _linkSetting$value.tag, renderContext);
-      var linkTag = (_resolvedLinkTag$valu = resolvedLinkTag === null || resolvedLinkTag === void 0 ? void 0 : resolvedLinkTag.value) !== null && _resolvedLinkTag$valu !== void 0 ? _resolvedLinkTag$valu : resolvedLinkTag;
-      var baseTag = (_resolvedTag$value = resolvedTag === null || resolvedTag === void 0 ? void 0 : resolvedTag.value) !== null && _resolvedTag$value !== void 0 ? _resolvedTag$value : resolvedTag;
-      var resultTag = linkTag !== null && linkTag !== void 0 ? linkTag : baseTag;
-      return resultTag || this.model.config.default_html_tag || 'div';
     },
     getChildViewContainer: function getChildViewContainer() {
       this.childViewContainer = '';
@@ -1181,155 +1171,14 @@ function createAtomicElementBaseView(type) {
       var _this$_parent2, _this$_parent2$getRes;
       return (_this$_parent2 = this._parent) === null || _this$_parent2 === void 0 || (_this$_parent2$getRes = _this$_parent2.getResolverRenderContext) === null || _this$_parent2$getRes === void 0 ? void 0 : _this$_parent2$getRes.call(_this$_parent2);
     },
-    className: function className() {
-      var generatedClasses = this.getGeneratedClasses();
-      return "".concat(BaseElementView.prototype.className.apply(this), " e-con e-atomic-element ").concat(this.getClassString(), " ").concat(generatedClasses);
-    },
-    getGeneratedClasses: function getGeneratedClasses() {
-      var _this = this;
-      var propsSchema = this.model.config.atomic_props_schema || {};
-      var generatedClasses = [];
-      Object.keys(propsSchema).forEach(function (key) {
-        var _propsSchema$key;
-        var propMeta = (_propsSchema$key = propsSchema[key]) === null || _propsSchema$key === void 0 ? void 0 : _propsSchema$key.meta;
-        if (propMeta !== null && propMeta !== void 0 && propMeta.generates_class) {
-          var _settingValue$value;
-          var classPattern = propMeta.generates_class;
-          var settingValue = _this.model.getSetting(key);
-          var value = (_settingValue$value = settingValue === null || settingValue === void 0 ? void 0 : settingValue.value) !== null && _settingValue$value !== void 0 ? _settingValue$value : settingValue;
-          if (value && 'string' === typeof value) {
-            var className = classPattern.replace('{value}', value);
-            generatedClasses.push(className);
-          }
-        }
-      });
-      return generatedClasses.join(' ');
-    },
-    // TODO: Copied from `views/column.js`.
-    ui: function ui() {
-      var ui = BaseElementView.prototype.ui.apply(this, arguments);
-      ui.percentsTooltip = '> .elementor-element-overlay .elementor-column-percents-tooltip';
-      return ui;
-    },
-    attributes: function attributes() {
-      var _this$model$getSettin, _this$model$getSettin2, _this$model$config$in, _this$model;
-      var attr = BaseElementView.prototype.attributes.apply(this);
-      var local = {};
-      var cssId = this.model.getSetting('_cssid');
-      var customAttributes = (_this$model$getSettin = (_this$model$getSettin2 = this.model.getSetting('attributes')) === null || _this$model$getSettin2 === void 0 ? void 0 : _this$model$getSettin2.value) !== null && _this$model$getSettin !== void 0 ? _this$model$getSettin : [];
-      var initialAttributes = (_this$model$config$in = this === null || this === void 0 || (_this$model = this.model) === null || _this$model === void 0 || (_this$model = _this$model.config) === null || _this$model === void 0 ? void 0 : _this$model.initial_attributes) !== null && _this$model$config$in !== void 0 ? _this$model$config$in : {};
-      if (cssId) {
-        local.id = cssId.value;
-      }
-      local['data-interaction-id'] = this.getInteractionId();
-      customAttributes.forEach(function (attribute) {
-        var _attribute$value, _attribute$value2;
-        var key = (_attribute$value = attribute.value) === null || _attribute$value === void 0 || (_attribute$value = _attribute$value.key) === null || _attribute$value === void 0 ? void 0 : _attribute$value.value;
-        var value = (_attribute$value2 = attribute.value) === null || _attribute$value2 === void 0 || (_attribute$value2 = _attribute$value2.value) === null || _attribute$value2 === void 0 ? void 0 : _attribute$value2.value;
-        if (key && value) {
-          local[key] = value;
-        }
-      });
-      return _objectSpread(_objectSpread(_objectSpread({}, attr), initialAttributes), local);
-    },
-    // TODO: Copied from `views/column.js`.
-    attachElContent: function attachElContent() {
-      BaseElementView.prototype.attachElContent.apply(this, arguments);
-      var $tooltip = jQuery('<div>', {
-        class: 'elementor-column-percents-tooltip',
-        'data-side': elementorCommon.config.isRTL ? 'right' : 'left'
-      });
-      this.$el.children('.elementor-element-overlay').append($tooltip);
-    },
-    // TODO: Copied from `views/column.js`.
-    getPercentSize: function getPercentSize(size) {
-      if (!size) {
-        size = this.el.getBoundingClientRect().width;
-      }
-      return +(size / this.$el.parent().width() * 100).toFixed(3);
-    },
-    // TODO: Copied from `views/column.js`.
-    getPercentsForDisplay: function getPercentsForDisplay() {
-      var width = +this.model.getSetting('width') || this.getPercentSize();
-      return width.toFixed(1) + '%';
-    },
-    renderOnChange: function renderOnChange(settings) {
-      var _this2 = this;
-      var changed = settings.changedAttributes();
-      setTimeout(function () {
-        _this2.updateHandlesPosition();
-      });
-      if (!changed) {
-        return;
-      }
-      BaseElementView.prototype.renderOnChange.apply(this, settings);
-      if (changed.attributes) {
-        var $elAttrs = this.$el[0].attributes;
-        for (var i = $elAttrs.length - 1; i >= 0; i--) {
-          var attrName = $elAttrs[i].name;
-          if (attrName !== 'class') {
-            this.$el.removeAttr(attrName);
-          }
-        }
-        var newAttrs = this.attributes();
-        Object.entries(newAttrs).forEach(function (_ref5) {
-          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-            key = _ref6[0],
-            value = _ref6[1];
-          if (key !== 'class' && value !== undefined) {
-            _this2.$el.attr(key, value);
-          }
-        });
-        return;
-      }
-
-      // Check if classes changed OR if any setting with generates_class metadata changed
-      var propsSchema = this.model.config.atomic_props_schema || {};
-      var hasGeneratesClassChange = Object.keys(changed).some(function (key) {
-        var _propsSchema$key2;
-        return (_propsSchema$key2 = propsSchema[key]) === null || _propsSchema$key2 === void 0 || (_propsSchema$key2 = _propsSchema$key2.meta) === null || _propsSchema$key2 === void 0 ? void 0 : _propsSchema$key2.generates_class;
-      });
-      if (changed.classes || hasGeneratesClassChange) {
-        // Preserve runtime state classes (e.g., e--selected) that are managed by Alpine
-        // and would be lost when replacing the class attribute.
-        var preservedClasses = Array.from(this.$el[0].classList).filter(function (cls) {
-          return cls.startsWith('e--');
-        });
-        this.$el.attr('class', this.className());
-        preservedClasses.forEach(function (cls) {
-          return _this2.$el[0].classList.add(cls);
-        });
-        return;
-      }
-      if (changed._cssid) {
-        if (changed._cssid.value) {
-          this.$el.attr('id', changed._cssid.value);
-        } else {
-          this.$el.removeAttr('id');
-        }
-        return;
-      }
-      this.$el.addClass(this.getClasses());
-      if (this.isTagChanged(changed)) {
-        this.rerenderEntireView();
-      }
-    },
-    isTagChanged: function isTagChanged(changed) {
-      return ((changed === null || changed === void 0 ? void 0 : changed.tag) !== undefined || (changed === null || changed === void 0 ? void 0 : changed.link) !== undefined) && this._parent && this.tagName() !== this.el.tagName;
-    },
-    rerenderEntireView: function rerenderEntireView() {
-      var parent = this._parent;
-      this._parent.removeChildView(this);
-      parent.addChild(this.model, AtomicElementView, this._index);
-    },
     render: function render() {
-      var _this3 = this;
+      var _this = this;
       this._currentRenderPromise = new Promise(function (resolve) {
         // Optimize rendering by reusing existing child views instead of recreating them.
-        if (_this3._shouldSkipFullRender()) {
-          _this3._renderWithoutDomRecreation(resolve);
+        if (_this._shouldSkipFullRender()) {
+          _this._renderWithoutDomRecreation(resolve);
         } else {
-          _this3._renderWithDomRecreation(resolve);
+          _this._renderWithDomRecreation(resolve);
         }
       });
       return this;
@@ -1348,85 +1197,41 @@ function createAtomicElementBaseView(type) {
       return (_firstChild$$el$get$i = firstChild === null || firstChild === void 0 || (_firstChild$$el = firstChild.$el) === null || _firstChild$$el === void 0 || (_firstChild$$el = _firstChild$$el.get(0)) === null || _firstChild$$el === void 0 ? void 0 : _firstChild$$el.isConnected) !== null && _firstChild$$el$get$i !== void 0 ? _firstChild$$el$get$i : false;
     },
     _renderWithoutDomRecreation: function _renderWithoutDomRecreation(resolve) {
-      var _this4 = this;
+      var _this2 = this;
       this._beforeRender();
       this._renderChildren();
       this._waitForChildrenToComplete().then(function () {
-        _this4._afterRender();
+        _this2._afterRender();
         resolve();
       });
     },
     _renderWithDomRecreation: function _renderWithDomRecreation(resolve) {
-      var _this5 = this;
       BaseElementView.prototype.render.apply(this, arguments);
       this._waitForChildrenToComplete().then(function () {
-        _this5._applyResolvedAttributes();
         resolve();
       });
     },
     _beforeRender: function _beforeRender() {
       this._isRendering = true;
-      this._invalidateTagCache();
       this.triggerMethod('before:render', this);
-    },
-    _invalidateTagCache: function _invalidateTagCache() {
-      resolvedTagCache.delete(this.model);
-    },
-    _cacheResolvedTag: function _cacheResolvedTag(tag) {
-      resolvedTagCache.set(this.model, tag);
     },
     _afterRender: function _afterRender() {
       this._isRendering = false;
       this.isRendered = true;
       this.triggerMethod('render', this);
-      this._applyResolvedAttributes();
-    },
-    _applyResolvedAttributes: function _applyResolvedAttributes() {
-      if (!this._parent) {
-        return;
-      }
-      if (this._shouldRecreateForTagChange()) {
-        return;
-      }
-      this._applyLinkAttributes();
-    },
-    _shouldRecreateForTagChange: function _shouldRecreateForTagChange() {
-      var resolvedTag = this.tagName();
-      var currentTag = this.el.tagName.toLowerCase();
-      if (resolvedTag === currentTag) {
-        return false;
-      }
-      this._cacheResolvedTag(resolvedTag);
-      this.rerenderEntireView();
-      return true;
-    },
-    _applyLinkAttributes: function _applyLinkAttributes() {
-      var _this6 = this;
-      this.$el.removeAttr('href');
-      this.$el.removeAttr('data-action-link');
-      var link = this.getLinkAttributes();
-      if (!link) {
-        return;
-      }
-      Object.entries(link).forEach(function (_ref7) {
-        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-          key = _ref8[0],
-          value = _ref8[1];
-        _this6.$el.attr(key, value);
-      });
     },
     _waitForChildrenToComplete: function _waitForChildrenToComplete() {
-      var _this7 = this;
+      var _this3 = this;
       return (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee() {
         return _regenerator.default.wrap(function (_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              if (!(_this7._childrenRenderPromises.length > 0)) {
+              if (!(_this3._childrenRenderPromises.length > 0)) {
                 _context.next = 1;
                 break;
               }
               _context.next = 1;
-              return Promise.all(_this7._childrenRenderPromises);
+              return Promise.all(_this3._childrenRenderPromises);
             case 1:
             case "end":
               return _context.stop();
@@ -1447,23 +1252,23 @@ function createAtomicElementBaseView(type) {
     },
     _collectChildrenRenderPromises: function _collectChildrenRenderPromises() {
       var _this$children3,
-        _this8 = this;
+        _this4 = this;
       this._childrenRenderPromises = [];
       (_this$children3 = this.children) === null || _this$children3 === void 0 || _this$children3.each(function (childView) {
         if (childView._currentRenderPromise) {
-          _this8._childrenRenderPromises.push(childView._currentRenderPromise);
+          _this4._childrenRenderPromises.push(childView._currentRenderPromise);
         }
       });
     },
     onRender: function onRender() {
-      var _this9 = this;
+      var _this5 = this;
       this.dispatchPreviewEvent('elementor/element/render');
       BaseElementView.prototype.onRender.apply(this, arguments);
 
       // Defer to wait for everything to render.
       setTimeout(function () {
-        _this9.droppableInitialize();
-        _this9.updateHandlesPosition();
+        _this5.droppableInitialize();
+        _this5.updateHandlesPosition();
       });
     },
     onDestroy: function onDestroy() {
@@ -1480,44 +1285,6 @@ function createAtomicElementBaseView(type) {
         }
       }));
     },
-    _hasLink: function _hasLink(renderContext) {
-      var _resolvedLink$value;
-      var linkSetting = this.model.getSetting('link');
-      var resolvedLink = this._resolvePropValue(linkSetting, renderContext);
-      if ('link' !== (resolvedLink === null || resolvedLink === void 0 ? void 0 : resolvedLink.$$type)) {
-        return false;
-      }
-      var destination = this._resolvePropValue((_resolvedLink$value = resolvedLink.value) === null || _resolvedLink$value === void 0 ? void 0 : _resolvedLink$value.destination, renderContext);
-      return !!(destination !== null && destination !== void 0 && destination.value);
-    },
-    getLinkAttributes: function getLinkAttributes() {
-      var _this$getResolverRend2, _resolvedLink$value2;
-      var renderContext = (_this$getResolverRend2 = this.getResolverRenderContext) === null || _this$getResolverRend2 === void 0 ? void 0 : _this$getResolverRend2.call(this);
-      var linkSetting = this.model.getSetting('link');
-      var resolvedLink = this._resolvePropValue(linkSetting, renderContext);
-      if ('link' !== (resolvedLink === null || resolvedLink === void 0 ? void 0 : resolvedLink.$$type)) {
-        return null;
-      }
-      var destination = this._resolvePropValue((_resolvedLink$value2 = resolvedLink.value) === null || _resolvedLink$value2 === void 0 ? void 0 : _resolvedLink$value2.destination, renderContext);
-      if (!(destination !== null && destination !== void 0 && destination.value)) {
-        return null;
-      }
-      var $$type = destination.$$type,
-        value = destination.value;
-      if ('dynamic' === $$type) {
-        var resolvedValue = this.handleDynamicLink(value);
-        if (!resolvedValue) {
-          return null;
-        }
-        var attributeKey = 'action' === (value === null || value === void 0 ? void 0 : value.group) ? 'data-action-link' : 'href';
-        return (0, _defineProperty2.default)({}, attributeKey, resolvedValue);
-      }
-      var isPostId = 'number' === $$type;
-      var hrefPrefix = isPostId ? elementor.config.home_url + '/?p=' : '';
-      return {
-        href: hrefPrefix + value
-      };
-    },
     droppableInitialize: function droppableInitialize() {
       this.$el.html5Droppable(this.getDroppableOptions());
     },
@@ -1527,14 +1294,14 @@ function createAtomicElementBaseView(type) {
      * @return {Object} groups
      */
     getContextMenuGroups: function getContextMenuGroups() {
-      var _this0 = this,
+      var _this6 = this,
         _elementorCommon$conf;
       var saveActions = [{
         name: 'save',
         title: __('Save as a template', 'elementor'),
         callback: this.saveAsTemplate.bind(this),
         isEnabled: function isEnabled() {
-          return !_this0.getContainer().isLocked();
+          return !_this6.getContainer().isLocked();
         }
       }];
       var isAdministrator = elementor.config.user.is_administrator;
@@ -1555,7 +1322,7 @@ function createAtomicElementBaseView(type) {
           hasShortcutAction: showPromoBadge,
           callback: this.saveAsComponent.bind(this),
           isEnabled: function isEnabled() {
-            return (isProActive || isProOutdated) && !_this0.getContainer().isLocked();
+            return (isProActive || isProOutdated) && !_this6.getContainer().isLocked();
           }
         });
       }
@@ -1640,7 +1407,7 @@ function createAtomicElementBaseView(type) {
       };
     },
     getDroppableOptions: function getDroppableOptions() {
-      var _this1 = this;
+      var _this7 = this;
       var items = '> .elementor-element, > .elementor-empty-view .elementor-first-add';
       return {
         axis: null,
@@ -1652,7 +1419,7 @@ function createAtomicElementBaseView(type) {
         placeholderClass: 'elementor-sortable-placeholder elementor-widget-placeholder',
         hasDraggingOnChildClass: 'e-dragging-over',
         getDropContainer: function getDropContainer() {
-          return _this1.getContainer();
+          return _this7.getContainer();
         },
         onDropping: function onDropping(side, event) {
           event.stopPropagation();
@@ -1664,12 +1431,12 @@ function createAtomicElementBaseView(type) {
             containerElement = event.currentTarget.parentElement,
             elements = Array.from((containerElement === null || containerElement === void 0 ? void 0 : containerElement.querySelectorAll(':scope > .elementor-element')) || []);
           var targetIndex = elements.indexOf(event.currentTarget);
-          if (_this1.isPanelElement(draggedView, draggedElement)) {
+          if (_this7.isPanelElement(draggedView, draggedElement)) {
             var _elementorCommon;
-            if (_this1.draggingOnBottomOrRightSide(side) && !_this1.emptyViewIsCurrentlyBeingDraggedOver()) {
+            if (_this7.draggingOnBottomOrRightSide(side) && !_this7.emptyViewIsCurrentlyBeingDraggedOver()) {
               targetIndex++;
             }
-            _this1.onDrop(event, {
+            _this7.onDrop(event, {
               at: targetIndex
             });
             if ((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.eventsManager) !== null && _elementorCommon !== void 0 && _elementorCommon.dispatchEvent) {
@@ -1689,14 +1456,14 @@ function createAtomicElementBaseView(type) {
             }
             return;
           }
-          if (_this1.isParentElement(draggedView.getContainer().id)) {
+          if (_this7.isParentElement(draggedView.getContainer().id)) {
             return;
           }
-          if (_this1.emptyViewIsCurrentlyBeingDraggedOver()) {
-            _this1.moveDroppedItem(draggedView, 0);
+          if (_this7.emptyViewIsCurrentlyBeingDraggedOver()) {
+            _this7.moveDroppedItem(draggedView, 0);
             return;
           }
-          _this1.moveExistingElement(side, draggedView, containerElement, elements, targetIndex, draggedElement);
+          _this7.moveExistingElement(side, draggedView, containerElement, elements, targetIndex, draggedElement);
         }
       };
     },
@@ -1816,24 +1583,6 @@ function createAtomicElementBaseView(type) {
       });
       this.addSectionView = addSectionView;
     },
-    getClasses: function getClasses() {
-      var _window, _window$get, _this$options;
-      var transformer = (_window = window) === null || _window === void 0 || (_window = _window.elementorV2) === null || _window === void 0 || (_window = _window.editorCanvas) === null || _window === void 0 || (_window = _window.settingsTransformersRegistry) === null || _window === void 0 || (_window$get = _window.get) === null || _window$get === void 0 ? void 0 : _window$get.call(_window, 'classes');
-      if (!transformer) {
-        return [];
-      }
-      return transformer(((_this$options = this.options) === null || _this$options === void 0 || (_this$options = _this$options.model) === null || _this$options === void 0 || (_this$options = _this$options.getSetting('classes')) === null || _this$options === void 0 ? void 0 : _this$options.value) || []);
-    },
-    getClassString: function getClassString() {
-      var classes = this.getClasses();
-      var base = this.getBaseClass();
-      return [base].concat((0, _toConsumableArray2.default)(classes)).join(' ');
-    },
-    getBaseClass: function getBaseClass() {
-      var _this$options2, _Object$keys$;
-      var baseStyles = elementor.helpers.getAtomicWidgetBaseStyles((_this$options2 = this.options) === null || _this$options2 === void 0 ? void 0 : _this$options2.model);
-      return (_Object$keys$ = Object.keys(baseStyles !== null && baseStyles !== void 0 ? baseStyles : {})[0]) !== null && _Object$keys$ !== void 0 ? _Object$keys$ : '';
-    },
     isOverflowHidden: function isOverflowHidden() {
       var elementStyles = window.getComputedStyle(this.el);
       var overflowStyles = [elementStyles.overflowX, elementStyles.overflowY, elementStyles.overflow];
@@ -1859,73 +1608,6 @@ function createAtomicElementBaseView(type) {
         return true;
       }
       return 0 === this.model.collection.indexOf(this.model);
-    },
-    getDynamicLinkValue: function getDynamicLinkValue(name, settings) {
-      var simpleTransform = function simpleTransform(props) {
-        var transformed = Object.entries(props).map(function (_ref0) {
-          var _ref1 = (0, _slicedToArray2.default)(_ref0, 2),
-            settingKey = _ref1[0],
-            settingValue = _ref1[1];
-          var value = 'object' === (0, _typeof2.default)(settingValue) && 'value' in settingValue ? settingValue.value : settingValue;
-          return [settingKey, value];
-        });
-        return Object.fromEntries(transformed);
-      };
-      var getTagValue = function getTagValue() {
-        var _elementor$dynamicTag;
-        var tag = elementor.dynamicTags.createTag('v4-dynamic-tag', name, simpleTransform(settings));
-        if (!tag) {
-          return null;
-        }
-        return (_elementor$dynamicTag = elementor.dynamicTags.loadTagDataFromCache(tag)) !== null && _elementor$dynamicTag !== void 0 ? _elementor$dynamicTag : null;
-      };
-      var tagValue = getTagValue();
-      if (tagValue !== null) {
-        return tagValue;
-      }
-      return new Promise(function (resolve) {
-        elementor.dynamicTags.refreshCacheFromServer(function () {
-          resolve(getTagValue());
-        });
-      });
-    },
-    handleDynamicLink: function handleDynamicLink(linkValue) {
-      var _this10 = this;
-      var result = this.getDynamicLinkValue(linkValue.name, linkValue.settings);
-      if (!result) {
-        return null;
-      }
-      if ('string' === typeof result) {
-        return result;
-      }
-      result.then(function (href) {
-        _this10.el.removeAttribute('href');
-        var attribute = 'action' === linkValue.group ? 'data-action-link' : 'href';
-        _this10.el.setAttribute(attribute, href);
-      }).then(function () {
-        return _this10.dispatchPreviewEvent('elementor/element/render');
-      });
-      return null;
-    },
-    _resolvePropValue: function _resolvePropValue(prop, renderContext) {
-      var _window2, _registry$get;
-      if (!prop || (0, _typeof2.default)(prop) !== 'object') {
-        return prop;
-      }
-      if ('overridable' !== prop.$$type) {
-        return prop;
-      }
-      var registry = (_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.elementorV2) === null || _window2 === void 0 || (_window2 = _window2.editorCanvas) === null || _window2 === void 0 ? void 0 : _window2.settingsTransformersRegistry;
-      var transformer = registry === null || registry === void 0 || (_registry$get = registry.get) === null || _registry$get === void 0 ? void 0 : _registry$get.call(registry, 'overridable');
-      if (!transformer) {
-        var _prop$value;
-        return (_prop$value = prop.value) === null || _prop$value === void 0 ? void 0 : _prop$value.origin_value;
-      }
-      var transformed = transformer(prop.value, {
-        key: 'overridable',
-        renderContext: renderContext
-      });
-      return this._resolvePropValue(transformed, renderContext);
     },
     getInteractionId: function getInteractionId() {
       var originId = this.model.get('originId');

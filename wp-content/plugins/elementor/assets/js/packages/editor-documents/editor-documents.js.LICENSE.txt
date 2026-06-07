@@ -2,6 +2,8 @@
 
 /*! ../store */
 
+/*! ../store/get-current-document */
+
 /*! ../store/selectors */
 
 /*! ../sync/utils */

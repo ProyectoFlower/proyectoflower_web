@@ -14,8 +14,6 @@
 
 /*! ../../utils/temp-id-utils */
 
-/*! ../../utils/time-conversion */
-
 /*! ../configs/time-constants */
 
 /*! ../constants */
@@ -40,9 +38,13 @@
 
 /*! ../utils/filter-interactions */
 
+/*! ../utils/is-supported-interaction-item */
+
 /*! ../utils/prop-value-utils */
 
 /*! ../utils/resolve-direction */
+
+/*! ../utils/scroll-interaction-event */
 
 /*! ../utils/size-transform-utils */
 
@@ -67,6 +69,8 @@
 /*! ./components/controls/trigger */
 
 /*! ./components/empty-state */
+
+/*! ./components/interaction-details */
 
 /*! ./components/interactions-tab */
 
@@ -130,11 +134,11 @@
 
 /*! ./utils/resolve-direction */
 
+/*! ./utils/scroll-interaction-event */
+
 /*! ./utils/size-transform-utils */
 
 /*! ./utils/temp-id-utils */
-
-/*! ./utils/time-conversion */
 
 /*! @elementor/editor-controls */
 
@@ -266,10 +270,6 @@
   !*** ./packages/packages/core/editor-interactions/src/ui/promotion-select.tsx ***!
   \********************************************************************************/
 
-/*!*********************************************************************************!*\
-  !*** ./packages/packages/core/editor-interactions/src/utils/time-conversion.ts ***!
-  \*********************************************************************************/
-
 /*!**********************************************************************************!*\
   !*** ./packages/packages/core/editor-interactions/src/configs/time-constants.ts ***!
   \**********************************************************************************/
@@ -356,6 +356,10 @@
 
 /*!******************************************************************************************!*\
   !*** ./packages/packages/core/editor-interactions/src/interactions-controls-registry.ts ***!
+  \******************************************************************************************/
+
+/*!******************************************************************************************!*\
+  !*** ./packages/packages/core/editor-interactions/src/utils/scroll-interaction-event.ts ***!
   \******************************************************************************************/
 
 /*!*******************************************************************************************!*\

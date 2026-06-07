@@ -1,6 +1,16 @@
+/*! ../../../prop-types/component-instance-override-prop-type */
+
 /*! ../../../prop-types/component-overridable-prop-type */
 
+/*! ../../../provider/component-instance-context */
+
+/*! ../../../utils/resolve-override-prop-value */
+
+/*! ../../../utils/resolve-overrides-chain */
+
 /*! ../../api */
+
+/*! ../../errors */
 
 /*! ../../hooks/use-components */
 
@@ -29,10 +39,6 @@
 /*! ../../utils/detach-component-instance */
 
 /*! ../../utils/get-component-documents */
-
-/*! ../../utils/get-container-by-origin-id */
-
-/*! ../../utils/get-overridable-prop */
 
 /*! ../../utils/get-prop-type-for-component-override */
 
@@ -174,8 +180,6 @@
 
 /*! ./loading-components */
 
-/*! ./overridable-props-utils */
-
 /*! ./override-prop-control */
 
 /*! ./override-props-group */
@@ -202,7 +206,11 @@
 
 /*! ./resolve-detached-instance */
 
+/*! ./resolve-element-settings */
+
 /*! ./resolve-overridable-settings */
+
+/*! ./resolve-overrides-chain */
 
 /*! ./search-provider */
 
@@ -236,8 +244,6 @@
 
 /*! ./use-instance-panel-data */
 
-/*! ./use-resolved-origin-value */
-
 /*! ./utils/component-document-data */
 
 /*! ./utils/correct-exposed-empty-override */
@@ -258,11 +264,17 @@
 
 /*! ./utils/is-pro-components-supported */
 
+/*! ./utils/resolve-element-settings */
+
 /*! ./utils/resolve-override-prop-value */
 
 /*! ./utils/switch-to-component */
 
 /*! ./utils/tracking */
+
+/*! ./utils/use-override-dependencies */
+
+/*! ./utils/use-resolved-inner-element */
 
 /*! @elementor/editor */
 
@@ -279,6 +291,8 @@
 /*! @elementor/editor-elements */
 
 /*! @elementor/editor-elements-panel */
+
+/*! @elementor/editor-global-classes */
 
 /*! @elementor/editor-notifications */
 
@@ -401,6 +415,10 @@
   \******************************************************/
 
 /*!******************************************************!*\
+  !*** external ["elementorV2","editorGlobalClasses"] ***!
+  \******************************************************/
+
+/*!******************************************************!*\
   !*** external ["elementorV2","editorNotifications"] ***!
   \******************************************************/
 
@@ -506,6 +524,10 @@
 
 /*!***************************************************************************************!*\
   !*** ./packages/packages/core/editor-components/src/utils/overridable-props-utils.ts ***!
+  \***************************************************************************************/
+
+/*!***************************************************************************************!*\
+  !*** ./packages/packages/core/editor-components/src/utils/resolve-overrides-chain.ts ***!
   \***************************************************************************************/
 
 /*!****************************************************************************************!*\
@@ -709,12 +731,20 @@
   \********************************************************************************************************************/
 
 /*!**********************************************************************************************************************!*\
-  !*** ./packages/packages/core/editor-components/src/components/instance-editing-panel/use-resolved-origin-value.tsx ***!
-  \**********************************************************************************************************************/
-
-/*!**********************************************************************************************************************!*\
   !*** ./packages/packages/core/editor-components/src/utils/detach-component-instance/resolve-overridable-settings.ts ***!
   \**********************************************************************************************************************/
+
+/*!**************************************************************************************************************************!*\
+  !*** ./packages/packages/core/editor-components/src/components/instance-editing-panel/utils/resolve-element-settings.ts ***!
+  \**************************************************************************************************************************/
+
+/*!***************************************************************************************************************************!*\
+  !*** ./packages/packages/core/editor-components/src/components/instance-editing-panel/utils/use-override-dependencies.ts ***!
+  \***************************************************************************************************************************/
+
+/*!****************************************************************************************************************************!*\
+  !*** ./packages/packages/core/editor-components/src/components/instance-editing-panel/utils/use-resolved-inner-element.ts ***!
+  \****************************************************************************************************************************/
 
 /*!********************************************************************************************************************************!*\
   !*** ./packages/packages/core/editor-components/src/components/instance-editing-panel/utils/correct-exposed-empty-override.ts ***!

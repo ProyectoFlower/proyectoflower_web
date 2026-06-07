@@ -1,5 +1,7 @@
 __( 'Select video', 'elementor' );
 __( 'Upload', 'elementor' );
+__( 'Start time', 'elementor' );
+__( 'End time', 'elementor' );
 __( "Sorry, you can't upload that file yet.", 'elementor' );
 __( 'To upload them anyway, ask the site administrator to enable unfiltered', 'elementor' );
 __( 'file uploads.', 'elementor' );
@@ -50,6 +52,7 @@ __( 'Value', 'elementor' );
 __( 'Invalid Format', 'elementor' );
 __( 'Select image', 'elementor' );
 __( 'Upload', 'elementor' );
+__( 'Insert from URL', 'elementor' );
 __( 'Image', 'elementor' );
 __( 'Resolution', 'elementor' );
 __( 'HTML Tag', 'elementor' );
@@ -68,19 +71,20 @@ __( 'Row', 'elementor' );
 __( 'Row gap', 'elementor' );
 __( 'Mixed', 'elementor' );
 __( 'Send to', 'elementor' );
-__( 'Where should we send new submissions?', 'elementor' );
 __( 'Email subject', 'elementor' );
 __( 'New form submission', 'elementor' );
 __( 'Message', 'elementor' );
 __(
-						'By default, all form fields are sent via [all-fields] shortcode.',
-						'elementor'
-					);
+									'[all-fields] shortcode sends all fields. Type @ to insert specific fields and customize your message.',
+									'elementor'
+							  );
+__( '[all-fields] shortcode sends all fields.', 'elementor' );
 __( 'From email', 'elementor' );
 __( 'What email should appear as the sender?', 'elementor' );
 __( 'From name', 'elementor' );
 __( 'What name should appear as the sender?', 'elementor' );
 __( 'Reply-to', 'elementor' );
+__( 'You can type @ to insert an email field', 'elementor' );
 __( 'Cc', 'elementor' );
 __( 'Bcc', 'elementor' );
 __( 'Metadata', 'elementor' );
@@ -93,6 +97,9 @@ __( 'Send as', 'elementor' );
 __( 'HTML', 'elementor' );
 __( 'Plain Text', 'elementor' );
 __( 'Email settings', 'elementor' );
+__( 'Min date', 'elementor' );
+__( 'Max date', 'elementor' );
+__( 'Max date must be on or after Min date', 'elementor' );
 __( 'Box shadow', 'elementor' );
 __( 'Color', 'elementor' );
 __( 'Position', 'elementor' );
@@ -102,6 +109,10 @@ __( 'Horizontal', 'elementor' );
 __( 'Vertical', 'elementor' );
 __( 'Blur', 'elementor' );
 __( 'Spread', 'elementor' );
+__(
+						'Linked uploads are saved to the server. Direct attachments will not appear under Submissions.',
+						'elementor'
+					);
 __( 'Auto', 'elementor' );
 __( 'Custom', 'elementor' );
 __( 'Type a URL', 'elementor' );
@@ -281,6 +292,7 @@ __( 'Move X', 'elementor' );
 __( 'Move Y', 'elementor' );
 __( 'Move Z', 'elementor' );
 __( 'CSS function', 'elementor' );
+__( 'Drop shadow:', 'elementor' );
 __( 'X-axis', 'elementor' );
 __( 'Y-axis', 'elementor' );
 __( 'Blur', 'elementor' );

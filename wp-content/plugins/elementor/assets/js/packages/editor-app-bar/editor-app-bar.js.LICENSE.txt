@@ -18,6 +18,8 @@
 
 /*! ../components/angie-guide-card */
 
+/*! ../hooks/use-auto-show */
+
 /*! ../locations */
 
 /*! ../ui/popover-menu */
@@ -84,6 +86,8 @@
 
 /*! ./hooks/use-document-save-template-props */
 
+/*! ./hooks/use-document-view-as-markdown-props */
+
 /*! ./hooks/use-document-view-page-props */
 
 /*! ./init */
@@ -137,6 +141,8 @@
 /*! ./wordpress */
 
 /*! @elementor/editor */
+
+/*! @elementor/editor-current-user */
 
 /*! @elementor/editor-documents */
 
@@ -219,6 +225,10 @@
 /*!***************************************************!*\
   !*** external ["elementorV2","editorV1Adapters"] ***!
   \***************************************************/
+
+/*!****************************************************!*\
+  !*** external ["elementorV2","editorCurrentUser"] ***!
+  \****************************************************/
 
 /*!***********************************************************!*\
   !*** ./packages/packages/core/editor-app-bar/src/init.ts ***!
@@ -364,6 +374,10 @@
   !*** ./packages/packages/core/editor-app-bar/src/extensions/keyboard-shortcuts/index.ts ***!
   \******************************************************************************************/
 
+/*!*******************************************************************************************!*\
+  !*** ./packages/packages/core/editor-app-bar/src/extensions/angie/hooks/use-auto-show.ts ***!
+  \*******************************************************************************************/
+
 /*!*********************************************************************************************!*\
   !*** ./packages/packages/core/editor-app-bar/src/extensions/help/hooks/use-action-props.ts ***!
   \*********************************************************************************************/
@@ -503,3 +517,7 @@
 /*!************************************************************************************************************************!*\
   !*** ./packages/packages/core/editor-app-bar/src/extensions/documents-save/hooks/use-document-copy-and-share-props.ts ***!
   \************************************************************************************************************************/
+
+/*!**************************************************************************************************************************!*\
+  !*** ./packages/packages/core/editor-app-bar/src/extensions/documents-save/hooks/use-document-view-as-markdown-props.ts ***!
+  \**************************************************************************************************************************/

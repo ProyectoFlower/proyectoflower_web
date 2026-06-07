@@ -90,13 +90,23 @@ exports.config = config;
 exports.extractInteractionId = extractInteractionId;
 exports.getAnimateFunction = getAnimateFunction;
 exports.getInViewFunction = getInViewFunction;
+exports.getTransformBaselineFromComputedStyle = getTransformBaselineFromComputedStyle;
 exports.parseInteractionsData = parseInteractionsData;
+exports.preserveTransformKeyframes = preserveTransformKeyframes;
+exports.resetElementStyles = resetElementStyles;
 exports.skipInteraction = skipInteraction;
 exports.timingValueToMs = timingValueToMs;
 exports.unwrapInteractionValue = unwrapInteractionValue;
 exports.waitForAnimateFunction = waitForAnimateFunction;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
 var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js"));
 var _interactionsBreakpoints = __webpack_require__(/*! ./interactions-breakpoints.js */ "../modules/interactions/assets/js/interactions-breakpoints.js");
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function config() {
   var _window$ElementorInte, _window$ElementorInte2;
   return (_window$ElementorInte = (_window$ElementorInte2 = window.ElementorInteractionsConfig) === null || _window$ElementorInte2 === void 0 ? void 0 : _window$ElementorInte2.constants) !== null && _window$ElementorInte !== void 0 ? _window$ElementorInte : {};
@@ -175,6 +185,177 @@ function timingValueToMs(timingValue, fallbackMs) {
   }
   return size;
 }
+function resetElementStyles(element) {
+  if (!element) {
+    return;
+  }
+  element.style.transition = '';
+  element.style.transform = '';
+  element.style.opacity = '';
+}
+var TRANSFORM_EPSILON = 0.001;
+var radiansToDegrees = function radiansToDegrees(radians) {
+  return radians * (180 / Math.PI);
+};
+var isNear = function isNear(value, expected) {
+  return Math.abs(value - expected) <= TRANSFORM_EPSILON;
+};
+var isNearZero = function isNearZero(value) {
+  return isNear(value, 0);
+};
+var isNearOne = function isNearOne(value) {
+  return isNear(value, 1);
+};
+function parseMatrixValues(transformValue) {
+  var match = transformValue.match(/^matrix(3d)?\((.+)\)$/);
+  if (!match) {
+    return null;
+  }
+  return match[2].split(',').map(function (token) {
+    return Number.parseFloat(token.trim());
+  }).filter(function (value) {
+    return Number.isFinite(value);
+  });
+}
+function createMatrixFromTransform(transformValue) {
+  if (!transformValue || 'none' === transformValue) {
+    return null;
+  }
+  var matrixFactories = [window.DOMMatrixReadOnly, window.DOMMatrix].filter(function (Factory) {
+    return 'function' === typeof Factory;
+  });
+  var _iterator = _createForOfIteratorHelper(matrixFactories),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var MatrixFactory = _step.value;
+      try {
+        var _ref, _matrix$a, _ref2, _matrix$b, _ref3, _matrix$c, _ref4, _matrix$d, _ref5, _matrix$e, _ref6, _matrix$f;
+        var matrix = new MatrixFactory(transformValue);
+        // CSS matrix(a,b,c,d,e,f): x' = ax + cy + e, y' = bx + dy + f
+        // matrixXfromY = how much input Y contributes to output X (etc.)
+        var compactMatrix = {
+          matrixXfromX: (_ref = (_matrix$a = matrix.a) !== null && _matrix$a !== void 0 ? _matrix$a : matrix.m11) !== null && _ref !== void 0 ? _ref : 1,
+          matrixYfromX: (_ref2 = (_matrix$b = matrix.b) !== null && _matrix$b !== void 0 ? _matrix$b : matrix.m12) !== null && _ref2 !== void 0 ? _ref2 : 0,
+          matrixXfromY: (_ref3 = (_matrix$c = matrix.c) !== null && _matrix$c !== void 0 ? _matrix$c : matrix.m21) !== null && _ref3 !== void 0 ? _ref3 : 0,
+          matrixYfromY: (_ref4 = (_matrix$d = matrix.d) !== null && _matrix$d !== void 0 ? _matrix$d : matrix.m22) !== null && _ref4 !== void 0 ? _ref4 : 1,
+          matrixTranslateX: (_ref5 = (_matrix$e = matrix.e) !== null && _matrix$e !== void 0 ? _matrix$e : matrix.m41) !== null && _ref5 !== void 0 ? _ref5 : 0,
+          matrixTranslateY: (_ref6 = (_matrix$f = matrix.f) !== null && _matrix$f !== void 0 ? _matrix$f : matrix.m42) !== null && _ref6 !== void 0 ? _ref6 : 0
+        };
+        if (Object.values(compactMatrix).every(Number.isFinite)) {
+          return compactMatrix;
+        }
+      } catch (_unused2) {}
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  var parsedValues = parseMatrixValues(transformValue);
+  if (!parsedValues) {
+    return null;
+  }
+  if (6 === parsedValues.length) {
+    var _parsedValues = (0, _slicedToArray2.default)(parsedValues, 6),
+      matrixXfromX = _parsedValues[0],
+      matrixYfromX = _parsedValues[1],
+      matrixXfromY = _parsedValues[2],
+      matrixYfromY = _parsedValues[3],
+      matrixTranslateX = _parsedValues[4],
+      matrixTranslateY = _parsedValues[5];
+    return {
+      matrixXfromX: matrixXfromX,
+      matrixYfromX: matrixYfromX,
+      matrixXfromY: matrixXfromY,
+      matrixYfromY: matrixYfromY,
+      matrixTranslateX: matrixTranslateX,
+      matrixTranslateY: matrixTranslateY
+    };
+  }
+  if (16 === parsedValues.length) {
+    var _parsedValues2 = (0, _slicedToArray2.default)(parsedValues, 14),
+      _matrixXfromX = _parsedValues2[0],
+      _matrixYfromX = _parsedValues2[1],
+      _matrixXfromY = _parsedValues2[4],
+      _matrixYfromY = _parsedValues2[5],
+      _matrixTranslateX = _parsedValues2[12],
+      _matrixTranslateY = _parsedValues2[13];
+    return {
+      matrixXfromX: _matrixXfromX,
+      matrixYfromX: _matrixYfromX,
+      matrixXfromY: _matrixXfromY,
+      matrixYfromY: _matrixYfromY,
+      matrixTranslateX: _matrixTranslateX,
+      matrixTranslateY: _matrixTranslateY
+    };
+  }
+  return null;
+}
+function getTransformBaselineFromComputedStyle(element) {
+  if (!element) {
+    return null;
+  }
+  var computedStyle = window.getComputedStyle(element);
+  var matrix = createMatrixFromTransform((computedStyle === null || computedStyle === void 0 ? void 0 : computedStyle.transform) || '');
+  if (!matrix) {
+    return null;
+  }
+  var matrixXfromX = matrix.matrixXfromX,
+    matrixYfromX = matrix.matrixYfromX,
+    matrixXfromY = matrix.matrixXfromY,
+    matrixYfromY = matrix.matrixYfromY,
+    matrixTranslateX = matrix.matrixTranslateX,
+    matrixTranslateY = matrix.matrixTranslateY;
+  var scaleX = Math.hypot(matrixXfromX, matrixYfromX);
+  var determinant = matrixXfromX * matrixYfromY - matrixYfromX * matrixXfromY;
+  var scaleY = scaleX ? determinant / scaleX : Math.hypot(matrixXfromY, matrixYfromY);
+  var rotate = radiansToDegrees(Math.atan2(matrixYfromX, matrixXfromX));
+  var shear = scaleX ? (matrixXfromX * matrixXfromY + matrixYfromX * matrixYfromY) / (scaleX * scaleX) : 0;
+  var skewX = radiansToDegrees(Math.atan(shear));
+  return {
+    x: matrixTranslateX,
+    y: matrixTranslateY,
+    scaleX: Number.isFinite(scaleX) ? scaleX : 1,
+    scaleY: Number.isFinite(scaleY) ? scaleY : 1,
+    rotate: Number.isFinite(rotate) ? rotate : 0,
+    skewX: Number.isFinite(skewX) ? skewX : 0
+  };
+}
+function preserveTransformKeyframes(keyframes, baseline) {
+  if (!baseline) {
+    return keyframes;
+  }
+  var mergedKeyframes = _objectSpread({}, keyframes);
+  var hasScaleShorthand = mergedKeyframes.scale !== undefined;
+  var canSetScaleX = mergedKeyframes.scaleX === undefined && !isNearOne(baseline.scaleX);
+  var canSetScaleY = mergedKeyframes.scaleY === undefined && !isNearOne(baseline.scaleY);
+  if (mergedKeyframes.x === undefined && !isNearZero(baseline.x)) {
+    mergedKeyframes.x = [baseline.x, baseline.x];
+  }
+  if (mergedKeyframes.y === undefined && !isNearZero(baseline.y)) {
+    mergedKeyframes.y = [baseline.y, baseline.y];
+  }
+  if (!hasScaleShorthand) {
+    if (canSetScaleX && canSetScaleY && isNear(baseline.scaleX, baseline.scaleY)) {
+      mergedKeyframes.scale = [baseline.scaleX, baseline.scaleX];
+    } else {
+      if (canSetScaleX) {
+        mergedKeyframes.scaleX = [baseline.scaleX, baseline.scaleX];
+      }
+      if (canSetScaleY) {
+        mergedKeyframes.scaleY = [baseline.scaleY, baseline.scaleY];
+      }
+    }
+  }
+  if (mergedKeyframes.rotate === undefined && mergedKeyframes.rotateZ === undefined && !isNearZero(baseline.rotate)) {
+    mergedKeyframes.rotate = [baseline.rotate, baseline.rotate];
+  }
+  if (mergedKeyframes.skew === undefined && mergedKeyframes.skewX === undefined && !isNearZero(baseline.skewX)) {
+    mergedKeyframes.skewX = [baseline.skewX, baseline.skewX];
+  }
+  return mergedKeyframes;
+}
 
 // Expose on elementorModules for Pro and other consumers.
 window.elementorModules = window.elementorModules || {};
@@ -187,7 +368,10 @@ window.elementorModules.interactions = {
   waitForAnimateFunction: waitForAnimateFunction,
   parseInteractionsData: parseInteractionsData,
   unwrapInteractionValue: unwrapInteractionValue,
-  timingValueToMs: timingValueToMs
+  timingValueToMs: timingValueToMs,
+  resetElementStyles: resetElementStyles,
+  getTransformBaselineFromComputedStyle: getTransformBaselineFromComputedStyle,
+  preserveTransformKeyframes: preserveTransformKeyframes
 };
 
 /***/ }),
@@ -233,7 +417,12 @@ Object.defineProperty(exports, "getInViewFunction", ({
 }));
 exports.getInteractionsData = getInteractionsData;
 exports.getKeyframes = getKeyframes;
-exports.isFreeFrontendSupportedTrigger = isFreeFrontendSupportedTrigger;
+Object.defineProperty(exports, "getTransformBaselineFromComputedStyle", ({
+  enumerable: true,
+  get: function get() {
+    return _interactionsSharedUtils.getTransformBaselineFromComputedStyle;
+  }
+}));
 exports.parseAnimationName = parseAnimationName;
 Object.defineProperty(exports, "parseInteractionsData", ({
   enumerable: true,
@@ -241,12 +430,19 @@ Object.defineProperty(exports, "parseInteractionsData", ({
     return _interactionsSharedUtils.parseInteractionsData;
   }
 }));
-Object.defineProperty(exports, "skipInteraction", ({
+Object.defineProperty(exports, "preserveTransformKeyframes", ({
   enumerable: true,
   get: function get() {
-    return _interactionsSharedUtils.skipInteraction;
+    return _interactionsSharedUtils.preserveTransformKeyframes;
   }
 }));
+Object.defineProperty(exports, "resetElementStyles", ({
+  enumerable: true,
+  get: function get() {
+    return _interactionsSharedUtils.resetElementStyles;
+  }
+}));
+exports.skipInteraction = skipInteraction;
 Object.defineProperty(exports, "timingValueToMs", ({
   enumerable: true,
   get: function get() {
@@ -267,13 +463,20 @@ Object.defineProperty(exports, "waitForAnimateFunction", ({
 }));
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
 var _interactionsSharedUtils = __webpack_require__(/*! ./interactions-shared-utils.js */ "../modules/interactions/assets/js/interactions-shared-utils.js");
-/**
- * Triggers the Core `interactions.js` / `editor-interactions.js` bundles run. Pro-only triggers
- * (e.g. hover, click) must not fall through to the load-time default path.
- */
-var FREE_FRONTEND_SUPPORTED_TRIGGERS = ['load', 'scrollIn', 'scrollOut'];
-function isFreeFrontendSupportedTrigger(trigger) {
-  return FREE_FRONTEND_SUPPORTED_TRIGGERS.includes(trigger);
+function isSupportedInteraction(animationConfig) {
+  if (!['load', 'scrollIn', 'scrollOut'].includes(animationConfig.trigger)) {
+    return false;
+  }
+  if ('custom' === animationConfig.effect) {
+    return false;
+  }
+  return true;
+}
+function skipInteraction(animationConfig) {
+  if (!isSupportedInteraction(animationConfig)) {
+    return true;
+  }
+  return (0, _interactionsSharedUtils.skipInteraction)(animationConfig);
 }
 function getKeyframes(effect, type, direction) {
   var isIn = 'in' === type;
@@ -285,7 +488,7 @@ function getKeyframes(effect, type, direction) {
   if ('scale' === effect) {
     keyframes.scale = isIn ? [config.scaleStart, 1] : [1, config.scaleStart];
   }
-  if (direction) {
+  if (direction && 'string' === typeof direction) {
     var distance = config.slideDistance;
     var movement = {
       left: {
@@ -301,7 +504,11 @@ function getKeyframes(effect, type, direction) {
         y: isIn ? [distance, 0] : [0, distance]
       }
     };
-    Object.assign(keyframes, movement[direction]);
+    direction.split('-').forEach(function (part) {
+      if (movement[part]) {
+        Object.assign(keyframes, movement[part]);
+      }
+    });
   }
   return keyframes;
 }
@@ -380,7 +587,8 @@ function extractAnimationConfig(interaction) {
   var config = (0, _interactionsSharedUtils.config)();
   var effect = (0, _interactionsSharedUtils.unwrapInteractionValue)(animation.effect) || animation.effect || 'fade';
   var type = (0, _interactionsSharedUtils.unwrapInteractionValue)(animation.type) || animation.type || 'in';
-  var direction = (0, _interactionsSharedUtils.unwrapInteractionValue)(animation.direction) || animation.direction || '';
+  var directionUnwrapped = (0, _interactionsSharedUtils.unwrapInteractionValue)(animation.direction);
+  var direction = 'string' === typeof directionUnwrapped ? directionUnwrapped : '';
   var easing = config.defaultEasing;
   var replay = false;
   var timingConfig = (0, _interactionsSharedUtils.unwrapInteractionValue)(animation.timing_config) || animation.timing_config || {};
@@ -655,7 +863,8 @@ function applyAnimation(element, animConfig, animateFunc) {
     playingInteractionsToStop[id].cancel();
     delete playingInteractionsToStop[id];
   }
-  var keyframes = (0, _interactionsUtils.getKeyframes)(animConfig.effect, animConfig.type, animConfig.direction);
+  var baseline = (0, _interactionsUtils.getTransformBaselineFromComputedStyle)(element);
+  var keyframes = (0, _interactionsUtils.preserveTransformKeyframes)((0, _interactionsUtils.getKeyframes)(animConfig.effect, animConfig.type, animConfig.direction), baseline);
   var options = {
     duration: animConfig.duration / 1000,
     delay: animConfig.delay / 1000,
@@ -665,32 +874,15 @@ function applyAnimation(element, animConfig, animateFunc) {
   Object.keys(keyframes).forEach(function (key) {
     initialKeyframes[key] = keyframes[key][0];
   });
-
-  // WHY - Transition can be set on elements but once it sets it destroys all animations, so we basically put it aside.
-  var transition = element.style.transition;
-  element.style.transition = 'none';
   animateFunc(element, initialKeyframes, {
     duration: 0
   }).then(function () {
-    var animations = animateFunc(element, keyframes, options);
-    playingInteractionsToStop[id] = animations;
-    animations.then(function () {
-      if ('out' === animConfig.type) {
-        var resetValues = {
-          opacity: 1,
-          scale: 1,
-          x: 0,
-          y: 0
-        };
-        var resetKeyframes = {};
-        Object.keys(keyframes).forEach(function (key) {
-          resetKeyframes[key] = resetValues[key];
-        });
-        element.style.transition = transition;
-        animateFunc(element, resetKeyframes, {
-          duration: 0
-        });
-      }
+    var animation = animateFunc(element, keyframes, options);
+    playingInteractionsToStop[id] = animation;
+    animation.then(function () {
+      requestAnimationFrame(function () {
+        (0, _interactionsUtils.resetElementStyles)(element);
+      });
       delete playingInteractionsToStop[id];
     });
   });

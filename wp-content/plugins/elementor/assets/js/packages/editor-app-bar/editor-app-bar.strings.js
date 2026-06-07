@@ -39,6 +39,7 @@ __( 'Add Element', 'elementor' );
 __( '%s Settings', 'elementor' );
 __( 'Document Settings', 'elementor' );
 __( 'View Page', 'elementor' );
+__( 'View as Markdown', 'elementor' );
 __( 'Save as Template', 'elementor' );
 __( 'Save Draft', 'elementor' );
 __( 'Copy and Share', 'elementor' );

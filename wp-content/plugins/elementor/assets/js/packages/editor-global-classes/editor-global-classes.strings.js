@@ -46,13 +46,13 @@ __(
 			  );
 __( 'Delete this class?', 'elementor' );
 __( 'Deleting', 'elementor' );
-__( 'Class Manager', 'elementor' );
 __( 'Save changes', 'elementor' );
 __( 'You have unsaved changes', 'elementor' );
 __( 'You have unsaved changes in the Class Manager.', 'elementor' );
 __( 'To avoid losing your updates, save your changes before leaving.', 'elementor' );
 __( 'Discard', 'elementor' );
 __( 'Save & Continue', 'elementor' );
+__( 'Class Manager', 'elementor' );
 __( 'Something went wrong', 'elementor' );
 __( 'Un-sync typography class', 'elementor' );
 __( "You're about to stop syncing a typography class to Global Fonts.", 'elementor' );

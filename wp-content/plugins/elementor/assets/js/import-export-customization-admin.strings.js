@@ -147,7 +147,7 @@ __( 'See it Live', 'elementor' );
 __( 'Close', 'elementor' );
 __( 'Import', 'elementor' );
 __( 'Kit is live illustration', 'elementor' );
-__( 'Your website templates is now live on your site!', 'elementor' );
+__( 'Your website template is now live on your site!', 'elementor' );
 __( 'You\'ve imported and applied the following to your site:', 'elementor' );
 __( 'Build sites faster with Website Templates.', 'elementor' );
 __( 'Show me how', 'elementor' );

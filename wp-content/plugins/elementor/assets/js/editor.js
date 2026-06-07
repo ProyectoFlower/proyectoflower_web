@@ -11366,7 +11366,7 @@ var TemplateLibrarySaveTemplateView = Marionette.ItemView.extend({
   handleSingleActionContextUiState: function handleSingleActionContextUiState() {
     var title = this.model.get('title');
     this.ui.templateNameInput.val(title);
-    this.handleContextUiStateChecboxes();
+    this.handleContextUiStateCheckboxes();
     this.maybeEnableSaveButton();
   },
   maybeEnableSaveButton: function maybeEnableSaveButton() {
@@ -11381,10 +11381,10 @@ var TemplateLibrarySaveTemplateView = Marionette.ItemView.extend({
   },
   handleBulkActionContextUiState: function handleBulkActionContextUiState() {
     this.ui.templateNameInput.remove();
-    this.handleContextUiStateChecboxes();
+    this.handleContextUiStateCheckboxes();
     this.maybeEnableSaveButton();
   },
-  handleContextUiStateChecboxes: function handleContextUiStateChecboxes() {
+  handleContextUiStateCheckboxes: function handleContextUiStateCheckboxes() {
     var fromSource = elementor.templates.getFilter('source');
     if ('local' === fromSource) {
       this.$('.source-selections-input #cloud').prop('checked', true);
@@ -11558,7 +11558,7 @@ var TemplateLibrarySaveTemplateView = Marionette.ItemView.extend({
   showEmptySourceErrorDialog: function showEmptySourceErrorDialog() {
     elementorCommon.dialogsManager.createWidget('alert', {
       id: 'elementor-template-library-error-dialog',
-      headerMessage: __('An error occured.', 'elementor'),
+      headerMessage: __('An error occurred.', 'elementor'),
       message: __('Please select at least one location.', 'elementor')
     }).show();
   },
@@ -17936,7 +17936,7 @@ ControlRepeaterItemView = ControlBaseDataView.extend({
       axis: 'y',
       handle: '.elementor-repeater-row-tools',
       items: ' > :not(.elementor-repeater-row--disable-sort)',
-      cancel: '' // Elements that do not allow sorting (by default it includs buttons).
+      cancel: '' // Elements that do not allow sorting (by default it includes buttons).
     };
   },
   onRender: function onRender() {
@@ -19786,6 +19786,9 @@ var components = _interopRequireWildcard(__webpack_require__(/*! ./ */ "../asset
 var hooks = _interopRequireWildcard(__webpack_require__(/*! ./hooks/ */ "../assets/dev/js/editor/document/hooks/index.js"));
 var uiStates = _interopRequireWildcard(__webpack_require__(/*! ./ui-states */ "../assets/dev/js/editor/document/ui-states/index.js"));
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _callSuper(t, o, e) { return o = (0, _getPrototypeOf2.default)(o), (0, _possibleConstructorReturn2.default)(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0, _getPrototypeOf2.default)(t).constructor) : o.apply(t, e)); }
 function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
 function _superPropGet(t, o, e, r) { var p = (0, _get2.default)((0, _getPrototypeOf2.default)(1 & r ? t.prototype : t), o, e); return 2 & r && "function" == typeof p ? function (t) { return p.apply(e, t); } : p; }
@@ -19863,6 +19866,61 @@ var Component = exports["default"] = /*#__PURE__*/function (_ComponentBase) {
             result = result.getContainer();
           }
           return result;
+        },
+        findModelById: function findModelById(id) {
+          var _collection$models;
+          var collection = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : elementor.elementsModel.get('elements');
+          var _iterator = _createForOfIteratorHelper((_collection$models = collection === null || collection === void 0 ? void 0 : collection.models) !== null && _collection$models !== void 0 ? _collection$models : []),
+            _step;
+          try {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
+              var model = _step.value;
+              var found = model.get('id') === id ? model : _this.utils.findModelById(id, model.get('elements'));
+              if (found) {
+                return found;
+              }
+            }
+          } catch (err) {
+            _iterator.e(err);
+          } finally {
+            _iterator.f();
+          }
+          return null;
+        },
+        addModelToParent: function addModelToParent(parentId, childData, options) {
+          var parentModel = _this.utils.findModelById(parentId);
+          if (!parentModel) {
+            return false;
+          }
+          var elements = parentModel.get('elements');
+          if (!elements) {
+            return false;
+          }
+          elements.add(childData, {
+            at: options === null || options === void 0 ? void 0 : options.at,
+            silent: true
+          });
+          return true;
+        },
+        removeModelFromParent: function removeModelFromParent(parentId, childId) {
+          var parentModel = _this.utils.findModelById(parentId);
+          if (!parentModel) {
+            return false;
+          }
+          var elements = parentModel.get('elements');
+          if (!elements) {
+            return false;
+          }
+          var child = elements.findWhere({
+            id: childId
+          });
+          if (!child) {
+            return false;
+          }
+          elements.remove(child, {
+            silent: true
+          });
+          return true;
         }
       };
     }
@@ -20490,7 +20548,16 @@ var Create = exports.Create = /*#__PURE__*/function (_$e$modules$editor$do) {
         containers = _args$containers2 === void 0 ? [args.container] : _args$containers2;
       var result = [];
       containers.forEach(function (container) {
+        var _container, _container2;
         container = container.lookup();
+        if (!((_container = container) !== null && _container !== void 0 && _container.view) || container.view.isDestroyed) {
+          var _$e$components$get$ut;
+          container = (_$e$components$get$ut = $e.components.get('document').utils.findContainerById(container.id)) !== null && _$e$components$get$ut !== void 0 ? _$e$components$get$ut : container;
+        }
+        if (!((_container2 = container) !== null && _container2 !== void 0 && _container2.view) || container.view.isDestroyed) {
+          $e.components.get('document').utils.addModelToParent(container.id, model, options);
+          return;
+        }
         var createdContainer = container.view.addElement(model, options).getContainer();
         result.push(createdContainer);
 
@@ -20519,6 +20586,7 @@ var Create = exports.Create = /*#__PURE__*/function (_$e$modules$editor$do) {
   }], [{
     key: "restore",
     value: function restore(historyItem, isRedo) {
+      var _data$containerToRest, _data$containerToRest2, _data$containerToRest3, _data$containerToRest4, _data$containerToRest5, _data$containerToRest6, _data$modelToRestore;
       var data = historyItem.get('data'),
         container = historyItem.get('container'),
         options = historyItem.get('options') || {};
@@ -20533,10 +20601,25 @@ var Create = exports.Create = /*#__PURE__*/function (_$e$modules$editor$do) {
           model: data.modelToRestore,
           options: options
         });
-      } else {
+        return;
+      }
+      if (!elementor.helpers.isAtomicWidget(data.modelToRestore)) {
         $e.run('document/elements/delete', {
           container: data.containerToRestore
         });
+        return;
+      }
+      var containerToRestore = (_data$containerToRest = (_data$containerToRest2 = data.containerToRestore) === null || _data$containerToRest2 === void 0 || (_data$containerToRest3 = _data$containerToRest2.lookup) === null || _data$containerToRest3 === void 0 ? void 0 : _data$containerToRest3.call(_data$containerToRest2)) !== null && _data$containerToRest !== void 0 ? _data$containerToRest : data.containerToRestore;
+      if (containerToRestore instanceof elementorModules.editor.Container) {
+        $e.run('document/elements/delete', {
+          container: containerToRestore
+        });
+        return;
+      }
+      var parentId = (_data$containerToRest4 = data.containerToRestore) === null || _data$containerToRest4 === void 0 || (_data$containerToRest4 = _data$containerToRest4.parent) === null || _data$containerToRest4 === void 0 ? void 0 : _data$containerToRest4.id;
+      var childId = (_data$containerToRest5 = (_data$containerToRest6 = data.containerToRestore) === null || _data$containerToRest6 === void 0 ? void 0 : _data$containerToRest6.id) !== null && _data$containerToRest5 !== void 0 ? _data$containerToRest5 : (_data$modelToRestore = data.modelToRestore) === null || _data$modelToRestore === void 0 ? void 0 : _data$modelToRestore.id;
+      if (parentId && childId) {
+        $e.components.get('document').utils.removeModelFromParent(parentId, childId);
       }
     }
   }]);
@@ -20594,7 +20677,19 @@ var Delete = exports.Delete = /*#__PURE__*/function (_$e$modules$editor$do) {
       var _args$containers2 = args.containers,
         containers = _args$containers2 === void 0 ? [args.container] : _args$containers2;
       containers.forEach(function (container) {
+        var _container, _container2;
         container = container.lookup();
+        if (!((_container = container) !== null && _container !== void 0 && _container.view) || container.view.isDestroyed) {
+          var _$e$components$get$ut;
+          container = (_$e$components$get$ut = $e.components.get('document').utils.findContainerById(container.id)) !== null && _$e$components$get$ut !== void 0 ? _$e$components$get$ut : container;
+        }
+        if (!((_container2 = container) !== null && _container2 !== void 0 && _container2.view) || container.view.isDestroyed) {
+          var _container3;
+          if ((_container3 = container) !== null && _container3 !== void 0 && _container3.parent) {
+            $e.components.get('document').utils.removeModelFromParent(container.parent.id, container.id);
+          }
+          return;
+        }
         if (_this.isHistoryActive() && _this.history) {
           $e.internal('document/history/log-sub-item', {
             container: container,
@@ -23843,7 +23938,13 @@ var Redo = exports.Redo = /*#__PURE__*/function (_$e$modules$CommandBa) {
   return (0, _createClass2.default)(Redo, [{
     key: "apply",
     value: function apply() {
-      elementor.documents.getCurrent().history.navigate(true);
+      var _historyItem$get;
+      var historyItem = elementor.documents.getCurrent().history.navigate(true);
+
+      // The history item that was just redone.
+      return {
+        originHistoryItemId: (_historyItem$get = historyItem === null || historyItem === void 0 ? void 0 : historyItem.get('id')) !== null && _historyItem$get !== void 0 ? _historyItem$get : null
+      };
     }
   }]);
 }($e.modules.CommandBase);
@@ -23920,7 +24021,13 @@ var Undo = exports.Undo = /*#__PURE__*/function (_$e$modules$CommandBa) {
   return (0, _createClass2.default)(Undo, [{
     key: "apply",
     value: function apply() {
-      elementor.documents.getCurrent().history.navigate();
+      var _historyItem$get;
+      var historyItem = elementor.documents.getCurrent().history.navigate();
+
+      // The history item that was just undone.
+      return {
+        originHistoryItemId: (_historyItem$get = historyItem === null || historyItem === void 0 ? void 0 : historyItem.get('id')) !== null && _historyItem$get !== void 0 ? _historyItem$get : null
+      };
     }
   }]);
 }($e.modules.CommandBase);
@@ -29421,8 +29528,10 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
 var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
 var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
@@ -30518,6 +30627,40 @@ var EditorBase = exports["default"] = /*#__PURE__*/function (_Marionette$Applica
       });
     }
   }, {
+    key: "refreshWidgets",
+    value: function () {
+      var _refreshWidgets = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var data;
+        return _regenerator.default.wrap(function (_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 1;
+              return elementorCommon.ajax.addRequest('refresh_widgets_config');
+            case 1:
+              data = _context.sent;
+              this.widgetsCache = {};
+              this.addWidgetsCache(data.widgets);
+              elementor.config.document.panel.elements_categories = data.categories;
+              if (elementor.config.locale !== elementor.config.user.locale) {
+                this.translateControlsDefaults(elementor.config.locale);
+              }
+              this.kitManager.renderGlobalsDefaultCSS();
+              elementor.hooks.doAction('elementor/widgets/refreshed');
+              $e.routes.refreshContainer('panel');
+              $e.run('preview/reload');
+              return _context.abrupt("return", data);
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this);
+      }));
+      function refreshWidgets() {
+        return _refreshWidgets.apply(this, arguments);
+      }
+      return refreshWidgets;
+    }()
+  }, {
     key: "translateControlsDefaults",
     value: function translateControlsDefaults(locale) {
       var _this7 = this;
@@ -30621,6 +30764,11 @@ var EditorBase = exports["default"] = /*#__PURE__*/function (_Marionette$Applica
     value: function onFirstPreviewLoaded() {
       this.initPanel();
       this.previewLoadedOnce = true;
+      var eventsManager = elementorCommon.eventsManager;
+      if (eventsManager) {
+        var _eventsManager$config;
+        eventsManager.dispatchEvent((_eventsManager$config = eventsManager.config) === null || _eventsManager$config === void 0 || (_eventsManager$config = _eventsManager$config.names) === null || _eventsManager$config === void 0 || (_eventsManager$config = _eventsManager$config.elementorEditor) === null || _eventsManager$config === void 0 ? void 0 : _eventsManager$config.editorLoaded, {});
+      }
     }
   }, {
     key: "onEditModeSwitched",
@@ -37087,13 +37235,26 @@ var _default = exports["default"] = /*#__PURE__*/function (_Marionette$Composite
       return helpers;
     }
   }, {
+    key: "isProPromotion",
+    value: function isProPromotion() {
+      var _elementor$widgetsCac;
+      var elType = this.model.get('elType');
+      return !!((_elementor$widgetsCac = elementor.widgetsCache) !== null && _elementor$widgetsCac !== void 0 && (_elementor$widgetsCac = _elementor$widgetsCac[elType]) !== null && _elementor$widgetsCac !== void 0 && (_elementor$widgetsCac = _elementor$widgetsCac.meta) !== null && _elementor$widgetsCac !== void 0 && _elementor$widgetsCac.is_pro_promotion);
+    }
+  }, {
     key: "initialize",
     value: function initialize() {
-      this.collection = this.model.get('elements');
+      this.collection = this.isProPromotion() ? new Backbone.Collection() : this.model.get('elements');
       this.childViewContainer = '.elementor-navigator__elements';
       this.listenTo(this.model, 'change', this.onModelChange).listenTo(this.model.get('settings'), 'change', this.onModelSettingsChange);
       this.listenTo(this.model, 'change:editor_settings', this.onModelEditorSettingsChange);
       this.listenTo(this.model, 'title_external_change', this.onTitleExternalChange);
+      this.listenTo(this.model, 'navigator:add', this.onNavigatorAdd);
+    }
+  }, {
+    key: "onNavigatorAdd",
+    value: function onNavigatorAdd(childModel, options) {
+      this._onCollectionAdd(childModel, this.collection, options || {});
     }
   }, {
     key: "onTitleExternalChange",
@@ -37133,6 +37294,9 @@ var _default = exports["default"] = /*#__PURE__*/function (_Marionette$Composite
     key: "hasChildren",
     value: function hasChildren() {
       var _this$model$get;
+      if (this.isProPromotion()) {
+        return false;
+      }
       return ((_this$model$get = this.model.get('elements')) === null || _this$model$get === void 0 ? void 0 : _this$model$get.length) || 'widget' !== this.model.get('elType');
     }
   }, {
@@ -39757,8 +39921,11 @@ PanelElementsLayoutView = Marionette.LayoutView.extend({
     }
     if (elementorCommon.config.experimentalFeatures.container) {
       jQuery.each(elementor.config.elementsPresets, function (index, widget) {
-        var originalWidget = elementor.widgetsCache[widget.replacements.custom.originalWidget],
-          replacements = widget.replacements,
+        var originalWidget = elementor.widgetsCache[widget.replacements.custom.originalWidget];
+        if (!originalWidget) {
+          return;
+        }
+        var replacements = widget.replacements,
           presetWidget = _this.deepMerge(originalWidget, replacements);
         if (!_this.shouldAddWidget(presetWidget)) {
           return;
@@ -41390,6 +41557,7 @@ exports["default"] = exports.ContainerHelper = void 0;
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _v4FlexboxPreset = __webpack_require__(/*! ./v4-flexbox-preset */ "../assets/dev/js/editor/utils/v4-flexbox-preset.js");
 var _ContainerHelper;
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -41404,8 +41572,12 @@ var ContainerHelper = exports.ContainerHelper = /*#__PURE__*/function () {
     (0, _classCallCheck2.default)(this, ContainerHelper);
   }
   return (0, _createClass2.default)(ContainerHelper, null, [{
-    key: "createContainers",
-    value:
+    key: "isV4OptIn",
+    value: function isV4OptIn() {
+      var _elementorCommon;
+      return !!((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.config) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.experimentalFeatures) !== null && _elementorCommon !== void 0 && _elementorCommon.e_opt_in_v4);
+    }
+
     /**
      * Create multiple container elements.
      *
@@ -41416,7 +41588,9 @@ var ContainerHelper = exports.ContainerHelper = /*#__PURE__*/function () {
      *
      * @return {Container[]} - Array of the newly created Containers.
      */
-    function createContainers(count, settings) {
+  }, {
+    key: "createContainers",
+    value: function createContainers(count, settings) {
       var target = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
       var containers = [];
@@ -41559,6 +41733,9 @@ var ContainerHelper = exports.ContainerHelper = /*#__PURE__*/function () {
     value: function createContainerFromPreset(preset) {
       var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : elementor.getPreviewContainer();
       var options = arguments.length > 2 ? arguments[2] : undefined;
+      if (ContainerHelper.isV4OptIn()) {
+        return (0, _v4FlexboxPreset.createV4FlexboxFromPreset)(preset, target, options);
+      }
       var historyId = $e.internal('document/history/start-log', {
           type: 'add',
           title: __('Container', 'elementor')
@@ -45064,6 +45241,280 @@ var Select2 = exports["default"] = /*#__PURE__*/function (_elementorModules$Vie)
 
 /***/ }),
 
+/***/ "../assets/dev/js/editor/utils/v4-flexbox-preset.js":
+/*!**********************************************************!*\
+  !*** ../assets/dev/js/editor/utils/v4-flexbox-preset.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/* provided dependency */ var __ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n")["__"];
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.createV4FlexboxFromPreset = createV4FlexboxFromPreset;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+var V4_ELEMENT_TYPE = 'e-flexbox';
+var DIRECTION_ROW = 'row';
+var DIRECTION_COLUMN = 'column';
+var SIZES_MAP = {
+  33: '33.3333',
+  66: '66.6666'
+};
+var sizeProp = function sizeProp(size) {
+  var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'px';
+  return {
+    $$type: 'size',
+    value: {
+      size: size,
+      unit: unit
+    }
+  };
+};
+var stringProp = function stringProp(value) {
+  return {
+    $$type: 'string',
+    value: value
+  };
+};
+var widthPercent = function widthPercent(size) {
+  var _SIZES_MAP$size;
+  return {
+    width: sizeProp(Number((_SIZES_MAP$size = SIZES_MAP[size]) !== null && _SIZES_MAP$size !== void 0 ? _SIZES_MAP$size : size), '%')
+  };
+};
+var FULL_WIDTH_MOBILE = {
+  width: sizeProp(100, '%')
+};
+var ROW = {
+  'flex-direction': stringProp(DIRECTION_ROW)
+};
+var COLUMN = {
+  'flex-direction': stringProp(DIRECTION_COLUMN)
+};
+var ROW_WRAP = _objectSpread(_objectSpread({}, ROW), {}, {
+  'flex-wrap': stringProp('wrap')
+});
+var widthChild = function widthChild(size) {
+  return {
+    parent: _objectSpread(_objectSpread({}, COLUMN), widthPercent(size)),
+    parentMobile: FULL_WIDTH_MOBILE,
+    children: []
+  };
+};
+var bareChild = function bareChild() {
+  return {
+    parent: COLUMN,
+    children: []
+  };
+};
+var rowOfSizes = function rowOfSizes(sizes) {
+  var sum = sizes.reduce(function (s, n) {
+    return s + Number(n);
+  }, 0);
+  return {
+    parent: sum > 100 ? ROW_WRAP : ROW,
+    children: sizes.map(widthChild)
+  };
+};
+var PRESET_DEFINITIONS = {
+  c100: {
+    parent: COLUMN,
+    children: []
+  },
+  r100: {
+    parent: ROW,
+    children: []
+  },
+  'c100-c50-50': {
+    parent: ROW,
+    children: [widthChild('50'), {
+      parent: _objectSpread(_objectSpread(_objectSpread({}, COLUMN), widthPercent('50')), {}, {
+        padding: sizeProp(0, 'px')
+      }),
+      parentMobile: FULL_WIDTH_MOBILE,
+      children: [bareChild(), bareChild()]
+    }]
+  }
+};
+function getPresetDefinition(preset) {
+  if (PRESET_DEFINITIONS[preset]) {
+    return PRESET_DEFINITIONS[preset];
+  }
+  return rowOfSizes(preset.split('-'));
+}
+function buildModel(cssProps, mobileProps) {
+  var model = {
+    id: elementorCommon.helpers.getUniqueId(),
+    elType: V4_ELEMENT_TYPE,
+    elements: []
+  };
+  var hasBase = cssProps && Object.keys(cssProps).length > 0;
+  var hasMobile = mobileProps && Object.keys(mobileProps).length > 0;
+  if (!hasBase && !hasMobile) {
+    return model;
+  }
+  var styleId = "e-".concat(elementorCommon.helpers.getUniqueId());
+  var variants = [{
+    meta: {
+      breakpoint: 'desktop',
+      state: null
+    },
+    props: cssProps !== null && cssProps !== void 0 ? cssProps : {},
+    custom_css: null
+  }];
+  if (hasMobile) {
+    variants.push({
+      meta: {
+        breakpoint: 'mobile',
+        state: null
+      },
+      props: mobileProps,
+      custom_css: null
+    });
+  }
+  model.styles = (0, _defineProperty2.default)({}, styleId, {
+    id: styleId,
+    label: 'local',
+    type: 'class',
+    variants: variants
+  });
+  model.settings = {
+    classes: {
+      $$type: 'classes',
+      value: [styleId]
+    }
+  };
+  return model;
+}
+function buildTreeModel(definition) {
+  var parentProps = definition.parent,
+    parentMobile = definition.parentMobile,
+    _definition$children = definition.children,
+    children = _definition$children === void 0 ? [] : _definition$children;
+  var model = buildModel(parentProps, parentMobile);
+  model.elements = children.map(function (childDef) {
+    return buildTreeModel(childDef);
+  });
+  return model;
+}
+function createFlexboxElement(target, model, options) {
+  var _elementorModules;
+  var containerClass = (_elementorModules = elementorModules) === null || _elementorModules === void 0 || (_elementorModules = _elementorModules.editor) === null || _elementorModules === void 0 ? void 0 : _elementorModules.Container;
+  var getDocumentUtils = function getDocumentUtils() {
+    var _$e, _$e$get;
+    return (_$e = $e) === null || _$e === void 0 || (_$e = _$e.components) === null || _$e === void 0 || (_$e$get = _$e.get) === null || _$e$get === void 0 || (_$e$get = _$e$get.call(_$e, 'document')) === null || _$e$get === void 0 ? void 0 : _$e$get.utils;
+  };
+  var getContainerById = function getContainerById(id) {
+    var _getDocumentUtils$fin, _getDocumentUtils, _getDocumentUtils$fin2;
+    return (_getDocumentUtils$fin = (_getDocumentUtils = getDocumentUtils()) === null || _getDocumentUtils === void 0 || (_getDocumentUtils$fin2 = _getDocumentUtils.findContainerById) === null || _getDocumentUtils$fin2 === void 0 ? void 0 : _getDocumentUtils$fin2.call(_getDocumentUtils, id)) !== null && _getDocumentUtils$fin !== void 0 ? _getDocumentUtils$fin : null;
+  };
+  var isContainerInstance = function isContainerInstance(candidate) {
+    var _candidate$constructo, _containerClass$proto;
+    if (!containerClass || !candidate) {
+      return false;
+    }
+    return candidate instanceof containerClass || ((_candidate$constructo = candidate.constructor) === null || _candidate$constructo === void 0 ? void 0 : _candidate$constructo.name) === ((_containerClass$proto = containerClass.prototype) === null || _containerClass$proto === void 0 ? void 0 : _containerClass$proto[Symbol.toStringTag]);
+  };
+  var resolveContainer = function resolveContainer(candidate) {
+    var _candidate$lookup;
+    if (!containerClass) {
+      return candidate;
+    }
+    if (isContainerInstance(candidate)) {
+      return candidate;
+    }
+    var lookedUp = candidate === null || candidate === void 0 || (_candidate$lookup = candidate.lookup) === null || _candidate$lookup === void 0 ? void 0 : _candidate$lookup.call(candidate);
+    if (isContainerInstance(lookedUp)) {
+      return lookedUp;
+    }
+    var byId = candidate !== null && candidate !== void 0 && candidate.id ? getContainerById(candidate.id) : null;
+    if (isContainerInstance(byId)) {
+      return byId;
+    }
+    return null;
+  };
+  var resolvedTarget = resolveContainer(target);
+  if (!resolvedTarget && containerClass && target !== null && target !== void 0 && target.id) {
+    var _getDocumentUtils2, _getDocumentUtils2$ad;
+    (_getDocumentUtils2 = getDocumentUtils()) === null || _getDocumentUtils2 === void 0 || (_getDocumentUtils2$ad = _getDocumentUtils2.addModelToParent) === null || _getDocumentUtils2$ad === void 0 || _getDocumentUtils2$ad.call(_getDocumentUtils2, target.id, model, options);
+    var inserted = getContainerById(model.id);
+    if (inserted) {
+      return inserted;
+    }
+    return {
+      id: model.id,
+      lookup: function lookup() {
+        return getContainerById(model.id);
+      }
+    };
+  }
+  var created = $e.run('document/elements/create', _objectSpread({
+    container: resolvedTarget !== null && resolvedTarget !== void 0 ? resolvedTarget : target,
+    model: model
+  }, options));
+  var resolvedCreated = resolveContainer(created);
+  if (resolvedCreated || !containerClass) {
+    return resolvedCreated !== null && resolvedCreated !== void 0 ? resolvedCreated : created;
+  }
+  return {
+    id: model.id,
+    lookup: function lookup() {
+      return getContainerById(model.id);
+    }
+  };
+}
+function buildNode(definition, target, options, isRoot) {
+  var _target$lookup, _target$lookup2;
+  var parentProps = definition.parent,
+    parentMobile = definition.parentMobile,
+    children = definition.children;
+  var reuseTarget = isRoot && false === options.createWrapper;
+  var node = reuseTarget ? (_target$lookup = target === null || target === void 0 || (_target$lookup2 = target.lookup) === null || _target$lookup2 === void 0 ? void 0 : _target$lookup2.call(target)) !== null && _target$lookup !== void 0 ? _target$lookup : target : createFlexboxElement(target, buildModel(parentProps, parentMobile), isRoot ? options : {
+    edit: false
+  });
+  children.forEach(function (childDef) {
+    var _childDef$children;
+    var hasNestedChildren = !!((_childDef$children = childDef.children) !== null && _childDef$children !== void 0 && _childDef$children.length);
+    if (hasNestedChildren) {
+      createFlexboxElement(node, buildTreeModel(childDef), {
+        edit: false
+      });
+      return;
+    }
+    buildNode(childDef, node, options, false);
+  });
+  return node;
+}
+function createV4FlexboxFromPreset(preset) {
+  var target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : elementor.getPreviewContainer();
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var historyId = $e.internal('document/history/start-log', {
+    type: 'add',
+    title: __('Container', 'elementor')
+  });
+  var result;
+  try {
+    var definition = getPresetDefinition(preset);
+    result = buildNode(definition, target, options, true);
+    $e.internal('document/history/end-log', {
+      id: historyId
+    });
+  } catch (e) {
+    $e.internal('document/history/delete-log', {
+      id: historyId
+    });
+  }
+  return result;
+}
+
+/***/ }),
+
 /***/ "../assets/dev/js/editor/views/add-section/base.js":
 /*!*********************************************************!*\
   !*** ../assets/dev/js/editor/views/add-section/base.js ***!
@@ -48181,11 +48632,13 @@ var Back = exports.Back = /*#__PURE__*/function (_$e$modules$CommandBa) {
   return (0, _createClass2.default)(Back, [{
     key: "apply",
     value: function apply() {
+      var _panelHistory;
       var panelHistory = $e.routes.getHistory('panel');
+      var currentRoute = (_panelHistory = panelHistory[panelHistory.length - 1]) === null || _panelHistory === void 0 ? void 0 : _panelHistory.route;
 
-      // When there's no more previous pages to navigate back to,
-      // prompt the user with a confirmation dialog asking if they would like to exit.
-      if (1 === panelHistory.length) {
+      // When at the root Site Settings page, back should behave like close —
+      // switching back to the initial document and clearing the active-document query param.
+      if (currentRoute === this.component.getNamespace() + '/menu') {
         this.getCloseConfirmDialog(event).show();
         return;
       }
@@ -48300,7 +48753,7 @@ var Back = exports.Back = /*#__PURE__*/function (_$e$modules$CommandBa) {
         var modalOptions = {
           id: "elementor-".concat(document, "-save-changes"),
           headerMessage: __('Save Changes', 'elementor'),
-          message: __('Would you like to save the changes you\'ve made?', 'elementor'),
+          message: __("Would you like to save the changes you've made?", 'elementor'),
           position: {
             my: 'center center',
             at: 'center center'
@@ -54319,6 +54772,8 @@ var HistoryManager = exports["default"] = /*#__PURE__*/function () {
         return;
       }
       this.doItem(requiredIndex);
+      var matchingDoItem = isRedo ? this.items.at(requiredIndex) : this.items.at(requiredIndex - 1);
+      return matchingDoItem;
     }
   }, {
     key: "setActive",

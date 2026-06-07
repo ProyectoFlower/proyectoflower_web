@@ -7679,7 +7679,7 @@ function ImportComplete() {
     altText: (0, _i18n.__)('Kit is live illustration', 'elementor'),
     testId: "import-complete-icon"
   }), /*#__PURE__*/_react.default.createElement(_components.CompleteHeading, {
-    title: (0, _i18n.__)('Your website templates is now live on your site!', 'elementor'),
+    title: (0, _i18n.__)('Your website template is now live on your site!', 'elementor'),
     subtitle: (0, _i18n.__)('You\'ve imported and applied the following to your site:', 'elementor'),
     testId: "import-complete-heading"
   }), /*#__PURE__*/_react.default.createElement(_components.CompleteSummary, {
@@ -19197,6 +19197,41 @@ var Onboarding = exports["default"] = /*#__PURE__*/(0, _createClass2.default)(fu
 
 /***/ }),
 
+/***/ "../app/modules/site-builder/assets/js/module.js":
+/*!*******************************************************!*\
+  !*** ../app/modules/site-builder/assets/js/module.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _router = _interopRequireDefault(__webpack_require__(/*! @elementor/router */ "@elementor/router"));
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var LazyApp = _react.default.lazy(function () {
+  return Promise.resolve(/*! import() */).then(__webpack_require__.t.bind(__webpack_require__, /*! @elementor/site-builder */ "@elementor/site-builder", 23)).then(function (module) {
+    return {
+      default: module.App
+    };
+  });
+});
+var SiteBuilder = exports["default"] = /*#__PURE__*/(0, _createClass2.default)(function SiteBuilder() {
+  (0, _classCallCheck2.default)(this, SiteBuilder);
+  _router.default.addRoute({
+    path: '/site-builder/*',
+    component: LazyApp
+  });
+});
+
+/***/ }),
+
 /***/ "../assets/dev/js/utils/react.js":
 /*!***************************************!*\
   !*** ../assets/dev/js/utils/react.js ***!
@@ -19474,6 +19509,7 @@ var eventsConfig = {
     },
     // ChecklistSteps event names are generated dynamically, based on stepId and action type taken: title, action, done, undone, upgrade
     elementorEditor: {
+      editorLoaded: 'editor_loaded',
       checklist: {
         checklistHeaderClose: 'checklist_header_close_icon',
         checklistFirstPopup: 'checklist popup triggered'
@@ -19492,6 +19528,15 @@ var eventsConfig = {
       saveChanges: 'save_variables_changes',
       delete: 'delete_variable',
       variableSyncToV3: 'variable_sync_to_v3'
+    },
+    design_system: {
+      importOpened: 'design_system_import_opened',
+      fileSelected: 'design_system_file_selected',
+      validationFailed: 'design_system_validation_failed',
+      conflictChoice: 'design_system_conflict_choice',
+      confirmed: 'design_system_import_confirmed',
+      imported: 'design_system_imported',
+      importFailed: 'design_system_import_failed'
     },
     components: {
       createClicked: 'component_create_clicked',
@@ -29986,6 +30031,17 @@ module.exports = elementorAppPackages.router;
 
 /***/ }),
 
+/***/ "@elementor/site-builder":
+/*!**********************************************!*\
+  !*** external ["elementorV2","siteBuilder"] ***!
+  \**********************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = elementorV2.siteBuilder;
+
+/***/ }),
+
 /***/ "@elementor/site-editor":
 /*!**************************************************!*\
   !*** external "elementorAppPackages.siteEditor" ***!
@@ -30359,14 +30415,18 @@ var _module = _interopRequireDefault(__webpack_require__(/*! ../../modules/impor
 var _module2 = _interopRequireDefault(__webpack_require__(/*! ../../modules/import-export-customization/assets/js/module */ "../app/modules/import-export-customization/assets/js/module.js"));
 var _module3 = _interopRequireDefault(__webpack_require__(/*! ../../modules/kit-library/assets/js/module */ "../app/modules/kit-library/assets/js/module.js"));
 var _module4 = _interopRequireDefault(__webpack_require__(/*! ../../modules/onboarding/assets/js/module */ "../app/modules/onboarding/assets/js/module.js"));
+var _module5 = _interopRequireDefault(__webpack_require__(/*! ../../modules/site-builder/assets/js/module */ "../app/modules/site-builder/assets/js/module.js"));
 var _siteEditor = __webpack_require__(/*! @elementor/site-editor */ "@elementor/site-editor");
 var _appContext = _interopRequireDefault(__webpack_require__(/*! ./app-context */ "../app/assets/js/app-context.js"));
-var _elementorCommon;
+var _elementorCommon, _elementorCommon2;
 new _module.default();
 new _module3.default();
 new _siteEditor.Module();
+if ((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.config) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.experimentalFeatures) !== null && _elementorCommon !== void 0 && _elementorCommon['site-builder']) {
+  new _module5.default();
+}
 new _module4.default();
-if ((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.config) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.experimentalFeatures) !== null && _elementorCommon !== void 0 && _elementorCommon['import-export-customization']) {
+if ((_elementorCommon2 = elementorCommon) !== null && _elementorCommon2 !== void 0 && (_elementorCommon2 = _elementorCommon2.config) !== null && _elementorCommon2 !== void 0 && (_elementorCommon2 = _elementorCommon2.experimentalFeatures) !== null && _elementorCommon2 !== void 0 && _elementorCommon2['import-export-customization']) {
   new _module2.default();
 }
 var AppWrapper = _react.default.Fragment;

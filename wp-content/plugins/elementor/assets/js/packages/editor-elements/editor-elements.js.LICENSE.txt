@@ -48,6 +48,8 @@
 
 /*! ./mutate-element-styles */
 
+/*! ./resolve-element */
+
 /*! ./styles/consts */
 
 /*! ./styles/create-element-style */
@@ -105,6 +107,8 @@
 /*! ./sync/remove-elements */
 
 /*! ./sync/replace-element */
+
+/*! ./sync/resolve-element */
 
 /*! ./sync/update-element-editor-settings */
 
@@ -206,6 +210,10 @@
 
 /*!****************************************************************************!*\
   !*** ./packages/packages/libs/editor-elements/src/sync/replace-element.ts ***!
+  \****************************************************************************/
+
+/*!****************************************************************************!*\
+  !*** ./packages/packages/libs/editor-elements/src/sync/resolve-element.ts ***!
   \****************************************************************************/
 
 /*!*****************************************************************************!*\
