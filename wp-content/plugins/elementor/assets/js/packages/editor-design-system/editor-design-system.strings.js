@@ -1,8 +1,4 @@
 __( 'Design System', 'elementor' );
-__( 'Export in progress. Your file will download when it’s ready.', 'elementor' );
-__( 'Design system exported', 'elementor' );
-__( 'Your design system export failed', 'elementor' );
-__( 'Try again', 'elementor' );
 __( 'Import in Progress. You will be notified when the import is complete.', 'elementor' );
 __( 'Design system imported', 'elementor' );
 __( 'Your design system import failed', 'elementor' );
@@ -14,6 +10,10 @@ __( 'zip (max. %dMB)', 'elementor' );
 __( 'Learn how design system imports work', 'elementor' );
 __( 'Cancel', 'elementor' );
 __( 'Import', 'elementor' );
+__( 'Export in progress. Your file will download when it’s ready.', 'elementor' );
+__( 'Design system exported', 'elementor' );
+__( 'Your design system export failed', 'elementor' );
+__( 'Try again', 'elementor' );
 __( 'Design system', 'elementor' );
 __( 'Close', 'elementor' );
 __( 'Variables', 'elementor' );
@@ -29,6 +29,13 @@ __(
 	);
 __( 'Import', 'elementor' );
 __( 'Export', 'elementor' );
+__( 'You have unsaved changes', 'elementor' );
+__(
+							"To open the Design System, save your page first. You can't continue without saving.",
+							'elementor'
+						);
+__( 'Stay here', 'elementor' );
+__( 'Save & Continue', 'elementor' );
 __( 'Replace existing values', 'elementor' );
 __( 'Imported design system values will overwrite existing variables and classes.', 'elementor' );
 __( 'Keep existing values', 'elementor' );

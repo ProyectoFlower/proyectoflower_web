@@ -232,7 +232,8 @@ exports["default"] = void 0;
 var eventsConfig = {
   appTypes: {
     editor: 'editor',
-    wpAdmin: 'wpadmin'
+    wpAdmin: 'wpadmin',
+    wpDash: 'wpdash'
   },
   targetTypes: {
     dropdownItem: 'dropdown_item',
@@ -242,7 +243,10 @@ var eventsConfig = {
     searchInput: 'search_input',
     searchResult: 'search_result',
     buttons: 'buttons',
-    searchWidget: 'search_widget'
+    searchWidget: 'search_widget',
+    wpDashAdminMenuItem: 'wpdash_admin_menu_item',
+    wpDashEditorMenu: 'wpdash_editor_menu',
+    wpDashSubMenuItem: 'wpdash_sub_menu_item'
   },
   interactionResults: {
     actionSelected: 'action_selected',
@@ -257,7 +261,10 @@ var eventsConfig = {
     noResults: 'no_results',
     selected: 'selected',
     promotionViewed: 'promotion_viewed',
-    upgradeNow: 'upgrade_now'
+    upgradeNow: 'upgrade_now',
+    elementorSideMenuOpened: 'elementor_side_menu_opened',
+    editorSubMenuOpened: 'wpdash_editor_sub_menu_opened',
+    themeBuilderPromotionWindow: 'theme_builder_promotion_window'
   },
   targetNames: {
     publishDropdown: {
@@ -282,7 +289,8 @@ var eventsConfig = {
     pageLoaded: 'Page Loaded',
     typing: 'Typing',
     tabSelect: 'Tab Select',
-    insert: 'Insert'
+    insert: 'Insert',
+    hover: 'Hover'
   },
   locations: {
     widgetPanel: 'Widget Panel',
@@ -301,6 +309,7 @@ var eventsConfig = {
     variables: 'Variables Panel',
     variablesManager: 'Variables Manager',
     admin: 'WP admin',
+    wpDashAdmin: 'wpdash_admin',
     structurePanel: 'Structure Panel',
     canvas: 'Canvas',
     leftPanel: 'Left Panel',
@@ -389,7 +398,10 @@ var eventsConfig = {
     searchBar: 'Search Bar',
     finderResults: 'Finder Results',
     libraryTabs: 'Library Tabs',
-    assetCard: 'Asset Card'
+    assetCard: 'Asset Card',
+    wpDashElementorCoreMenu: 'elementor_editor_core_menu',
+    wpDashElementorCoreSubMenu: 'elementor_editor_core_sub_menu',
+    wpDashThemeBuilder: 'wpdash_core_sub_menu_theme_builder'
   },
   elements: {
     accordionSection: 'Accordion section',
@@ -455,6 +467,7 @@ var eventsConfig = {
       add: 'add_new_variable',
       connect: 'connect_variable',
       save: 'save_new_variable',
+      update: 'update_variable',
       openManager: 'open_variables_manager',
       saveChanges: 'save_variables_changes',
       delete: 'delete_variable',
@@ -467,7 +480,9 @@ var eventsConfig = {
       conflictChoice: 'design_system_conflict_choice',
       confirmed: 'design_system_import_confirmed',
       imported: 'design_system_imported',
-      importFailed: 'design_system_import_failed'
+      importFailed: 'design_system_import_failed',
+      export: 'design_system_export',
+      opened: 'design_system_opened'
     },
     components: {
       createClicked: 'component_create_clicked',
@@ -515,7 +530,10 @@ var eventsConfig = {
       finderSearchInput: 'finder_search_input',
       finderResultSelect: 'finder_result_select',
       canvasEmptyBoxAction: 'canvas_empty_box_action',
-      widgetPanelSearch: 'widget_panel_search'
+      widgetPanelSearch: 'widget_panel_search',
+      wpDashElementorMenuClick: 'wpdash_elementor_menu_click',
+      wpDashEditorSubMenuHover: 'wpdash_editor_sub_menu_hover',
+      wpDashThemeBuilderClick: 'wpdash_theme_builder_click'
     },
     interactions: {
       created: 'interactions_created'

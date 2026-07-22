@@ -377,11 +377,7 @@ var EditorOneEventManager = exports.EditorOneEventManager = /*#__PURE__*/functio
       if (!this.isEventsManagerAvailable() || !this.canSendEvents()) {
         return false;
       }
-      try {
-        return this.getEventsManager().dispatchEvent(eventName, payload);
-      } catch (error) {
-        return false;
-      }
+      this.getEventsManager().dispatchEvent(eventName, payload);
     }
   }, {
     key: "toLowerSnake",
@@ -683,6 +679,60 @@ var EditorOneEventManager = exports.EditorOneEventManager = /*#__PURE__*/functio
         };
       }
       return this.dispatchEvent(config === null || config === void 0 || (_config$names1 = config.names) === null || _config$names1 === void 0 || (_config$names1 = _config$names1.editorOne) === null || _config$names1 === void 0 ? void 0 : _config$names1.widgetPanelSearch, payload);
+    }
+  }, {
+    key: "createWpDashPayload",
+    value: function createWpDashPayload() {
+      var _config$appTypes$wpDa, _config$appTypes5, _config$locations11;
+      var overrides = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var config = this.getConfig();
+      return this.createBasePayload(_objectSpread({
+        window_name: (_config$appTypes$wpDa = config === null || config === void 0 || (_config$appTypes5 = config.appTypes) === null || _config$appTypes5 === void 0 ? void 0 : _config$appTypes5.wpDash) !== null && _config$appTypes$wpDa !== void 0 ? _config$appTypes$wpDa : 'wpdash',
+        target_location: this.toLowerSnake(config === null || config === void 0 || (_config$locations11 = config.locations) === null || _config$locations11 === void 0 ? void 0 : _config$locations11.wpDashAdmin),
+        location_l2: ''
+      }, overrides));
+    }
+  }, {
+    key: "sendWpDashElementorMenuClick",
+    value: function sendWpDashElementorMenuClick() {
+      var _config$names10, _config$triggers10, _config$targetTypes11, _config$interactionRe13, _config$secondaryLoca11;
+      var config = this.getConfig();
+      return this.dispatchEvent(config === null || config === void 0 || (_config$names10 = config.names) === null || _config$names10 === void 0 || (_config$names10 = _config$names10.editorOne) === null || _config$names10 === void 0 ? void 0 : _config$names10.wpDashElementorMenuClick, this.createWpDashPayload({
+        interaction_type: this.toLowerSnake(config === null || config === void 0 || (_config$triggers10 = config.triggers) === null || _config$triggers10 === void 0 ? void 0 : _config$triggers10.click),
+        target_type: config === null || config === void 0 || (_config$targetTypes11 = config.targetTypes) === null || _config$targetTypes11 === void 0 ? void 0 : _config$targetTypes11.wpDashAdminMenuItem,
+        target_name: 'elementor_menu_item',
+        interaction_result: config === null || config === void 0 || (_config$interactionRe13 = config.interactionResults) === null || _config$interactionRe13 === void 0 ? void 0 : _config$interactionRe13.elementorSideMenuOpened,
+        location_l1: this.toLowerSnake(config === null || config === void 0 || (_config$secondaryLoca11 = config.secondaryLocations) === null || _config$secondaryLoca11 === void 0 ? void 0 : _config$secondaryLoca11.wpDashElementorCoreMenu),
+        interaction_description: 'core_user_clicked_elementor_menu_item'
+      }));
+    }
+  }, {
+    key: "sendWpDashEditorSubMenuHover",
+    value: function sendWpDashEditorSubMenuHover() {
+      var _config$names11, _config$triggers11, _config$targetTypes12, _config$interactionRe14, _config$secondaryLoca12;
+      var config = this.getConfig();
+      return this.dispatchEvent(config === null || config === void 0 || (_config$names11 = config.names) === null || _config$names11 === void 0 || (_config$names11 = _config$names11.editorOne) === null || _config$names11 === void 0 ? void 0 : _config$names11.wpDashEditorSubMenuHover, this.createWpDashPayload({
+        interaction_type: this.toLowerSnake(config === null || config === void 0 || (_config$triggers11 = config.triggers) === null || _config$triggers11 === void 0 ? void 0 : _config$triggers11.hover),
+        target_type: config === null || config === void 0 || (_config$targetTypes12 = config.targetTypes) === null || _config$targetTypes12 === void 0 ? void 0 : _config$targetTypes12.wpDashEditorMenu,
+        target_name: 'wpdash_editor_sub_menu',
+        interaction_result: config === null || config === void 0 || (_config$interactionRe14 = config.interactionResults) === null || _config$interactionRe14 === void 0 ? void 0 : _config$interactionRe14.editorSubMenuOpened,
+        location_l1: this.toLowerSnake(config === null || config === void 0 || (_config$secondaryLoca12 = config.secondaryLocations) === null || _config$secondaryLoca12 === void 0 ? void 0 : _config$secondaryLoca12.wpDashElementorCoreSubMenu),
+        interaction_description: 'core_user_hovered_sub_menu'
+      }));
+    }
+  }, {
+    key: "sendWpDashThemeBuilderClick",
+    value: function sendWpDashThemeBuilderClick() {
+      var _config$names12, _config$triggers12, _config$targetTypes13, _config$interactionRe15, _config$secondaryLoca13;
+      var config = this.getConfig();
+      return this.dispatchEvent(config === null || config === void 0 || (_config$names12 = config.names) === null || _config$names12 === void 0 || (_config$names12 = _config$names12.editorOne) === null || _config$names12 === void 0 ? void 0 : _config$names12.wpDashThemeBuilderClick, this.createWpDashPayload({
+        interaction_type: this.toLowerSnake(config === null || config === void 0 || (_config$triggers12 = config.triggers) === null || _config$triggers12 === void 0 ? void 0 : _config$triggers12.click),
+        target_type: config === null || config === void 0 || (_config$targetTypes13 = config.targetTypes) === null || _config$targetTypes13 === void 0 ? void 0 : _config$targetTypes13.wpDashSubMenuItem,
+        target_name: 'theme_builder_menu_item',
+        interaction_result: config === null || config === void 0 || (_config$interactionRe15 = config.interactionResults) === null || _config$interactionRe15 === void 0 ? void 0 : _config$interactionRe15.themeBuilderPromotionWindow,
+        location_l1: this.toLowerSnake(config === null || config === void 0 || (_config$secondaryLoca13 = config.secondaryLocations) === null || _config$secondaryLoca13 === void 0 ? void 0 : _config$secondaryLoca13.wpDashThemeBuilder),
+        interaction_description: 'core_user_clicked_theme_builder_menu_item'
+      }));
     }
   }]);
 }();
@@ -992,6 +1042,27 @@ var _default = exports["default"] = createFlexboxType;
 
 /***/ }),
 
+/***/ "../modules/atomic-widgets/assets/js/editor/atomic-element-types/create-grid-type.js":
+/*!*******************************************************************************************!*\
+  !*** ../modules/atomic-widgets/assets/js/editor/atomic-element-types/create-grid-type.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var createGridType = function createGridType() {
+  var GridView = elementor.modules.elements.views.createAtomicElementBase('e-grid');
+  return new elementor.modules.elements.types.AtomicElementBase('e-grid', GridView);
+};
+var _default = exports["default"] = createGridType;
+
+/***/ }),
+
 /***/ "../modules/atomic-widgets/assets/js/editor/component.js":
 /*!***************************************************************!*\
   !*** ../modules/atomic-widgets/assets/js/editor/component.js ***!
@@ -1267,9 +1338,29 @@ function createAtomicElementBaseView(type) {
 
       // Defer to wait for everything to render.
       setTimeout(function () {
+        if (_this5.isAtomicGridContainer()) {
+          _this5.reInitEmptyView();
+        }
         _this5.droppableInitialize();
         _this5.updateHandlesPosition();
       });
+    },
+    destroyEmptyView: function destroyEmptyView() {
+      if (this.isAtomicGridContainer()) {
+        return;
+      }
+      return Marionette.CompositeView.prototype.destroyEmptyView.apply(this, arguments);
+    },
+    isAtomicGridContainer: function isAtomicGridContainer() {
+      return 'e-grid' === type;
+    },
+    reInitEmptyView: function reInitEmptyView() {
+      var _this$el;
+      if ((_this$el = this.el) !== null && _this$el !== void 0 && _this$el.querySelector(':scope > .elementor-empty-view')) {
+        return;
+      }
+      delete this._showingEmptyView;
+      this.showEmptyView();
     },
     onDestroy: function onDestroy() {
       BaseElementView.prototype.onDestroy.apply(this, arguments);
@@ -1410,7 +1501,7 @@ function createAtomicElementBaseView(type) {
       var _this7 = this;
       var items = '> .elementor-element, > .elementor-empty-view .elementor-first-add';
       return {
-        axis: null,
+        axis: this.isAtomicGridContainer() ? 'vertical' : null,
         items: items,
         groups: ['elementor-element'],
         horizontalThreshold: 0,
@@ -1428,39 +1519,24 @@ function createAtomicElementBaseView(type) {
           elementor.getPreviewView().onPanelElementDragEnd();
           var draggedView = elementor.channels.editor.request('element:dragged'),
             draggedElement = draggedView === null || draggedView === void 0 ? void 0 : draggedView.getContainer().view.el,
-            containerElement = event.currentTarget.parentElement,
+            isEmptyViewTarget = _this7.emptyViewIsCurrentlyBeingDraggedOver(),
+            containerElement = isEmptyViewTarget ? _this7.el : event.currentTarget.parentElement,
             elements = Array.from((containerElement === null || containerElement === void 0 ? void 0 : containerElement.querySelectorAll(':scope > .elementor-element')) || []);
-          var targetIndex = elements.indexOf(event.currentTarget);
+          var targetIndex = isEmptyViewTarget ? elements.length : elements.indexOf(event.currentTarget);
           if (_this7.isPanelElement(draggedView, draggedElement)) {
-            var _elementorCommon;
-            if (_this7.draggingOnBottomOrRightSide(side) && !_this7.emptyViewIsCurrentlyBeingDraggedOver()) {
+            if (_this7.draggingOnBottomOrRightSide(side) && !isEmptyViewTarget) {
               targetIndex++;
             }
             _this7.onDrop(event, {
               at: targetIndex
             });
-            if ((_elementorCommon = elementorCommon) !== null && _elementorCommon !== void 0 && (_elementorCommon = _elementorCommon.eventsManager) !== null && _elementorCommon !== void 0 && _elementorCommon.dispatchEvent) {
-              var selectedElement = elementor.channels.panelElements.request('element:selected');
-              if (selectedElement) {
-                var _selectedElement$mode, _selectedElement$mode2, _selectedElement$mode3, _selectedElement$mode4;
-                var elType = (_selectedElement$mode = (_selectedElement$mode2 = selectedElement.model) === null || _selectedElement$mode2 === void 0 ? void 0 : _selectedElement$mode2.get('elType')) !== null && _selectedElement$mode !== void 0 ? _selectedElement$mode : '';
-                var widgetType = (_selectedElement$mode3 = (_selectedElement$mode4 = selectedElement.model) === null || _selectedElement$mode4 === void 0 ? void 0 : _selectedElement$mode4.get('widgetType')) !== null && _selectedElement$mode3 !== void 0 ? _selectedElement$mode3 : '';
-                var elementName = 'widget' === elType ? widgetType : elType;
-                elementorCommon.eventsManager.dispatchEvent('add_element', {
-                  location: 'editor_panel',
-                  element_name: elementName,
-                  element_type: elType,
-                  widget_type: widgetType
-                });
-              }
-            }
             return;
           }
           if (_this7.isParentElement(draggedView.getContainer().id)) {
             return;
           }
-          if (_this7.emptyViewIsCurrentlyBeingDraggedOver()) {
-            _this7.moveDroppedItem(draggedView, 0);
+          if (isEmptyViewTarget) {
+            _this7.moveDroppedItem(draggedView, targetIndex);
             return;
           }
           _this7.moveExistingElement(side, draggedView, containerElement, elements, targetIndex, draggedElement);
@@ -1820,7 +1896,10 @@ exports.getElementChildren = getElementChildren;
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "../node_modules/@babel/runtime/helpers/toConsumableArray.js"));
 function getElementChildren(model) {
   var _model$get$models, _model$get;
-  var childModels = (_model$get$models = model === null || model === void 0 || (_model$get = model.get('elements')) === null || _model$get === void 0 ? void 0 : _model$get.models) !== null && _model$get$models !== void 0 ? _model$get$models : [];
+  if (!model) {
+    return [];
+  }
+  var childModels = (_model$get$models = (_model$get = model.get('elements')) === null || _model$get === void 0 ? void 0 : _model$get.models) !== null && _model$get$models !== void 0 ? _model$get$models : [];
   var children = childModels.flatMap(getElementChildren);
   return [model].concat((0, _toConsumableArray2.default)(children));
 }
@@ -1881,10 +1960,13 @@ var _getRandomStyleId = __webpack_require__(/*! ./get-random-style-id */ "../mod
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0, _defineProperty2.default)(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function regenerateLocalStyleIds(container) {
+  if (!(container !== null && container !== void 0 && container.model)) {
+    return;
+  }
   var allElements = (0, _getElementChildren.getElementChildren)(container.model);
   var styledElements = allElements.filter(function (model) {
     var _model$get;
-    return Object.keys((_model$get = model.get('styles')) !== null && _model$get !== void 0 ? _model$get : {}).length > 0;
+    return model && Object.keys((_model$get = model.get('styles')) !== null && _model$get !== void 0 ? _model$get : {}).length > 0;
   });
   updateElementsStyleIdsInsideOut(styledElements);
 }
@@ -2902,6 +2984,7 @@ var _createAtomicElementBaseView = _interopRequireDefault(__webpack_require__(/*
 var _atomicElementBaseModel = _interopRequireDefault(__webpack_require__(/*! ./atomic-element-base-model */ "../modules/atomic-widgets/assets/js/editor/atomic-element-base-model.js"));
 var _createDivBlockType = _interopRequireDefault(__webpack_require__(/*! ./atomic-element-types/create-div-block-type */ "../modules/atomic-widgets/assets/js/editor/atomic-element-types/create-div-block-type.js"));
 var _createFlexboxType = _interopRequireDefault(__webpack_require__(/*! ./atomic-element-types/create-flexbox-type */ "../modules/atomic-widgets/assets/js/editor/atomic-element-types/create-flexbox-type.js"));
+var _createGridType = _interopRequireDefault(__webpack_require__(/*! ./atomic-element-types/create-grid-type */ "../modules/atomic-widgets/assets/js/editor/atomic-element-types/create-grid-type.js"));
 function _callSuper(t, o, e) { return o = (0, _getPrototypeOf2.default)(o), (0, _possibleConstructorReturn2.default)(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0, _getPrototypeOf2.default)(t).constructor) : o.apply(t, e)); }
 function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
 var Module = /*#__PURE__*/function (_elementorModules$edi) {
@@ -2927,8 +3010,17 @@ var Module = /*#__PURE__*/function (_elementorModules$edi) {
   }, {
     key: "registerAtomicElements",
     value: function registerAtomicElements() {
-      elementor.elementsManager.registerElementType((0, _createDivBlockType.default)());
-      elementor.elementsManager.registerElementType((0, _createFlexboxType.default)());
+      this.registerAtomicElementTypeIfAbsent((0, _createDivBlockType.default)());
+      this.registerAtomicElementTypeIfAbsent((0, _createFlexboxType.default)());
+      this.registerAtomicElementTypeIfAbsent((0, _createGridType.default)());
+    }
+  }, {
+    key: "registerAtomicElementTypeIfAbsent",
+    value: function registerAtomicElementTypeIfAbsent(elementType) {
+      if (elementor.elementsManager.getElementTypeClass(elementType.getType())) {
+        return;
+      }
+      elementor.elementsManager.registerElementType(elementType);
     }
   }]);
 }(elementorModules.editor.utils.Module);

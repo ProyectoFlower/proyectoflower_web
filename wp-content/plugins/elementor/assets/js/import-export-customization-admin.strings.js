@@ -250,7 +250,7 @@ __( 'Learn more', 'elementor' );
 __( 'Your library is full', 'elementor' );
 __( 'This file', 'elementor' );
 __( '%s exceeds the library size limit', 'elementor' );
-__( 'The maximum website template library size is %s GB. To save this file, you can either export it locally as a .zip file or get more storage by ', 'elementor' );
+__( 'The maximum website template library size is %s GB. To save this file, you can either export it locally as a .zip file or get more storage by', 'elementor' );
 __( 'Upgrade now', 'elementor' );
 __( 'Cancel', 'elementor' );
 __( 'Export as .zip', 'elementor' );

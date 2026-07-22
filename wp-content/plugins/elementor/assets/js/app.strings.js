@@ -71,13 +71,6 @@ __( 'Close', 'elementor' );
 __( 'Tip', 'elementor' );
 __( 'Close', 'elementor' );
 __( 'Theme Builder', 'elementor' );
-__( 'Info', 'elementor' );
-__( 'Learn More', 'elementor' );
-__( 'Tip', 'elementor' );
-__( 'Watch Video', 'elementor' );
-__( 'Upgrade Now', 'elementor' );
-__( 'Site Parts', 'elementor' );
-__( 'All Parts', 'elementor' );
 __( 'Upgrade', 'elementor' );
 __( 'Customize every part of your site', 'elementor' );
 __( 'Get total control, consistency and a faster workflow by designing the recurring parts that make up a complete website like the Header & Footer, Archive, 404, WooCommerce pages and more.', 'elementor' );
@@ -86,6 +79,13 @@ __( 'Theme Builder could not be loaded', 'elementor' );
 __( 'We’re sorry, but something went wrong. Click on ‘Learn more’ and follow each of the steps to quickly solve it.', 'elementor' );
 __( 'Learn More', 'elementor' );
 __( 'Go Back', 'elementor' );
+__( 'Info', 'elementor' );
+__( 'Learn More', 'elementor' );
+__( 'Tip', 'elementor' );
+__( 'Watch Video', 'elementor' );
+__( 'Upgrade Now', 'elementor' );
+__( 'Site Parts', 'elementor' );
+__( 'All Parts', 'elementor' );
 __( 'Error:', 'elementor' );
 __( 'Loading', 'elementor' );
 __( 'Categories', 'elementor' );
@@ -462,7 +462,7 @@ __( 'Pages', 'elementor' );
 __( ', try again and if the problem persists contact ', 'elementor' );
 __( 'Support', 'elementor' );
 __( 'Unable to download the Website Template', 'elementor' );
-__( 'We couldn’t download the Website Template due to technical difficulty on our part. Try again in a few minutes and if the problem persists contact ', 'elementor' );
+__( 'We couldn’t download the Website Template due to technical difficulty on our part. Try again in a few minutes and if the problem persists contact', 'elementor' );
 __( 'Support', 'elementor' );
 __( 'Couldn’t access the file', 'elementor' );
 __( 'Seems like Elementor isn’t authorized to access relevant files for installing this Website Template. Contact your site host to get permission.', 'elementor' );
@@ -481,12 +481,6 @@ __( 'The export failed because it will pass the maximum Website Templates storag
 __( 'Try Again', 'elementor' );
 __( 'Learn More', 'elementor' );
 __( 'Close', 'elementor' );
-__( 'Site Area', 'elementor' );
-__( 'Included', 'elementor' );
-__( 'Elementor Templates', 'elementor' );
-__( 'Site Settings', 'elementor' );
-__( 'Content', 'elementor' );
-__( 'Plugins', 'elementor' );
 __( 'Templates', 'elementor' );
 __( 'Saved Templates', 'elementor' );
 __( 'Headers', 'elementor' );
@@ -514,6 +508,19 @@ __( 'Theme Style settings', 'elementor' );
 __( 'Layout Settings', 'elementor' );
 __( 'Lightbox Settings', 'elementor' );
 __( 'Background Settings', 'elementor' );
+__( 'Site Area', 'elementor' );
+__( 'Included', 'elementor' );
+__( 'Elementor Templates', 'elementor' );
+__( 'Site Settings', 'elementor' );
+__( 'Content', 'elementor' );
+__( 'Plugins', 'elementor' );
+__( 'Setting up your website template...', 'elementor' );
+__( 'This usually takes a few moments.', 'elementor' );
+__( "Don't close this window until the process is finished.", 'elementor' );
+__( 'Custom Post Type', 'elementor' );
+__( 'Click to select custom post types', 'elementor' );
+__( 'No custom post types in your site...', 'elementor' );
+__( 'Add the custom posts types to export. The latest 20 items from each type will be included.', 'elementor' );
 __( 'Kit Info', 'elementor' );
 __( 'Import a Website Template', 'elementor' );
 __( 'What’s a Website Template?', 'elementor' );
@@ -525,17 +532,10 @@ __( 'Learn More', 'elementor' );
 __( 'Export a Website Kit', 'elementor' );
 __( 'What’s a Website Kit?', 'elementor' );
 __( 'A Website Kit is a .zip file that contains all the parts of a complete site. It’s an easy way to get a site up and running quickly.', 'elementor' );
-__( ' Learn more about Website Kits', 'elementor' );
+__( 'Learn more about Website Kits', 'elementor' );
 __( 'How does exporting work?', 'elementor' );
 __( 'To turn your site into a Website Kit, select the templates, content, settings and plugins you want to include. Once it’s ready, you’ll get a .zip file that you can import to other sites.', 'elementor' );
 __( 'Learn More', 'elementor' );
-__( 'Setting up your website template...', 'elementor' );
-__( 'This usually takes a few moments.', 'elementor' );
-__( "Don't close this window until the process is finished.", 'elementor' );
-__( 'Custom Post Type', 'elementor' );
-__( 'Click to select custom post types', 'elementor' );
-__( 'No custom post types in your site...', 'elementor' );
-__( 'Add the custom posts types to export. The latest 20 items from each type will be included.', 'elementor' );
 __( 'Export', 'elementor' );
 __( 'Close', 'elementor' );
 __( 'Unable to download the Website Template', 'elementor' );
@@ -582,24 +582,14 @@ __( 'Learn more', 'elementor' );
 __( 'Your library is full', 'elementor' );
 __( 'This file', 'elementor' );
 __( '%s exceeds the library size limit', 'elementor' );
-__( 'The maximum website template library size is %s GB. To save this file, you can either export it locally as a .zip file or get more storage by ', 'elementor' );
+__( 'The maximum website template library size is %s GB. To save this file, you can either export it locally as a .zip file or get more storage by', 'elementor' );
 __( 'Upgrade now', 'elementor' );
 __( 'Cancel', 'elementor' );
 __( 'Export as .zip', 'elementor' );
 __( 'Try Again', 'elementor' );
-__( 'Version' ) } ${ cellLinkProps.text }` } <Icon className="eicon-editor-external-link" />
-		</InlineLink>
-	);
-
-	const getHeaders = () => {
-		if ( ! withHeader ) {
-			return [];
-		}
-
-		const headers = [ 'Plugin Name', 'Version' ];
-
-		if ( withStatus ) {
-			headers.splice( 1, 0, 'Status' );
+__( 'Importing your content, templates and site settings', 'elementor' );
+__( 'This allows Elementor to scan your SVGs for malicious content. Otherwise, you can skip any SVGs in this import.', 'elementor' );
+__( 'Nothing to worry about, just continue without importing SVGs or go back and start the import again.', 'elementor' );
 __( 'Previous', 'elementor' );
 __( 'Next', 'elementor' );
 __( 'Learn More', 'elementor' );
@@ -609,9 +599,6 @@ __( 'Note:', 'elementor' );
 __( "Your site's homepage will be determined by the kit. You can change this later.", 'elementor' );
 __( 'Select the items you want to keep and apply:', 'elementor' );
 __( 'Activating plugins:', 'elementor' );
-__( 'Importing your content, templates and site settings', 'elementor' );
-__( 'This allows Elementor to scan your SVGs for malicious content. Otherwise, you can skip any SVGs in this import.', 'elementor' );
-__( 'Nothing to worry about, just continue without importing SVGs or go back and start the import again.', 'elementor' );
 __( 'Select which plugins to include', 'elementor' );
 __( 'All items are already selected by default. Uncheck the ones you don\'t want.', 'elementor' );
 __( ' Recommended:', 'elementor' );
@@ -658,6 +645,19 @@ __( 'You can find it in the My Website Templates tab.', 'elementor' );
 __( 'Once the download is complete, you can upload it to be used for other sites.', 'elementor' );
 __( 'Build sites faster with Website Templates.', 'elementor' );
 __( 'Is the automatic download not starting?', 'elementor' );
+__( 'Version' ) } ${ cellLinkProps.text }` } <Icon className="eicon-editor-external-link" />
+		</InlineLink>
+	);
+
+	const getHeaders = () => {
+		if ( ! withHeader ) {
+			return [];
+		}
+
+		const headers = [ 'Plugin Name', 'Version' ];
+
+		if ( withStatus ) {
+			headers.splice( 1, 0, 'Status' );
 __( 'Edit Template', 'elementor' );
 __( 'Imported', 'elementor' );
 __( 'Existing', 'elementor' );

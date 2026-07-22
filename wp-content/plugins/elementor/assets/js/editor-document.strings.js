@@ -402,6 +402,6 @@ __( 'Renew my subscription', 'elementor' );
 __( 'Empty folder', 'elememntor' );
 __( 'Connected successfully.', 'elementor' );
 __( 'Have a look', 'elementor' );
-__( 'Library sections', 'elementor' );
 __( 'Folders you create will appear here.', 'elementor' );
 __( 'To create a new one, go to Cloud Templates.', 'elementor' );
+__( 'Library sections', 'elementor' );

@@ -1,7 +1,7 @@
 @font-face {
   font-family: "eicons";
-  src: url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.eot?5.49.0");
-  src: url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.eot?5.49.0#iefix") format("embedded-opentype"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.woff2?5.49.0") format("woff2"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.woff?5.49.0") format("woff"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.ttf?5.49.0") format("truetype"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.svg?5.49.0#eicon") format("svg");
+  src: url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.eot?5.53.0");
+  src: url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.eot?5.53.0#iefix") format("embedded-opentype"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.woff2?5.53.0") format("woff2"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.woff?5.53.0") format("woff"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.ttf?5.53.0") format("truetype"), url("/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.svg?5.53.0#eicon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -2049,6 +2049,38 @@
 
 .eicon-atomic-date-picker:before {
   content: "\ebeb";
+}
+
+.eicon-upgrade-crown-full:before {
+  content: "\ef03";
+}
+
+.eicon-after:before {
+  content: "\ebfa";
+}
+
+.eicon-pagination-item:before {
+  content: "\ebfb";
+}
+
+.eicon-before:before {
+  content: "\ebfc";
+}
+
+.eicon-pagination:before {
+  content: "\ebfd";
+}
+
+.eicon-loop-item:before {
+  content: "\ec00";
+}
+
+.eicon-loop-widget:before {
+  content: "\ec01";
+}
+
+.eicon-x-twitter:before {
+  content: "\ef04";
 }
 
 .eicon-eye:before {
