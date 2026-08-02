@@ -124,7 +124,7 @@ __( 'Delete this variable?', 'elementor' );
 __( 'All elements using', 'elementor' );
 __( 'will keep their current values, but the variable itself will be removed.', 'elementor' );
 __( 'Font family', 'elementor' );
+__( 'Unlink variable', 'elementor' );
 __( 'Missing variable', 'elementor' );
 __( 'changed', 'elementor' );
 __( 'deleted', 'elementor' );
-__( 'Unlink variable', 'elementor' );

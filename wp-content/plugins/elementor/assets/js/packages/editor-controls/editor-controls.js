@@ -49112,7 +49112,8 @@ const DEFAULT_MENU_PROPS = {
   }
 };
 const SelectControl = (0,_create_control__WEBPACK_IMPORTED_MODULE_6__.createControl)(({
-  options,
+  options = [],
+  groups = [],
   onChange,
   MenuProps = DEFAULT_MENU_PROPS,
   ariaLabel
@@ -49128,7 +49129,8 @@ const SelectControl = (0,_create_control__WEBPACK_IMPORTED_MODULE_6__.createCont
     onChange?.(newValue, value);
     setValue(newValue);
   };
-  const isDisabled = disabled || options.length === 0;
+  const flatOptions = flattenGroupedOptions(options, groups);
+  const isDisabled = disabled || flatOptions.length === 0;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_control_actions_control_actions__WEBPACK_IMPORTED_MODULE_5__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_elementor_ui__WEBPACK_IMPORTED_MODULE_3__.Select, {
     sx: {
       overflow: 'hidden'
@@ -49137,20 +49139,42 @@ const SelectControl = (0,_create_control__WEBPACK_IMPORTED_MODULE_6__.createCont
     size: "tiny",
     MenuProps: MenuProps,
     "aria-label": ariaLabel || placeholder,
-    renderValue: selectedValue => getSelectRenderValue(options, placeholder, selectedValue),
+    renderValue: selectedValue => getSelectRenderValue(flatOptions, placeholder, selectedValue),
     value: value ?? '',
     onChange: handleChange,
     disabled: isDisabled,
     fullWidth: true
-  }, options.map(({
-    label,
-    ...props
-  }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_elementor_editor_ui__WEBPACK_IMPORTED_MODULE_2__.MenuListItem, _extends({
+  }, groups.length ? groups.flatMap(group => renderGroup(group)) : options.map(option => renderOption(option))));
+});
+const GROUPED_OPTION_INDENT = 3.5;
+function renderGroup(group) {
+  return [/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_elementor_ui__WEBPACK_IMPORTED_MODULE_3__.MenuSubheader, {
+    key: `group-${group.label}`,
+    sx: {
+      fontWeight: 400,
+      color: 'text.tertiary'
+    }
+  }, group.label), ...group.options.map(option => renderOption(option, true))];
+}
+function renderOption({
+  label,
+  ...props
+}, isGrouped = false) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_elementor_editor_ui__WEBPACK_IMPORTED_MODULE_2__.MenuListItem, _extends({
     key: props.value
   }, props, {
-    value: props.value ?? ''
-  }), label))));
-});
+    value: props.value ?? '',
+    sx: isGrouped ? {
+      pl: GROUPED_OPTION_INDENT
+    } : undefined
+  }), label);
+}
+function flattenGroupedOptions(options, groups) {
+  if (!groups.length) {
+    return options;
+  }
+  return groups.flatMap(group => group.options);
+}
 function getSelectRenderValue(options, placeholder, selectedValue) {
   const optionWithValue = v => options.find(({
     value

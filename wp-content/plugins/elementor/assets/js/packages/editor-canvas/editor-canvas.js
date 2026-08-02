@@ -13842,9 +13842,9 @@ function initStyleTransformers() {
   }) => key === 'transform-functions' ? 'transform' : key)).register('transition', _transformers_styles_transition_transformer__WEBPACK_IMPORTED_MODULE_29__.transitionTransformer).register('layout-direction', (0,_transformers_styles_create_multi_props_transformer__WEBPACK_IMPORTED_MODULE_12__.createMultiPropsTransformer)(['row', 'column'], ({
     propKey,
     key
-  }) => `${key}-${propKey}`)).register('flex', _transformers_styles_flex_transformer__WEBPACK_IMPORTED_MODULE_14__.flexTransformer).register('border-width', (0,_transformers_styles_create_multi_props_transformer__WEBPACK_IMPORTED_MODULE_12__.createMultiPropsTransformer)(['block-start', 'block-end', 'inline-start', 'inline-end'], ({
+  }) => `${key}-${propKey}`)).register('flex', _transformers_styles_flex_transformer__WEBPACK_IMPORTED_MODULE_14__.flexTransformer).register('border-width-v2', (0,_transformers_styles_create_multi_props_transformer__WEBPACK_IMPORTED_MODULE_12__.createMultiPropsTransformer)(['block-start', 'block-end', 'inline-start', 'inline-end'], ({
     key
-  }) => `border-${key}-width`)).register('border-radius', (0,_transformers_styles_create_multi_props_transformer__WEBPACK_IMPORTED_MODULE_12__.createMultiPropsTransformer)(['start-start', 'start-end', 'end-start', 'end-end'], ({
+  }) => `border-${key}-width`)).register('border-radius-v2', (0,_transformers_styles_create_multi_props_transformer__WEBPACK_IMPORTED_MODULE_12__.createMultiPropsTransformer)(['start-start', 'start-end', 'end-start', 'end-end'], ({
     key
   }) => `border-${key}-radius`)).registerFallback(_transformers_shared_plain_transformer__WEBPACK_IMPORTED_MODULE_3__.plainTransformer);
 }

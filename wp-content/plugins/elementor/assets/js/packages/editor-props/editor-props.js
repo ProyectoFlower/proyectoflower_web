@@ -2038,7 +2038,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const borderRadiusPropTypeUtil = (0,_utils_create_prop_utils__WEBPACK_IMPORTED_MODULE_1__.createPropUtils)('border-radius', _elementor_schema__WEBPACK_IMPORTED_MODULE_0__.z.strictObject({
+const borderRadiusPropTypeUtil = (0,_utils_create_prop_utils__WEBPACK_IMPORTED_MODULE_1__.createPropUtils)('border-radius-v2', _elementor_schema__WEBPACK_IMPORTED_MODULE_0__.z.strictObject({
   'start-start': _utils__WEBPACK_IMPORTED_MODULE_2__.unknownChildrenSchema,
   'start-end': _utils__WEBPACK_IMPORTED_MODULE_2__.unknownChildrenSchema,
   'end-start': _utils__WEBPACK_IMPORTED_MODULE_2__.unknownChildrenSchema,
@@ -2064,7 +2064,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const borderWidthPropTypeUtil = (0,_utils_create_prop_utils__WEBPACK_IMPORTED_MODULE_1__.createPropUtils)('border-width', _elementor_schema__WEBPACK_IMPORTED_MODULE_0__.z.strictObject({
+const borderWidthPropTypeUtil = (0,_utils_create_prop_utils__WEBPACK_IMPORTED_MODULE_1__.createPropUtils)('border-width-v2', _elementor_schema__WEBPACK_IMPORTED_MODULE_0__.z.strictObject({
   'block-start': _utils__WEBPACK_IMPORTED_MODULE_2__.unknownChildrenSchema,
   'block-end': _utils__WEBPACK_IMPORTED_MODULE_2__.unknownChildrenSchema,
   'inline-start': _utils__WEBPACK_IMPORTED_MODULE_2__.unknownChildrenSchema,

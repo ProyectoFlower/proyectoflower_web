@@ -29,27 +29,6 @@ __( 'Upgrade now', 'elementor' );
 __( 'Upgrade Now', 'elementor' );
 __( 'Detach from Component', 'elementor' );
 __( 'Instance detached', 'elementor' );
-/* translators: %s: component name. */
-__( 'Edit %s', 'elementor' );
-__( 'Edit Component', 'elementor' );
-__(
-							'To edit components, update Elementor Pro to the latest version.',
-							'elementor'
-						);
-__( 'Edit components', 'elementor' );
-__( 'Editing components requires an active Pro subscription.', 'elementor' );
-__(
-				'Edit the component to add properties, manage them or update the design across all instances.',
-				'elementor'
-		  );
-__(
-				'With your current role, you cannot edit this component. Contact an administrator to add properties.',
-				'elementor'
-		  );
-__( 'No properties yet', 'elementor' );
-__( 'Edit component', 'elementor' );
-__( 'Failed to detach component instance.', 'elementor' );
-__( 'Detach from Component', 'elementor' );
 __( 'Create new Components', 'elementor' );
 __( 'To create new components, update Elementor Pro to the latest version.', 'elementor' );
 __( 'Create new components', 'elementor' );
@@ -78,3 +57,24 @@ __( 'Sorry, nothing matched', 'elementor' );
 __( 'Try something else.', 'elementor' );
 __( 'Clear & try again', 'elementor' );
 __( 'Search', 'elementor' );
+/* translators: %s: component name. */
+__( 'Edit %s', 'elementor' );
+__( 'Edit Component', 'elementor' );
+__(
+							'To edit components, update Elementor Pro to the latest version.',
+							'elementor'
+						);
+__( 'Edit components', 'elementor' );
+__( 'Editing components requires an active Pro subscription.', 'elementor' );
+__(
+				'Edit the component to add properties, manage them or update the design across all instances.',
+				'elementor'
+		  );
+__(
+				'With your current role, you cannot edit this component. Contact an administrator to add properties.',
+				'elementor'
+		  );
+__( 'No properties yet', 'elementor' );
+__( 'Edit component', 'elementor' );
+__( 'Failed to detach component instance.', 'elementor' );
+__( 'Detach from Component', 'elementor' );
