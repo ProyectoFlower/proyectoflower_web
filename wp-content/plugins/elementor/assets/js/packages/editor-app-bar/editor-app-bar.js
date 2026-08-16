@@ -2222,6 +2222,7 @@ function useActionProps() {
   return {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Add Element', 'elementor'),
     icon: _elementor_icons__WEBPACK_IMPORTED_MODULE_1__.PlusIcon,
+    id: 'ele-add-element',
     onClick: () => {
       const extendedWindow = window;
       const config = extendedWindow?.elementorCommon?.eventsManager?.config;
